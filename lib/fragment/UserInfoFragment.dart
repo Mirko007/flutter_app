@@ -1,12 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:barcode_flutter/barcode_flutter.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+String ime_prezime='';
+String current_points='';
+String referenceNumber='';
 class UserInfoFragment extends StatefulWidget {
+
   @override
   _UserInfoState createState() => _UserInfoState();
 }
 
 class _UserInfoState extends State<UserInfoFragment> {
+  @override
+  void initState() {
+    super.initState();
+    _loadCounter();
+  }
+  _loadCounter() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      ime_prezime = (prefs.getString('ime')??'')+" "+ (prefs.getString('prezime')??'');
+      double cur=(prefs.getDouble('currentPoints')??0.0);
+      current_points = cur.toString();
+
+      referenceNumber = (prefs.getString('referenceNumber')??"");
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,6 +39,7 @@ class _UserInfoState extends State<UserInfoFragment> {
 }
 
 Widget buildContent(BuildContext context) {
+
   return Container(
     color: Colors.white,
     child: Column(
@@ -64,7 +84,7 @@ Widget buildContent(BuildContext context) {
         Padding(
           padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
           child: Text(
-            "Vjekoslav Marunac",
+            ime_prezime,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
@@ -96,7 +116,7 @@ Widget buildContent(BuildContext context) {
         Padding(
           padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
           child: Text(
-            "124",
+            current_points,
             style: TextStyle(
                 fontSize: 35, fontWeight: FontWeight.bold, color: Colors.blue),
           ),
@@ -139,7 +159,7 @@ Widget buildContent(BuildContext context) {
                     Padding(
                       padding: EdgeInsets.only(left: 15),
                       child: Text(
-                        "Vjekoslav Marunac",
+                        ime_prezime,
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -162,7 +182,7 @@ Widget buildContent(BuildContext context) {
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(10, 5, 15, 5),
                         child: new BarCodeImage(
-                          data: "1234ABC",
+                          data: referenceNumber,
                           // Code string. (required)
                           codeType: BarCodeType.Code128,
                           // Code type (required)
@@ -188,4 +208,7 @@ Widget buildContent(BuildContext context) {
       ],
     ),
   );
+
 }
+
+

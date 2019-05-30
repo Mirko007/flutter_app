@@ -29,12 +29,12 @@ class _Main_FragmentState extends State<Main_Fragment> {
     switch (currentIndex) {
       case 0:
         return TransakcijeFragment();
-      case 1:
-        return AkcijeFragment();
+//      case 1:
+//        return AkcijeFragment();
       case 2:
         return UserInfoFragment();
-      case 3:
-        return KuponiFragment();
+//      case 3:
+//        return KuponiFragment();
       case 4:
         return MojProfil_Fragment();
         break;

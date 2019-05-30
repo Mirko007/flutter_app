@@ -23,6 +23,7 @@ dependencies:
   barcode_flutter: ^1.0.0
   datetime_picker_formfield: ^0.1.8
   http: any
+  shared_preferences: 0.5.2+2
 
 dev_dependencies:
   flutter_test:
