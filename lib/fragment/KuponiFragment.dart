@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app/KuponiDetails.dart';
 
 class KuponiFragment extends StatefulWidget {
@@ -9,15 +10,47 @@ class KuponiFragment extends StatefulWidget {
 class _KuponiState extends State<KuponiFragment> {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return new WillPopScope(
+
+      onWillPop: _onWillPop,
+      child: new Scaffold(
+        appBar: new AppBar(
+          automaticallyImplyLeading: false,
+          title: new Text("Kuponi"),
+        ),
+        body: new SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Image.asset(
+            "assets/images/nema_sadrzaja.PNG",
+            fit: BoxFit.fill,
+          ),
+          width: MediaQuery.of(context).size.width,
+        )
       ),
-      home: new ListKuponiPage(),
     );
+//    return  new ListKuponiPage();
+  }
+  Future<bool> _onWillPop() {
+    return showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text('Are you sure?'),
+        content: new Text('Do you want to exit an App'),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('No'),
+          ),
+          new FlatButton(
+            onPressed: () =>  SystemNavigator.pop(),
+            child: new Text('Yes'),
+          ),
+        ],
+      ),
+    ) ?? false;
   }
 }
+
 
 class Coupons {
   Coupons({this.date, this.spentPoints, this.totalAmount, this.locationName});

@@ -47,7 +47,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final EmailText = TextEditingController();
 
-
   Future<String> getSWData() async {
     var res =
         await http.get(Uri.parse(url), headers: {"Accept": "application/json"});
@@ -105,8 +104,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             textColor: Colors.white,
                             color: Colors.blue,
                             onPressed: () {
-                              //_callServisEmail(EmailText.text);
-                               Navigator.of(context).pushNamed('/main');
+                              _callServisEmail(EmailText.text);
+                              //Navigator.of(context).pushNamed('/main');
                             },
                             child: Text(
                               'LOGIN',
@@ -144,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             Expanded(
-                child:
+              child:
 //                ListView.builder(
 //              itemCount: data == null ? 0 : data.length,
 //              itemBuilder: (BuildContext context, int index) {
@@ -197,13 +196,13 @@ class _MyHomePageState extends State<MyHomePage> {
 //                );
 //              },
 //            )
-              Align(
+                  Align(
                 alignment: FractionalOffset.bottomCenter,
                 child: Image.asset(
                   "assets/images/prijava_logo_polleo.png",
                 ),
               ),
-                )
+            )
           ],
         ));
   }
@@ -211,6 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    _getPref();
 
     //this.getSWData();
   }
@@ -232,8 +232,7 @@ class _MyHomePageState extends State<MyHomePage> {
       print(response.body);
 
       if (response.statusCode == 200) {
-          _asyncInputDialog(context,EmailText);
-
+        _asyncInputDialog(context, EmailText);
       } else {
         // If that call was not successful, throw an error.
         throw Exception('Failed to load post');
@@ -241,8 +240,8 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-   _asyncInputDialog(BuildContext context,String EmailText) async {
-    String dialogOTP="";
+  _asyncInputDialog(BuildContext context, String EmailText) async {
+    String dialogOTP = "";
     return showDialog<String>(
       context: context,
       barrierDismissible: false,
@@ -255,6 +254,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               new Expanded(
                   child: new TextField(
+                keyboardType: TextInputType.number,
                 autofocus: true,
                 decoration: new InputDecoration(),
                 onChanged: (value) {
@@ -268,7 +268,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text('Ok'),
               onPressed: () {
                 Navigator.pop(context);
-                fvoidServisEmailOTP(dialogOTP,EmailText);
+                fvoidServisEmailOTP(dialogOTP, EmailText);
               },
             ),
           ],
@@ -277,7 +277,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void fvoidServisEmailOTP(String dialogOTP,String EmailTextConfirm) async{
+  void fvoidServisEmailOTP(String dialogOTP, String EmailTextConfirm) async {
     String url = "http://165.227.137.83:9000/api/v1/confirmOTP";
     String json_body = '{"otp" : "$dialogOTP", "email" : "$EmailTextConfirm"}';
 
@@ -296,19 +296,23 @@ class _MyHomePageState extends State<MyHomePage> {
       if (response.statusCode == 200) {
         var resBody = json.decode(response.body);
         print(resBody["token"]);
-        fvoidGetCustomer(resBody["token"],EmailTextConfirm);
-
+        fvoidGetCustomer(resBody["token"], EmailTextConfirm);
       } else {
         // If that call was not successful, throw an error.
         throw Exception('Failed to load post');
       }
     });
-
   }
-  void fvoidGetCustomer(String token,String EmailText) async{
+
+  void fvoidGetCustomer(String token, String EmailText) async {
     String url = "http://165.227.137.83:9000/api/v1/getCustomer";
 
-    http.Response response = await http.get(url, headers: {"Accept": "application/json","content-type": "application/json","req_type": "mob","token": "$token"}).then((http.Response response) async {
+    http.Response response = await http.get(url, headers: {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "req_type": "mob",
+      "token": "$token"
+    }).then((http.Response response) async {
       print("Response status: ${response.statusCode}");
       print("Response body: ${response.contentLength}");
       print(response.headers);
@@ -321,15 +325,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
 
-         prefs.setString('email', resBody["email"]);
-         prefs.setString('token', token);
+        prefs.setString('email', resBody["email"]);
+        prefs.setString('token', token);
         await prefs.setString('ime', resBody["firstName"]);
         await prefs.setString('prezime', resBody["lastName"]);
         await prefs.setString('referenceNumber', resBody["referenceNumber"]);
         await prefs.setBool('termsOfUse', resBody["termsOfUse"]);
         await prefs.setBool('gdpr_privola_mob', resBody["gdpr_privola_mob"]);
-        await prefs.setBool('gdpr_privola_email', resBody["gdpr_privola_email"]);
-        await prefs.setBool('gdpr_privola_posta', resBody["gdpr_privola_posta"]);
+        await prefs.setBool(
+            'gdpr_privola_email', resBody["gdpr_privola_email"]);
+        await prefs.setBool(
+            'gdpr_privola_posta', resBody["gdpr_privola_posta"]);
         await prefs.setDouble('currentPoints', resBody["currentPoints"]);
         await prefs.setString('dateOfBirth', resBody["dateOfBirth"]);
         await prefs.setString('gender', resBody["gender"]);
@@ -340,15 +346,47 @@ class _MyHomePageState extends State<MyHomePage> {
         await prefs.setString('categoryName', resBody["categoryName"]);
         await prefs.setString('fitnessName', resBody["fitnessName"]);
         await prefs.setString('sportName', resBody["sportName"]);
-        await prefs.setString('placeOfRegistration', resBody["placeOfRegistration"]);
+        await prefs.setString(
+            'placeOfRegistration', resBody["placeOfRegistration"]);
         Navigator.of(context).pushNamed('/main');
-
       } else {
         // If that call was not successful, throw an error.
         throw Exception('Failed to load post');
       }
     });
-
   }
 
+  _getPref() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      if (!(prefs.getString('email') == ""))
+        _checkUser(prefs.getString('token'));
+    });
+  }
+
+  _checkUser(String token) async {
+    String url = "http://165.227.137.83:9000/api/v1/getCustomer";
+
+    http.Response response = await http.get(url, headers: {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "req_type": "mob",
+      "token": "$token"
+    }).then((http.Response response) async {
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.contentLength}");
+      print(response.headers);
+      print(response.request);
+      print(response.statusCode);
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        var resBody = json.decode(response.body);
+        Navigator.of(context).pushNamed('/main');
+      } else {
+        // If that call was not successful, throw an error.
+        throw Exception('Failed to load post');
+      }
+    });
+  }
 }

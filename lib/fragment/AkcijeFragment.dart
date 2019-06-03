@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AkcijeFragment extends StatefulWidget {
   @override
@@ -8,14 +9,53 @@ class AkcijeFragment extends StatefulWidget {
 class _AkcijeState extends State<AkcijeFragment> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Akcije')),
-      backgroundColor: Colors.blue,
-      body: Container(
-        color: Colors.blue,
-        child: buildContent(),
+    return new WillPopScope(
+
+      onWillPop: _onWillPop,
+      child: new Scaffold(
+        appBar: new AppBar(
+          automaticallyImplyLeading: false,
+          title: new Text("Akcije"),
+        ),
+        body: new SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Image.asset(
+            "assets/images/nema_sadrzaja.PNG",
+            fit: BoxFit.fill,
+          ),
+          width: MediaQuery.of(context).size.width,
+        )
       ),
     );
+//    return Scaffold(
+//      appBar: AppBar(title: Text('Akcije')),
+//      backgroundColor: Colors.blue,
+//      body: Container(
+//        color: Colors.blue,
+//        child: buildContent(),
+//      ),
+//    );
+
+
+  }
+  Future<bool> _onWillPop() {
+    return showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text('Are you sure?'),
+        content: new Text('Do you want to exit an App'),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('No'),
+          ),
+          new FlatButton(
+            onPressed: () =>  SystemNavigator.pop(),
+            child: new Text('Yes'),
+          ),
+        ],
+      ),
+    ) ?? false;
   }
 
   Widget buildContent() {

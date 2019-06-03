@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:barcode_flutter/barcode_flutter.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 String ime_prezime='';
 String current_points='';
@@ -28,6 +29,25 @@ class _UserInfoState extends State<UserInfoFragment> {
   }
   @override
   Widget build(BuildContext context) {
+    if (MediaQuery.of(context).orientation == Orientation.landscape){
+      return Scaffold(
+          resizeToAvoidBottomPadding: false,
+          backgroundColor: Colors.blue,
+          body: Container(
+            color: Colors.blue,
+            child:SizedBox(),
+          ));
+    }else{
+// is landscape
+      return new WillPopScope(
+
+        onWillPop: _onWillPop,
+        child: new Scaffold(
+          body: Container(
+              color: Colors.blue,
+              child: buildContent(context),
+        ),
+        ));
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         backgroundColor: Colors.blue,
@@ -35,8 +55,29 @@ class _UserInfoState extends State<UserInfoFragment> {
           color: Colors.blue,
           child: buildContent(context),
         ));
+  }}
+  Future<bool> _onWillPop() {
+    return showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text('Are you sure?'),
+        content: new Text('Do you want to exit an App'),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('No'),
+          ),
+          new FlatButton(
+            onPressed: () =>  SystemNavigator.pop(),
+            child: new Text('Yes'),
+          ),
+        ],
+      ),
+    ) ?? false;
   }
 }
+
+
 
 Widget buildContent(BuildContext context) {
 

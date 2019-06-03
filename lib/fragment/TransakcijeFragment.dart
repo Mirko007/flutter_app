@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app/TransactionDetails.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -17,29 +18,46 @@ class _TransakcijeState extends State<TransakcijeFragment> {
   void initState() {
     super.initState();
     _getPref();
-    this.getTransactionData();
   }
 
   _getPref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       token = (prefs.getString('token')??"");
+      this.getTransactionData();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return new WillPopScope(
+
+      onWillPop: _onWillPop,
+      child: new Scaffold(
+        body: new ListPage(),
       ),
-      routes: <String, WidgetBuilder>{
-        '/transaction_details': (BuildContext context) =>
-            new TransactionDetails(),
-      },
-      home: new ListPage(),
     );
+    return  new ListPage();
+
+  }
+  Future<bool> _onWillPop() {
+    return showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text('Are you sure?'),
+        content: new Text('Do you want to exit an App'),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('No'),
+          ),
+          new FlatButton(
+            onPressed: () =>  SystemNavigator.pop(),
+            child: new Text('Yes'),
+          ),
+        ],
+      ),
+    ) ?? false;
   }
 
     Future<String> getTransactionData() async {
@@ -64,11 +82,7 @@ class _TransakcijeState extends State<TransakcijeFragment> {
         }
       });
 
-
-
-
     }
-
 }
 
 class Transaction {
@@ -88,7 +102,8 @@ class ListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Transakcije')),
+      appBar: AppBar(title: Text('Transakcije'),
+        automaticallyImplyLeading: false,),
       body: Container(
         color: Colors.blueAccent,
         child: _buildContent(),
@@ -156,29 +171,6 @@ class ListPage extends StatelessWidget {
   }
 
 }
-
-List<Transaction> allTransactions = [
-  Transaction(
-      date: '26.10.2018 05:57.11',
-      spentPoints: '10',
-      totalAmount: "50",
-      locationName: "Zagreb - Žitnjak"),
-  Transaction(
-      date: '28.10.2018 10:55.41',
-      spentPoints: '22',
-      totalAmount: "120",
-      locationName: "Zagreb - Jankomir"),
-  Transaction(
-      date: '06.11.2018 12:12.45',
-      spentPoints: '30',
-      totalAmount: "170",
-      locationName: "Velesajam"),
-  Transaction(
-      date: '12.11.2018 15:34.37',
-      spentPoints: '45',
-      totalAmount: "200",
-      locationName: "Osijek"),
-];
 
 void getTransactionDetails(String location_name, BuildContext context) {
   Navigator.push(

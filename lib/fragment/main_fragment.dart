@@ -29,13 +29,13 @@ class _Main_FragmentState extends State<Main_Fragment> {
     switch (currentIndex) {
       case 0:
         return TransakcijeFragment();
-        
-//      case 1:
-//        return AkcijeFragment();
+
+      case 1:
+        return AkcijeFragment();
       case 2:
         return UserInfoFragment();
-//      case 3:
-//        return KuponiFragment();
+      case 3:
+        return KuponiFragment();
       case 4:
         return MojProfil_Fragment();
         break;
@@ -46,22 +46,20 @@ class _Main_FragmentState extends State<Main_Fragment> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
+    return Scaffold(
             bottomNavigationBar: CurvedNavigationBar(
               index: 2,
               height: 75.0,
               items: <Widget>[
-                Icon(Icons.transform, size: 30),
-                Icon(Icons.accessibility_new, size: 30),
-                Icon(Icons.adb, size: 30),
-                Icon(Icons.redeem, size: 30),
-                Icon(customIcon.MyFlutterApp.user_plus,size:30),
+                Icon(Icons.transform, size: 30,color: Colors.white,),
+                Icon(Icons.accessibility_new, size: 30,color: Colors.white),
+                Icon(Icons.adb, size: 30,color: Colors.white),
+                Icon(Icons.redeem, size: 30,color: Colors.white),
+                Icon(customIcon.MyFlutterApp.user_plus,color: Colors.white,size:30),
               ],
-              color: Colors.white,
-              buttonBackgroundColor: Colors.white,
-              backgroundColor: Colors.blue,
+              color: Colors.blue,
+              buttonBackgroundColor: Colors.blue,
+              backgroundColor: Colors.white,
               animationCurve: Curves.easeInOut,
               animationDuration: Duration(milliseconds: 600),
               onTap: (index) {
@@ -114,7 +112,7 @@ class _Main_FragmentState extends State<Main_Fragment> {
 //          ,
 //        ),
 //      ),
-        );
+        ;
   }
 
 

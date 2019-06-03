@@ -24,6 +24,7 @@ dependencies:
   datetime_picker_formfield: ^0.1.8
   http: any
   shared_preferences: 0.5.2+2
+  fluttertoast: ^2.0.7
 
 dev_dependencies:
   flutter_test:
@@ -47,6 +48,7 @@ flutter:
     - assets/images/registriraj_logo.png
     - assets/images/polleo.jpeg
     - assets/images/kupon_fragment_slika.PNG
+    - assets/images/nema_sadrzaja.PNG
 
 
   #images/a_dot_burr.jpeg
