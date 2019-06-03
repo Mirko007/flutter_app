@@ -435,6 +435,7 @@ class _SignupPageState extends State<SignupPage> {
     setState(() {
       _currentfitnessType = selectedFitness;
 
+      
       print("Selected city $selectedFitness, we are going to refresh the UI");
     });
   }
