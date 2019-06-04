@@ -25,12 +25,16 @@ dependencies:
   http: any
   shared_preferences: 0.5.2+2
   fluttertoast: ^2.0.7
+  flutter_launcher_icons: "^0.7.0"
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-
+flutter_icons:
+  image_path: "assets/icon/leoclub_icon.png"
+  android: "launcher_icon"
+  ios: true
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
 
@@ -38,6 +42,8 @@ dev_dependencies:
 flutter:
 
   uses-material-design: true
+
+
 
   # To add assets to your application, add an assets section, like this:
   assets:
@@ -49,6 +55,7 @@ flutter:
     - assets/images/polleo.jpeg
     - assets/images/kupon_fragment_slika.PNG
     - assets/images/nema_sadrzaja.PNG
+    - assets/icon/leoclub_icon.png
 
 
   #images/a_dot_burr.jpeg

@@ -6,7 +6,7 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -33,8 +33,7 @@ class _SignupPageState extends State<SignupPage> {
   final datumRodenja = TextEditingController();
   bool gdpr_privola = false;
 
-  List _gender =
-  ["Musko", "Zensko", "Ostalo"];
+  List _gender = ["Musko", "Zensko", "Ostalo"];
 
   List<DropdownMenuItem<String>> _dropDownMenuItemsGender;
   String _currentGender;
@@ -58,8 +57,7 @@ class _SignupPageState extends State<SignupPage> {
   List data_categoryType;
 
   Future<String> getPrefTypeData() async {
-    var res =
-    await http.get(Uri.parse(url));
+    var res = await http.get(Uri.parse(url));
 
     setState(() {
       var resBody = json.decode(res.body);
@@ -84,291 +82,319 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       resizeToAvoidBottomPadding: false,
-
-
       body: SingleChildScrollView(
           child:
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-              Widget>[
-            Container(
-              color: Colors.white,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(
-                    height: 24.0,
-                  ),
-                  SizedBox(
-                    height: 100.0,
-                    child: Image.asset(
-                      "assets/images/registriraj_logo.png",
-                      fit: BoxFit.fill,
-                    ),
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
-                  ),
-                  Container(
-                      padding: EdgeInsets.only(
-                          top: 10.0, left: 20.0, right: 20.0),
-                      child: Column(
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+                  Widget>[
+        Container(
+          color: Colors.white,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                height: 24.0,
+              ),
+              SizedBox(
+                height: 100.0,
+                child: Image.asset(
+                  "assets/images/registriraj_logo.png",
+                  fit: BoxFit.fill,
+                ),
+                width: MediaQuery.of(context).size.width,
+              ),
+              Container(
+                  padding: EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        "Dobro došao u LeoClub program nagrađivanja!",
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Upiši u svoje podatke, registriraj se i koristi članske pogodnosti već danas.",
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
                         children: <Widget>[
                           Text(
-                            "Dobro došao u LeoClub program nagrađivanja!",
-                            style: TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.bold),
+                            "Već imaš račun?",
+                            style: TextStyle(fontSize: 16),
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            "Upiši u svoje podatke, registriraj se i koristi članske pogodnosti već danas.",
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            children: <Widget>[ Text(
-                              "Već imaš račun?",
-                              style: TextStyle(fontSize: 16),), InkWell(
-                              child: new Text("Prijavi se", style: TextStyle(
+                          InkWell(
+                            child: new Text(
+                              "Prijavi se",
+                              style: TextStyle(
                                   color: Colors.blue,
                                   decoration: TextDecoration.underline,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 16),),
-                              onTap: () {
-                                Navigator.of(context).pop(true);
-                              },
-                            )
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5, bottom: 5),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                  labelText: 'Ime',
-                                  labelStyle: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey),
-                                  // hintText: 'EMAIL',
-                                  // hintStyle: ,
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.blue))),
-                              controller: ImeText,
+                                  fontSize: 16),
                             ),
-                          ),
-                          TextField(
-                            decoration: InputDecoration(
-                                labelText: 'Prezime',
-                                labelStyle: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey),
-                                // hintText: 'EMAIL',
-                                // hintStyle: ,
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.blue))),
-                            controller: PrezimeText,
-                          ),
-                          TextField(
-                            decoration: InputDecoration(
-                                labelText: 'Mobitel',
-                                hintText: "+385911234567",
-                                labelStyle: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey),
-                                // hintText: 'EMAIL',
-                                // hintStyle: ,
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.blue))),
-                            controller: MobitelText,
-                          ),
-                          TextField(
-                            decoration: InputDecoration(
-                                labelText: 'E-mail adresa',
-                                labelStyle: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey),
-                                // hintText: 'EMAIL',
-                                // hintStyle: ,
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.blue))),
-                            controller: EmailText,
-                          ),
-                          TextField(
-                            decoration: InputDecoration(
-                                labelText: 'Kućna adresa',
-                                labelStyle: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey),
-                                // hintText: 'EMAIL',
-                                // hintStyle: ,
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.blue))),
-                            controller: KucnaAdresaText,
-                          ),
-                          TextField(
-                            decoration: InputDecoration(
-                                labelText: 'Poštanski broj',
-                                labelStyle: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey),
-                                // hintText: 'EMAIL',
-                                // hintStyle: ,
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.blue))),
-                            controller: PostanskiBrojText,
-                          ),
-                          TextField(
-                            decoration: InputDecoration(
-                                labelText: 'Grad',
-                                labelStyle: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey),
-                                // hintText: 'EMAIL',
-                                // hintStyle: ,
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.blue))),
-                            controller: GradText,
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          DateTimePickerFormField(
-                            inputType: inputType,
-                            format: formats[inputType],
-                            editable: editable,
-                            decoration: InputDecoration(
-                                hintText: "Datum rođenja",
-                                labelText: 'Datum rođenja',
-                                hasFloatingPlaceholder: false,
-                                labelStyle: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey)),
-                            onChanged: (dt) => setState(() => date = dt),
-                            controller: datumRodenja,
-
-                          ),
-
-                          SizedBox(height: 20.0),
-
-                          Text(
-                            "Spol",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 14,
-                                color: Colors.grey),
-                          ),
-                          new DropdownButton(
-                            value: _currentGender,
-                            items: _dropDownMenuItemsGender,
-                            onChanged: changedDropDownItem,
-                          ),
-
-                          new DropdownButton(
-                            value: _currentfitnessType,
-                            items: _dropDownMenuItemsfitnessTypeList,
-                            onChanged: changedDropDownItemFitness,
-                          ),
-
-                          new DropdownButton(
-                            value: _currentsportType,
-                            items: _dropDownMenuItemssportTypeList,
-                            onChanged: changedDropDownItemSport,
-                          ),
-
-                          new DropdownButton(
-                            value: _currentcategoryType,
-                            items: _dropDownMenuItemscategoryTypeList,
-                            onChanged: changedDropDownItemCategory,
-                          ),
-
-                          CheckboxListTile(value: gdpr_privola,
-                              title: new Text(
-                                  "Dajem suglasnost da mi Polleo Adria d.o.o šalje obavijesti o Programu te ponude i pogodnosti putem mobitela, elektroničke pošte i pošte"),
-                              onChanged: (bool value) {
-                                setState(() {
-                                  gdpr_privola = value;
-                                });
-                              }),
-
-                          Container(
-                              height: 40.0,
-                              child: Material(
-                                borderRadius: BorderRadius.circular(20.0),
-                                shadowColor: Colors.blueAccent,
-                                color: Colors.blue,
-                                elevation: 7.0,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    if (gdpr_privola) {
-                                      fvoidServisEmail(EmailText.text);
-                                    } else {
-                                      print("gdpr_privola" +
-                                          gdpr_privola.toString());
-                                      Fluttertoast.showToast(
-                                          msg: "Molimo unesite sve podatke i omogućite privolu",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.BOTTOM,
-                                          // also possible "TOP" and "CENTER"
-                                          textColor: Colors.white);
-                                    }
-                                  },
-                                  child: Center(
-                                    child: Text(
-                                      'Registriraj se',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Montserrat'),
-                                    ),
-                                  ),
-                                ),
-                              )),
-                          SizedBox(height: 20.0),
-
+                            onTap: () {
+                              Navigator.of(context).pop(true);
+                            },
+                          )
                         ],
-                      )),
-                ],
-              ),
-            ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5, bottom: 5),
+                        child: TextField(
+                          decoration: InputDecoration(
+                              labelText: 'Ime',
+                              labelStyle: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey),
+                              // hintText: 'EMAIL',
+                              // hintStyle: ,
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.blue))),
+                          controller: ImeText,
+                        ),
+                      ),
+                      TextField(
+                        decoration: InputDecoration(
+                            labelText: 'Prezime',
+                            labelStyle: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey),
+                            // hintText: 'EMAIL',
+                            // hintStyle: ,
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue))),
+                        controller: PrezimeText,
+                      ),
+                      TextField(
+                        decoration: InputDecoration(
+                            labelText: 'Mobitel',
+                            hintText: "+385911234567",
+                            labelStyle: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey),
+                            // hintText: 'EMAIL',
+                            // hintStyle: ,
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue))),
+                        controller: MobitelText,
+                      ),
+                      TextField(
+                        decoration: InputDecoration(
+                            labelText: 'E-mail adresa',
+                            labelStyle: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey),
+                            // hintText: 'EMAIL',
+                            // hintStyle: ,
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue))),
+                        controller: EmailText,
+                      ),
+                      TextField(
+                        decoration: InputDecoration(
+                            labelText: 'Kućna adresa',
+                            labelStyle: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey),
+                            // hintText: 'EMAIL',
+                            // hintStyle: ,
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue))),
+                        controller: KucnaAdresaText,
+                      ),
+                      TextField(
+                        decoration: InputDecoration(
+                            labelText: 'Poštanski broj',
+                            labelStyle: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey),
+                            // hintText: 'EMAIL',
+                            // hintStyle: ,
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue))),
+                        controller: PostanskiBrojText,
+                      ),
+                      TextField(
+                        decoration: InputDecoration(
+                            labelText: 'Grad',
+                            labelStyle: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey),
+                            // hintText: 'EMAIL',
+                            // hintStyle: ,
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue))),
+                        controller: GradText,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      DateTimePickerFormField(
+                        inputType: inputType,
+                        format: formats[inputType],
+                        editable: editable,
+                        decoration: InputDecoration(
+                            hintText: "Datum rođenja",
+                            labelText: 'Datum rođenja',
+                            hasFloatingPlaceholder: false,
+                            labelStyle: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey)),
+                        onChanged: (dt) => setState(() => date = dt),
+                        controller: datumRodenja,
+                      ),
+                      SizedBox(height: 20.0),
+                      Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Text(
+                          "Spol",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: Colors.grey),
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                      new DropdownButton(
+                        isExpanded: true,
+                        value: _currentGender,
+                        items: _dropDownMenuItemsGender,
+                        onChanged: changedDropDownItem,
+                      ),
+                      Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Text(
+                          "Fitness Type",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: Colors.grey),
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                      new DropdownButton(
+                        isExpanded: true,
+                        value: _currentfitnessType,
+                        items: _dropDownMenuItemsfitnessTypeList,
+                        onChanged: changedDropDownItemFitness,
+                      ),
+                      Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Text(
+                          "Sport Type",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: Colors.grey),
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                      new DropdownButton(
+                        isExpanded: true,
+                        value: _currentsportType,
+                        items: _dropDownMenuItemssportTypeList,
+                        onChanged: changedDropDownItemSport,
+                      ),
+                      Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Text(
+                          "Category Type",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: Colors.grey),
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                      new DropdownButton(
+                        isExpanded: true,
+                        value: _currentcategoryType,
+                        items: _dropDownMenuItemscategoryTypeList,
+                        onChanged: changedDropDownItemCategory,
+                      ),
+                      CheckboxListTile(
+                          value: gdpr_privola,
+                          title: new Text(
+                              "Dajem suglasnost da mi Polleo Adria d.o.o šalje obavijesti o Programu te ponude i pogodnosti putem mobitela, elektroničke pošte i pošte"),
+                          onChanged: (bool value) {
+                            setState(() {
+                              gdpr_privola = value;
+                            });
+                          }),
+                      Container(
+                          height: 40.0,
+                          child: Material(
+                            borderRadius: BorderRadius.circular(20.0),
+                            shadowColor: Colors.blueAccent,
+                            color: Colors.blue,
+                            elevation: 7.0,
+                            child: GestureDetector(
+                              onTap: () {
+                                if (gdpr_privola) {
+                                  fvoidServisEmail(EmailText.text);
+                                } else {
+                                  print(
+                                      "gdpr_privola" + gdpr_privola.toString());
+                                  Fluttertoast.showToast(
+                                      msg:
+                                          "Molimo unesite sve podatke i omogućite privolu",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      // also possible "TOP" and "CENTER"
+                                      textColor: Colors.white);
+                                }
+                              },
+                              child: Center(
+                                child: Text(
+                                  'Registriraj se',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Montserrat'),
+                                ),
+                              ),
+                            ),
+                          )),
+                      SizedBox(height: 20.0),
+                    ],
+                  )),
+            ],
+          ),
+        ),
 
-            // SizedBox(height: 15.0),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: <Widget>[
-            //     Text(
-            //       'New to Spotify?',
-            //       style: TextStyle(
-            //         fontFamily: 'Montserrat',
-            //       ),
-            //     ),
-            //     SizedBox(width: 5.0),
-            //     InkWell(
-            //       child: Text('Register',
-            //           style: TextStyle(
-            //               color: Colors.green,
-            //               fontFamily: 'Montserrat',
-            //               fontWeight: FontWeight.bold,
-            //               decoration: TextDecoration.underline)),
-            //     )
-            //   ],
-            // )
-          ])),
+        // SizedBox(height: 15.0),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   children: <Widget>[
+        //     Text(
+        //       'New to Spotify?',
+        //       style: TextStyle(
+        //         fontFamily: 'Montserrat',
+        //       ),
+        //     ),
+        //     SizedBox(width: 5.0),
+        //     InkWell(
+        //       child: Text('Register',
+        //           style: TextStyle(
+        //               color: Colors.green,
+        //               fontFamily: 'Montserrat',
+        //               fontWeight: FontWeight.bold,
+        //               decoration: TextDecoration.underline)),
+        //     )
+        //   ],
+        // )
+      ])),
     );
   }
 
@@ -383,10 +409,7 @@ class _SignupPageState extends State<SignupPage> {
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
     List<DropdownMenuItem<String>> items = new List();
     for (String gender in _gender) {
-      items.add(new DropdownMenuItem(
-          value: gender,
-          child: new Text(gender)
-      ));
+      items.add(new DropdownMenuItem(value: gender, child: new Text(gender)));
     }
     return items;
   }
@@ -396,8 +419,7 @@ class _SignupPageState extends State<SignupPage> {
     for (int index = 0; index < data_fitnessType.length; index++) {
       items.add(new DropdownMenuItem(
           value: data_fitnessType[index]["name"],
-          child: new Text(data_fitnessType[index]["name"])
-      ));
+          child: new Text(data_fitnessType[index]["name"])));
     }
     return items;
   }
@@ -407,8 +429,7 @@ class _SignupPageState extends State<SignupPage> {
     for (int index = 0; index < data_sportType.length; index++) {
       items.add(new DropdownMenuItem(
           value: data_sportType[index]["name"],
-          child: new Text(data_sportType[index]["name"])
-      ));
+          child: new Text(data_sportType[index]["name"])));
     }
     return items;
   }
@@ -418,8 +439,7 @@ class _SignupPageState extends State<SignupPage> {
     for (int index = 0; index < data_categoryType.length; index++) {
       items.add(new DropdownMenuItem(
           value: data_categoryType[index]["name"],
-          child: new Text(data_categoryType[index]["name"])
-      ));
+          child: new Text(data_categoryType[index]["name"])));
     }
     return items;
   }
@@ -434,9 +454,13 @@ class _SignupPageState extends State<SignupPage> {
   void changedDropDownItemFitness(String selectedFitness) {
     setState(() {
       _currentfitnessType = selectedFitness;
-
-      
       print("Selected city $selectedFitness, we are going to refresh the UI");
+      for (int index = 0; index < data_fitnessType.length; index++) {
+        if(data_fitnessType[index]["name"] == _currentfitnessType)
+          _currentfitnessTypeIndex=data_fitnessType[index]["id"];
+      }
+
+
     });
   }
 
@@ -444,6 +468,10 @@ class _SignupPageState extends State<SignupPage> {
     setState(() {
       _currentsportType = selectedFitness;
       print("Selected city $selectedFitness, we are going to refresh the UI");
+      for (int index = 0; index < data_sportType.length; index++) {
+        if(data_sportType[index]["name"] == _currentsportType)
+          _currentsportTypeIndex=data_sportType[index]["id"];
+      }
     });
   }
 
@@ -451,6 +479,10 @@ class _SignupPageState extends State<SignupPage> {
     setState(() {
       _currentcategoryType = selectedFitness;
       print("Selected city $selectedFitness, we are going to refresh the UI");
+      for (int index = 0; index < data_categoryType.length; index++) {
+        if(data_categoryType[index]["name"] == _currentcategoryType)
+          _currentcategoryTypeIndex=data_categoryType[index]["id"];
+      }
     });
   }
 
@@ -493,13 +525,13 @@ class _SignupPageState extends State<SignupPage> {
             children: <Widget>[
               new Expanded(
                   child: new TextField(
-                    keyboardType: TextInputType.number,
-                    autofocus: true,
-                    decoration: new InputDecoration(),
-                    onChanged: (value) {
-                      dialogOTP = value;
-                    },
-                  ))
+                keyboardType: TextInputType.number,
+                autofocus: true,
+                decoration: new InputDecoration(),
+                onChanged: (value) {
+                  dialogOTP = value;
+                },
+              ))
             ],
           ),
           actions: <Widget>[
@@ -557,42 +589,17 @@ class _SignupPageState extends State<SignupPage> {
 
     String spol = "";
     if (_currentGender == "Musko") {
-      spol = "Male";
-    } else if (_currentGender == "Zensko") {spol = "Female";} else {spol = "Other";}
+      spol = "1";
+    } else if (_currentGender == "Zensko") {
+      spol = "2";
+    } else {
+      spol = "3";
+    }
 
-    //active inace false, sada za test true
-    String json_body = '{"active" : "true", "dateOfBirth" : "$datum_rodenja","gender" : "$spol","address" : "$kucna_adresa", "city" : "$city","zipCode" : "$zipCode","phoneNumber" : "$phoneNumber",''"firstName" : "$firstName","lastName" : "$lastName","email" : "$email","termsOfUse" : true,"gdpr_privola_email" : true,"gdpr_privola_mob" : true,"gdpr_privola_posta" : true,"categoryType" : "$_currentcategoryType",''"fitnessType" : "$_currentfitnessType","sportType" : "$_currentsportType",}';
-//    this.active = active;
-//    this.dateOfBirth = dateOfBirth;
-//    this.gender = gender;
-//    this.address = address;
-//    this.city = city;
-//    this.zipCode = zipCode;
-//    this.phoneNumber = phoneNumber;
-//    this.firstName = firstName;
-//    this.lastName = lastName;
-//    this.email = email;
-//    this.termsOfUse = termsOfUse;
-//    this.gdpr_privola_email = gdpr_privola_email;
-//    this.gdpr_privola_mob = gdpr_privola_mob;
-//    this.gdpr_privola_posta = gdpr_privola_posta;
-//    false",
-//    et_datum_rodenja.getText().toString(),
-//    vstr_gender_type,
-//    et_kucna_adresa.getText().toString(),
-//    et_grad.getText().toString(),//city
-//    et_post_broj_i_grad.getText().toString(),
-//    et_mobitel.getText().toString(),
-//    et_ime.getText().toString(),
-//    et_prezime.getText().toString(),
-//    et_email.getText().toString(),
-//    vstr_category_type,
-//    vstr_fitness_type,
-//    vstr_sport_type,
-//    true,
-//    true,
-//    true,
-//    true
+    String json_body =
+        '{"active" : "false", "dateOfBirth" : "$datum_rodenja","gender" : "$spol","address" : "$kucna_adresa", "city" : "$city","zipCode" : "$zipCode","phoneNumber" : "$phoneNumber",'
+        '"firstName" : "$firstName","lastName" : "$lastName","email" : "$email","termsOfUse" : true,"gdpr_privola_email" : true,"gdpr_privola_mob" : true,"gdpr_privola_posta" : true,"categoryType" : $_currentcategoryTypeIndex,'
+        '"fitnessType" : $_currentfitnessTypeIndex,"sportType" : $_currentsportTypeIndex}';
 
     http.Response response = await http.post(url, body: json_body, headers: {
       "Accept": "application/json",
@@ -600,7 +607,7 @@ class _SignupPageState extends State<SignupPage> {
       "req_type": "mob",
       "token": "$token",
       "app_version": "ios",
-    }).then((http.Response response) {
+    }).then((http.Response response) async {
       print("Response status: ${response.statusCode}");
       print("Response body: ${response.contentLength}");
       print("response.header ");
@@ -614,14 +621,34 @@ class _SignupPageState extends State<SignupPage> {
       if (response.statusCode == 200) {
         var resBody = json.decode(response.body);
         print(resBody["token"]);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+
+        await prefs.setString('email', resBody["email"]);
+        await prefs.setString('token', token);
+        await prefs.setString('ime', resBody["firstName"]);
+        await prefs.setString('prezime', resBody["lastName"]);
+        await prefs.setString('referenceNumber', resBody["referenceNumber"]);
+        await prefs.setBool('termsOfUse', resBody["termsOfUse"]);
+        await prefs.setBool('gdpr_privola_mob', resBody["gdpr_privola_mob"]);
+        await prefs.setBool('gdpr_privola_email', resBody["gdpr_privola_email"]);
+        await prefs.setBool('gdpr_privola_posta', resBody["gdpr_privola_posta"]);
+        await prefs.setDouble('currentPoints', resBody["currentPoints"]);
+        await prefs.setString('dateOfBirth', resBody["dateOfBirth"]);
+        await prefs.setString('gender', resBody["gender"]);
+        await prefs.setString('address', resBody["address"]);
+        await prefs.setString('city', resBody["city"]);
+        await prefs.setString('zipCode', resBody["zipCode"]);
+        await prefs.setString('phoneNumber', resBody["phoneNumber"]);
+        await prefs.setString('categoryName', resBody["categoryName"]);
+        await prefs.setString('fitnessName', resBody["fitnessName"]);
+        await prefs.setString('sportName', resBody["sportName"]);
+        await prefs.setString(
+            'placeOfRegistration', resBody["placeOfRegistration"]);
+        Navigator.of(context).pushNamed('/main');
       } else {
         // If that call was not successful, throw an error.
         throw Exception('Failed to load post');
       }
     });
   }
-
-
 }
-
-

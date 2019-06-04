@@ -332,10 +332,8 @@ class _MyHomePageState extends State<MyHomePage> {
         await prefs.setString('referenceNumber', resBody["referenceNumber"]);
         await prefs.setBool('termsOfUse', resBody["termsOfUse"]);
         await prefs.setBool('gdpr_privola_mob', resBody["gdpr_privola_mob"]);
-        await prefs.setBool(
-            'gdpr_privola_email', resBody["gdpr_privola_email"]);
-        await prefs.setBool(
-            'gdpr_privola_posta', resBody["gdpr_privola_posta"]);
+        await prefs.setBool('gdpr_privola_email', resBody["gdpr_privola_email"]);
+        await prefs.setBool('gdpr_privola_posta', resBody["gdpr_privola_posta"]);
         await prefs.setDouble('currentPoints', resBody["currentPoints"]);
         await prefs.setString('dateOfBirth', resBody["dateOfBirth"]);
         await prefs.setString('gender', resBody["gender"]);

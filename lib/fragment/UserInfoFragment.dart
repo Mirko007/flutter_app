@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:barcode_flutter/barcode_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../TransactionDetails.dart';
 String ime_prezime='';
 String current_points='';
 String referenceNumber='';
@@ -16,6 +18,7 @@ class _UserInfoState extends State<UserInfoFragment> {
   void initState() {
     super.initState();
     _loadCounter();
+
   }
   _loadCounter() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -32,10 +35,82 @@ class _UserInfoState extends State<UserInfoFragment> {
     if (MediaQuery.of(context).orientation == Orientation.landscape){
       return Scaffold(
           resizeToAvoidBottomPadding: false,
-          backgroundColor: Colors.blue,
+          backgroundColor: Colors.white,
           body: Container(
-            color: Colors.blue,
-            child:SizedBox(),
+            color: Colors.white,
+            child:Column(
+              children: <Widget>[
+              SizedBox(height: 24.0,),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Align(alignment: Alignment.centerRight,
+                  child: Icon(
+                    Icons.screen_rotation,
+                    color: Colors.black,
+                    size: 50.0,
+                  ),
+                ),
+              ),
+                Padding(
+                padding: EdgeInsets.only(left: 50,right: 50),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.all(Radius.circular(15.0))),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text(
+                              ime_prezime,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Expanded(
+                              child: Image.asset(
+                                "assets/images/polleo.jpeg",
+                                height: 40,
+                                width: 100,
+                              ))
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Center(
+                          child: Container(
+                            color: Colors.white,
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(10, 5, 15, 5),
+                              child: new BarCodeImage(
+                                data: referenceNumber,
+                                // Code string. (required)
+                                codeType: BarCodeType.Code128,
+                                // Code type (required)
+                                lineWidth: 2.0,
+                                // width for a single black/white bar (default: 2.0)
+                                barHeight: 70.0,
+                                // height for the entire widget (default: 100.0)
+                                hasText: true,
+                                // Render with text label or not (default: false)
+                                onError: (error) {
+                                  // Error handler
+                                  print('error = $error');
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),],
+            ),
           ));
     }else{
 // is landscape
@@ -75,6 +150,11 @@ class _UserInfoState extends State<UserInfoFragment> {
       ),
     ) ?? false;
   }
+
+  start() {Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => TransactionDetails()),
+  );}
 }
 
 
@@ -134,7 +214,7 @@ Widget buildContent(BuildContext context) {
           child: Row(
             children: <Widget>[
               Icon(
-                Icons.card_travel,
+                Icons.account_balance_wallet,
                 color: Colors.grey,
               ),
               Padding(
@@ -245,7 +325,15 @@ Widget buildContent(BuildContext context) {
               ],
             ),
           ),
-        )
+        ),
+        SizedBox(height: 10.0,),
+        Align(alignment: Alignment.center,
+          child: Icon(
+            Icons.screen_rotation,
+            color: Colors.black,
+            size: 50.0,
+          ),
+        ),
       ],
     ),
   );
