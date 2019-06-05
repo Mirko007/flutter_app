@@ -1,4 +1,4 @@
-library flutter_app.signup;
+library Loyalty_client.signup;
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

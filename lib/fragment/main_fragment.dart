@@ -1,14 +1,12 @@
+import 'package:Loyalty_client/fragment/AkcijeFragment.dart';
+import 'package:Loyalty_client/fragment/KuponiFragment.dart';
+import 'package:Loyalty_client/fragment/MojProfil_Fragment.dart';
+import 'package:Loyalty_client/fragment/TransakcijeFragment.dart';
+import 'package:Loyalty_client/fragment/UserInfoFragment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app/TransactionDetails.dart';
-import 'package:flutter_app/fragment/AkcijeFragment.dart';
-import 'package:flutter_app/fragment/KuponiFragment.dart';
-import 'package:flutter_app/fragment/MojProfil_Fragment.dart';
-import 'package:flutter_app/fragment/TransakcijeFragment.dart';
-import 'package:flutter_app/fragment/UserInfoFragment.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
-import 'package:flutter_app/./presentation/my_flutter_app_icons.dart' as customIcon;
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 
 class Main_Fragment extends StatefulWidget {

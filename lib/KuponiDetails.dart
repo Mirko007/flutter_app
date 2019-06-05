@@ -1,6 +1,6 @@
 import 'package:barcode_flutter/barcode_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/fragment/KuponiFragment.dart';
+import 'package:Loyalty_client/fragment/KuponiFragment.dart';
 
 class KuponiDetails extends StatelessWidget {
   final Coupons coupon;

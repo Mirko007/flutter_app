@@ -1,4 +1,4 @@
-package com.example.flutterapp;
+package hr.etranet.loyalty;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

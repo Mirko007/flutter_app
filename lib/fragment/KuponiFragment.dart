@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app/KuponiDetails.dart';
+import 'package:Loyalty_client/KuponiDetails.dart';
 
 class KuponiFragment extends StatefulWidget {
   @override

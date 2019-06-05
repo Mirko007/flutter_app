@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app/fragment/main_fragment.dart';
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'fragment/main_fragment.dart';
 import 'signup.dart';
 
-import './presentation/my_flutter_app_icons.dart' as customIcon;
 
 void main() {
   debugPaintSizeEnabled = false;
