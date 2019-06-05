@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class TransactionDetails extends StatefulWidget {
   @override
@@ -8,6 +9,9 @@ class TransactionDetails extends StatefulWidget {
 class TransactionDetailsState extends State<TransactionDetails> {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,  DeviceOrientation.portraitDown,
+    ]);
     return Scaffold(
       appBar: AppBar(title: Text('Transakcije detalji')),
       body: Container(

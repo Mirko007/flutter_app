@@ -78,6 +78,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
 
   List<DropdownMenuItem<String>> getDropDownMenuItemsFitnessType() {
     List<DropdownMenuItem<String>> items = new List();
+    items.add(new DropdownMenuItem(value: "", child: new Text("")));
     for (int index = 0; index < data_fitnessType.length; index++) {
       items.add(new DropdownMenuItem(
           value: data_fitnessType[index]["name"],
@@ -88,6 +89,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
 
   List<DropdownMenuItem<String>> getDropDownMenuItemsSportType() {
     List<DropdownMenuItem<String>> items = new List();
+    items.add(new DropdownMenuItem(value: "", child: new Text("")));
     for (int index = 0; index < data_sportType.length; index++) {
       items.add(new DropdownMenuItem(
           value: data_sportType[index]["name"],
@@ -98,6 +100,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
 
   List<DropdownMenuItem<String>> getDropDownMenuItemsCategoryType() {
     List<DropdownMenuItem<String>> items = new List();
+    items.add(new DropdownMenuItem(value: "", child: new Text("")));
     for (int index = 0; index < data_categoryType.length; index++) {
       items.add(new DropdownMenuItem(
           value: data_categoryType[index]["name"],
@@ -187,6 +190,10 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return new WillPopScope(
         onWillPop: _onWillPop,
         child: new Scaffold(
@@ -199,23 +206,22 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
 
   Future<bool> _onWillPop() {
     return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-                title: new Text('Are you sure?'),
-                content: new Text('Do you want to exit an App'),
-                actions: <Widget>[
-                  new FlatButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: new Text('No'),
-                  ),
-                  new FlatButton(
-                    onPressed: () => SystemNavigator.pop(),
-                    child: new Text('Yes'),
-                  ),
-                ],
-              ),
-        ) ??
-        false;
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text('Jeste li sigurni?'),
+        content: new Text('Želite li izaći iz aplikacije'),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('Ne'),
+          ),
+          new FlatButton(
+            onPressed: () =>  SystemNavigator.pop(),
+            child: new Text('Da'),
+          ),
+        ],
+      ),
+    ) ?? false;
   }
 
   Widget buildContent(BuildContext context) {
@@ -447,7 +453,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                               },
                               child: Center(
                                 child: Text(
-                                  'Registriraj se',
+                                  'POTVRDA',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -537,8 +543,11 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
       _currentfitnessType = selectedFitness;
       print("Selected city $selectedFitness, we are going to refresh the UI");
       for (int index = 0; index < data_fitnessType.length; index++) {
-        if (data_fitnessType[index]["name"] == _currentfitnessType)
+        if (data_fitnessType[index]["name"] == _currentfitnessType) {
           _currentfitnessTypeIndex = data_fitnessType[index]["id"];
+        } else if (_currentfitnessType == "") {
+          _currentfitnessTypeIndex = null;
+        }
       }
     });
   }
@@ -548,8 +557,11 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
       _currentsportType = selectedFitness;
       print("Selected city $selectedFitness, we are going to refresh the UI");
       for (int index = 0; index < data_sportType.length; index++) {
-        if (data_sportType[index]["name"] == _currentsportType)
+        if (data_sportType[index]["name"] == _currentsportType) {
           _currentsportTypeIndex = data_sportType[index]["id"];
+        } else if (_currentsportType == "") {
+          _currentsportTypeIndex = null;
+        }
       }
     });
   }
@@ -559,8 +571,11 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
       _currentcategoryType = selectedFitness;
       print("Selected city $selectedFitness, we are going to refresh the UI");
       for (int index = 0; index < data_categoryType.length; index++) {
-        if (data_categoryType[index]["name"] == _currentcategoryType)
+        if (data_categoryType[index]["name"] == _currentcategoryType) {
           _currentcategoryTypeIndex = data_categoryType[index]["id"];
+        } else if (_currentcategoryType == "") {
+          _currentcategoryTypeIndex = null;
+        }
       }
     });
   }

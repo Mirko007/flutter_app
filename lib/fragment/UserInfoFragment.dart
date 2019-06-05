@@ -32,6 +32,13 @@ class _UserInfoState extends State<UserInfoFragment> {
   }
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+
+    ]);
     if (MediaQuery.of(context).orientation == Orientation.landscape){
       return Scaffold(
           resizeToAvoidBottomPadding: false,
@@ -55,30 +62,10 @@ class _UserInfoState extends State<UserInfoFragment> {
                 padding: EdgeInsets.only(left: 50,right: 50),
                 child: Container(
                   decoration: BoxDecoration(
-                      color: Colors.black,
+                      color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(15.0))),
                   child: Column(
                     children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Text(
-                              ime_prezime,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          Expanded(
-                              child: Image.asset(
-                                "assets/images/polleo.jpeg",
-                                height: 40,
-                                width: 100,
-                              ))
-                        ],
-                      ),
                       Padding(
                         padding: EdgeInsets.all(10),
                         child: Center(
@@ -93,7 +80,7 @@ class _UserInfoState extends State<UserInfoFragment> {
                                 // Code type (required)
                                 lineWidth: 2.0,
                                 // width for a single black/white bar (default: 2.0)
-                                barHeight: 70.0,
+                                barHeight: 100.0,
                                 // height for the entire widget (default: 100.0)
                                 hasText: true,
                                 // Render with text label or not (default: false)
@@ -135,16 +122,16 @@ class _UserInfoState extends State<UserInfoFragment> {
     return showDialog(
       context: context,
       builder: (context) => new AlertDialog(
-        title: new Text('Are you sure?'),
-        content: new Text('Do you want to exit an App'),
+        title: new Text('Jeste li sigurni?'),
+        content: new Text('Želite li izaći iz aplikacije'),
         actions: <Widget>[
           new FlatButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: new Text('No'),
+            child: new Text('Ne'),
           ),
           new FlatButton(
             onPressed: () =>  SystemNavigator.pop(),
-            child: new Text('Yes'),
+            child: new Text('Da'),
           ),
         ],
       ),

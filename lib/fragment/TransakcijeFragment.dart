@@ -30,6 +30,10 @@ class _TransakcijeState extends State<TransakcijeFragment> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return new WillPopScope(
 
       onWillPop: _onWillPop,
@@ -44,16 +48,16 @@ class _TransakcijeState extends State<TransakcijeFragment> {
     return showDialog(
       context: context,
       builder: (context) => new AlertDialog(
-        title: new Text('Are you sure?'),
-        content: new Text('Do you want to exit an App'),
+        title: new Text('Jeste li sigurni?'),
+        content: new Text('Želite li izaći iz aplikacije'),
         actions: <Widget>[
           new FlatButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: new Text('No'),
+            child: new Text('Ne'),
           ),
           new FlatButton(
             onPressed: () =>  SystemNavigator.pop(),
-            child: new Text('Yes'),
+            child: new Text('Da'),
           ),
         ],
       ),
@@ -101,6 +105,9 @@ class ListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     return Scaffold(
       appBar: AppBar(title: Text('Transakcije'),
         automaticallyImplyLeading: false,),

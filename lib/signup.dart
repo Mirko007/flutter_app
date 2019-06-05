@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -32,6 +33,7 @@ class _SignupPageState extends State<SignupPage> {
   final GradText = TextEditingController();
   final datumRodenja = TextEditingController();
   bool gdpr_privola = false;
+  bool terms_of_use = false;
 
   List _gender = ["Musko", "Zensko", "Ostalo"];
 
@@ -80,6 +82,10 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return new Scaffold(
       resizeToAvoidBottomPadding: false,
       body: SingleChildScrollView(
@@ -324,6 +330,15 @@ class _SignupPageState extends State<SignupPage> {
                         onChanged: changedDropDownItemCategory,
                       ),
                       CheckboxListTile(
+                          value: terms_of_use,
+                          title: new Text(
+                              "Prihvaćam i slažem se s Uvjetima korištenja"),
+                          onChanged: (bool value) {
+                            setState(() {
+                              terms_of_use = value;
+                            });
+                          }),
+                      CheckboxListTile(
                           value: gdpr_privola,
                           title: new Text(
                               "Dajem suglasnost da mi Polleo Adria d.o.o šalje obavijesti o Programu te ponude i pogodnosti putem mobitela, elektroničke pošte i pošte"),
@@ -332,6 +347,9 @@ class _SignupPageState extends State<SignupPage> {
                               gdpr_privola = value;
                             });
                           }),
+                      SizedBox(
+                        height: 10.0,
+                      ),
                       Container(
                           height: 40.0,
                           child: Material(
@@ -341,7 +359,7 @@ class _SignupPageState extends State<SignupPage> {
                             elevation: 7.0,
                             child: GestureDetector(
                               onTap: () {
-                                if (gdpr_privola) {
+                                if (gdpr_privola && terms_of_use) {
                                   fvoidServisEmail(EmailText.text);
                                 } else {
                                   print(
@@ -416,6 +434,7 @@ class _SignupPageState extends State<SignupPage> {
 
   List<DropdownMenuItem<String>> getDropDownMenuItemsFitnessType() {
     List<DropdownMenuItem<String>> items = new List();
+    items.add(new DropdownMenuItem(value: "", child: new Text("")));
     for (int index = 0; index < data_fitnessType.length; index++) {
       items.add(new DropdownMenuItem(
           value: data_fitnessType[index]["name"],
@@ -426,6 +445,7 @@ class _SignupPageState extends State<SignupPage> {
 
   List<DropdownMenuItem<String>> getDropDownMenuItemsSportType() {
     List<DropdownMenuItem<String>> items = new List();
+    items.add(new DropdownMenuItem(value: "", child: new Text("")));
     for (int index = 0; index < data_sportType.length; index++) {
       items.add(new DropdownMenuItem(
           value: data_sportType[index]["name"],
@@ -436,6 +456,7 @@ class _SignupPageState extends State<SignupPage> {
 
   List<DropdownMenuItem<String>> getDropDownMenuItemsCategoryType() {
     List<DropdownMenuItem<String>> items = new List();
+    items.add(new DropdownMenuItem(value: "", child: new Text("")));
     for (int index = 0; index < data_categoryType.length; index++) {
       items.add(new DropdownMenuItem(
           value: data_categoryType[index]["name"],
@@ -456,11 +477,12 @@ class _SignupPageState extends State<SignupPage> {
       _currentfitnessType = selectedFitness;
       print("Selected city $selectedFitness, we are going to refresh the UI");
       for (int index = 0; index < data_fitnessType.length; index++) {
-        if(data_fitnessType[index]["name"] == _currentfitnessType)
-          _currentfitnessTypeIndex=data_fitnessType[index]["id"];
+        if (data_fitnessType[index]["name"] == _currentfitnessType) {
+          _currentfitnessTypeIndex = data_fitnessType[index]["id"];
+        } else if (_currentfitnessType == "") {
+          _currentfitnessTypeIndex = null;
+        }
       }
-
-
     });
   }
 
@@ -469,8 +491,11 @@ class _SignupPageState extends State<SignupPage> {
       _currentsportType = selectedFitness;
       print("Selected city $selectedFitness, we are going to refresh the UI");
       for (int index = 0; index < data_sportType.length; index++) {
-        if(data_sportType[index]["name"] == _currentsportType)
-          _currentsportTypeIndex=data_sportType[index]["id"];
+        if (data_sportType[index]["name"] == _currentsportType) {
+          _currentsportTypeIndex = data_sportType[index]["id"];
+        } else if (_currentsportType == "") {
+          _currentsportTypeIndex = null;
+        }
       }
     });
   }
@@ -480,8 +505,11 @@ class _SignupPageState extends State<SignupPage> {
       _currentcategoryType = selectedFitness;
       print("Selected city $selectedFitness, we are going to refresh the UI");
       for (int index = 0; index < data_categoryType.length; index++) {
-        if(data_categoryType[index]["name"] == _currentcategoryType)
-          _currentcategoryTypeIndex=data_categoryType[index]["id"];
+        if (data_categoryType[index]["name"] == _currentcategoryType) {
+          _currentcategoryTypeIndex = data_categoryType[index]["id"];
+        } else if (_currentcategoryType == "") {
+          _currentcategoryTypeIndex = null;
+        }
       }
     });
   }
@@ -630,8 +658,10 @@ class _SignupPageState extends State<SignupPage> {
         await prefs.setString('referenceNumber', resBody["referenceNumber"]);
         await prefs.setBool('termsOfUse', resBody["termsOfUse"]);
         await prefs.setBool('gdpr_privola_mob', resBody["gdpr_privola_mob"]);
-        await prefs.setBool('gdpr_privola_email', resBody["gdpr_privola_email"]);
-        await prefs.setBool('gdpr_privola_posta', resBody["gdpr_privola_posta"]);
+        await prefs.setBool(
+            'gdpr_privola_email', resBody["gdpr_privola_email"]);
+        await prefs.setBool(
+            'gdpr_privola_posta', resBody["gdpr_privola_posta"]);
         await prefs.setDouble('currentPoints', resBody["currentPoints"]);
         await prefs.setString('dateOfBirth', resBody["dateOfBirth"]);
         await prefs.setString('gender', resBody["gender"]);

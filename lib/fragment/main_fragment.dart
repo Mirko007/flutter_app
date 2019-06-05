@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app/TransactionDetails.dart';
 import 'package:flutter_app/fragment/AkcijeFragment.dart';
 import 'package:flutter_app/fragment/KuponiFragment.dart';
@@ -46,6 +47,7 @@ class _Main_FragmentState extends State<Main_Fragment> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
             bottomNavigationBar: CurvedNavigationBar(
               index: 2,
