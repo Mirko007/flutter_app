@@ -32,7 +32,7 @@ dev_dependencies:
     sdk: flutter
 
 flutter_icons:
-  image_path: "assets/icon/leoclub_icon.png"
+  image_path: "assets/icon/leoclub_icon_launcher.png"
   android: "launcher_icon"
   ios: true
 # For information on the generic Dart part of this file, see the
@@ -55,7 +55,7 @@ flutter:
     - assets/images/polleo.jpeg
     - assets/images/kupon_fragment_slika.PNG
     - assets/images/nema_sadrzaja.PNG
-    - assets/icon/leoclub_icon.png
+    - assets/icon/leoclub_icon_launcher.png
 
 
   #images/a_dot_burr.jpeg
