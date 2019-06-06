@@ -80,7 +80,7 @@ class _UserInfoState extends State<UserInfoFragment> {
                                 // Code type (required)
                                 lineWidth: 2.0,
                                 // width for a single black/white bar (default: 2.0)
-                                barHeight: 100.0,
+                                barHeight: 150.0,
                                 // height for the entire widget (default: 100.0)
                                 hasText: true,
                                 // Render with text label or not (default: false)

@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'fragment/main_fragment.dart';
 import 'signup.dart';
-
+//DOminik test
+//String base_url = "http://165.227.137.83:9000";
+//produkcija
+String base_url = "http://leoclub.hr";
+//test SSL
+//private static String BASE_URL = "http://test.leoclub.hr";
 
 void main() {
   debugPaintSizeEnabled = false;
@@ -219,7 +225,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _callServisEmail(String EmailText) async {
-    String url = "http://165.227.137.83:9000/api/v1/requestOTP";
+    String url = base_url+"/api/v1/requestOTP";
     String json_body = '{"isActive" : true, "email" : "$EmailText"}';
 
     http.Response response = await http.post(url, body: json_body, headers: {
@@ -237,6 +243,13 @@ class _MyHomePageState extends State<MyHomePage> {
       if (response.statusCode == 200) {
         _asyncInputDialog(context, EmailText);
       } else {
+        Fluttertoast.showToast(
+            msg:
+            "Neuspješan dohvat podataka",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            // also possible "TOP" and "CENTER"
+            textColor: Colors.white);
         // If that call was not successful, throw an error.
         throw Exception('Failed to load post');
       }
@@ -281,7 +294,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void fvoidServisEmailOTP(String dialogOTP, String EmailTextConfirm) async {
-    String url = "http://165.227.137.83:9000/api/v1/confirmOTP";
+    String url = base_url+"/api/v1/confirmOTP";
     String json_body = '{"otp" : "$dialogOTP", "email" : "$EmailTextConfirm"}';
 
     http.Response response = await http.post(url, body: json_body, headers: {
@@ -301,6 +314,13 @@ class _MyHomePageState extends State<MyHomePage> {
         print(resBody["token"]);
         fvoidGetCustomer(resBody["token"], EmailTextConfirm);
       } else {
+        Fluttertoast.showToast(
+            msg:
+            "Neuspješan dohvat podataka",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            // also possible "TOP" and "CENTER"
+            textColor: Colors.white);
         // If that call was not successful, throw an error.
         throw Exception('Failed to load post');
       }
@@ -308,7 +328,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void fvoidGetCustomer(String token, String EmailText) async {
-    String url = "http://165.227.137.83:9000/api/v1/getCustomer";
+    String url = base_url+"/api/v1/getCustomer";
 
     http.Response response = await http.get(url, headers: {
       "Accept": "application/json",
@@ -351,6 +371,13 @@ class _MyHomePageState extends State<MyHomePage> {
             'placeOfRegistration', resBody["placeOfRegistration"]);
         Navigator.of(context).pushNamed('/main');
       } else {
+        Fluttertoast.showToast(
+            msg:
+            "Neuspješan dohvat podataka",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            // also possible "TOP" and "CENTER"
+            textColor: Colors.white);
         // If that call was not successful, throw an error.
         throw Exception('Failed to load post');
       }
@@ -366,7 +393,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _checkUser(String token) async {
-    String url = "http://165.227.137.83:9000/api/v1/getCustomer";
+    String url = base_url+"/api/v1/getCustomer";
 
     http.Response response = await http.get(url, headers: {
       "Accept": "application/json",

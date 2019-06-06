@@ -63,9 +63,14 @@ class _TransakcijeState extends State<TransakcijeFragment> {
       ),
     ) ?? false;
   }
-
+//DOminik test
+//String base_url = "http://165.227.137.83:9000";
+//produkcija
+  String base_url = "http://leoclub.hr";
+//test SSL
+//private static String BASE_URL = "http://test.leoclub.hr";
     Future<String> getTransactionData() async {
-      String url = "http://165.227.137.83:9000/api/v1/transaction";
+      String url = base_url+"/api/v1/transaction";
 
       http.Response response = await http.get(url, headers: {"Accept": "application/json","content-type": "application/json","token": "$token"}).then((http.Response response) async {
         print("Response status: ${response.statusCode}");
@@ -125,7 +130,7 @@ class ListPage extends StatelessWidget {
 
           return GestureDetector(
             onTap: () {
-              getTransactionDetails(data[index]["locationName"], content);
+              //getTransactionDetails(data[index]["locationName"], content);
             },
             child: Container(
                 margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 4.0),

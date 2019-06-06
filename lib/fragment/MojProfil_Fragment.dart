@@ -6,8 +6,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-import '../main.dart';
+//DOminik test
+//String base_url = "http://165.227.137.83:9000";
+//produkcija
+String base_url = "http://leoclub.hr";
+//test SSL
+//private static String BASE_URL = "http://test.leoclub.hr";
 
 class MojProfil_Fragment extends StatefulWidget {
   @override
@@ -54,7 +58,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
   String _currentcategoryType;
   int _currentcategoryTypeIndex;
 
-  final String url = "http://165.227.137.83:9000/api/v1/getPrefTypes";
+  final String url = base_url+"/api/v1/getPrefTypes";
 
   List data_fitnessType;
   List data_sportType;
@@ -581,7 +585,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
   }
 
   void fvoidUpdateCustomer() async {
-    String url = "http://165.227.137.83:9000/api/v1/updateCustomer";
+    String url = base_url+"/api/v1/updateCustomer";
 
     //String datum_rodenja = datumRodenja.text;
     String kucna_adresa = _controller_adresa.text;

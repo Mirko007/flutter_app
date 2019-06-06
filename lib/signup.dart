@@ -9,6 +9,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 
+//DOminik test
+//String base_url = "http://165.227.137.83:9000";
+//produkcija
+String base_url = "http://leoclub.hr";
+//test SSL
+//private static String BASE_URL = "http://test.leoclub.hr";
+
 class SignupPage extends StatefulWidget {
   @override
   _SignupPageState createState() => _SignupPageState();
@@ -52,7 +59,7 @@ class _SignupPageState extends State<SignupPage> {
   String _currentcategoryType;
   int _currentcategoryTypeIndex;
 
-  final String url = "http://165.227.137.83:9000/api/v1/getPrefTypes";
+  final String url = base_url+"/api/v1/getPrefTypes";
 
   List data_fitnessType;
   List data_sportType;
@@ -515,7 +522,7 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void fvoidServisEmail(String text) async {
-    String url = "http://165.227.137.83:9000/api/v1/requestOTP";
+    String url = base_url+"/api/v1/requestOTP";
     String json_body = '{"isActive" : true, "email" : "$text"}';
 
     http.Response response = await http.post(url, body: json_body, headers: {
@@ -577,7 +584,7 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void fvoidServisEmailOTP(String dialogOTP, String EmailTextConfirm) async {
-    String url = "http://165.227.137.83:9000/api/v1/confirmOTP";
+    String url = base_url+"/api/v1/confirmOTP";
     String json_body = '{"otp" : "$dialogOTP", "email" : "$EmailTextConfirm"}';
 
     http.Response response = await http.post(url, body: json_body, headers: {
@@ -604,7 +611,7 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void fvoidCreateCustomer(String token, String emailTextConfirm) async {
-    String url = "http://165.227.137.83:9000/api/v1/updateCustomer";
+    String url = base_url+"/api/v1/updateCustomer";
 
     String datum_rodenja = datumRodenja.text;
     String kucna_adresa = KucnaAdresaText.text;
