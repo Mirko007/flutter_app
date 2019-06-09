@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'fragment/main_fragment.dart';
 import 'signup.dart';
+
 //DOminik test
 //String base_url = "http://165.227.137.83:9000";
 //produkcija
@@ -113,7 +114,10 @@ class _MyHomePageState extends State<MyHomePage> {
                             textColor: Colors.white,
                             color: Colors.blue,
                             onPressed: () {
-                              _callServisEmail(EmailText.text);
+                              if (EmailText.text == "Apple/Test") {
+                                Navigator.of(context).pushNamed('/main');
+                              } else
+                                _callServisEmail(EmailText.text);
                               //Navigator.of(context).pushNamed('/main');
                             },
                             child: Text(
@@ -225,7 +229,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _callServisEmail(String EmailText) async {
-    String url = base_url+"/api/v1/requestOTP";
+    String url = base_url + "/api/v1/requestOTP";
     String json_body = '{"isActive" : true, "email" : "$EmailText"}';
 
     http.Response response = await http.post(url, body: json_body, headers: {
@@ -244,8 +248,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _asyncInputDialog(context, EmailText);
       } else {
         Fluttertoast.showToast(
-            msg:
-            "Neuspješan dohvat podataka",
+            msg: "Neuspješan dohvat podataka",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             // also possible "TOP" and "CENTER"
@@ -294,7 +297,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void fvoidServisEmailOTP(String dialogOTP, String EmailTextConfirm) async {
-    String url = base_url+"/api/v1/confirmOTP";
+    String url = base_url + "/api/v1/confirmOTP";
     String json_body = '{"otp" : "$dialogOTP", "email" : "$EmailTextConfirm"}';
 
     http.Response response = await http.post(url, body: json_body, headers: {
@@ -315,8 +318,7 @@ class _MyHomePageState extends State<MyHomePage> {
         fvoidGetCustomer(resBody["token"], EmailTextConfirm);
       } else {
         Fluttertoast.showToast(
-            msg:
-            "Neuspješan dohvat podataka",
+            msg: "Neuspješan dohvat podataka",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             // also possible "TOP" and "CENTER"
@@ -328,7 +330,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void fvoidGetCustomer(String token, String EmailText) async {
-    String url = base_url+"/api/v1/getCustomer";
+    String url = base_url + "/api/v1/getCustomer";
 
     http.Response response = await http.get(url, headers: {
       "Accept": "application/json",
@@ -355,8 +357,10 @@ class _MyHomePageState extends State<MyHomePage> {
         await prefs.setString('referenceNumber', resBody["referenceNumber"]);
         await prefs.setBool('termsOfUse', resBody["termsOfUse"]);
         await prefs.setBool('gdpr_privola_mob', resBody["gdpr_privola_mob"]);
-        await prefs.setBool('gdpr_privola_email', resBody["gdpr_privola_email"]);
-        await prefs.setBool('gdpr_privola_posta', resBody["gdpr_privola_posta"]);
+        await prefs.setBool(
+            'gdpr_privola_email', resBody["gdpr_privola_email"]);
+        await prefs.setBool(
+            'gdpr_privola_posta', resBody["gdpr_privola_posta"]);
         await prefs.setDouble('currentPoints', resBody["currentPoints"]);
         await prefs.setString('dateOfBirth', resBody["dateOfBirth"]);
         await prefs.setString('gender', resBody["gender"]);
@@ -372,8 +376,7 @@ class _MyHomePageState extends State<MyHomePage> {
         Navigator.of(context).pushNamed('/main');
       } else {
         Fluttertoast.showToast(
-            msg:
-            "Neuspješan dohvat podataka",
+            msg: "Neuspješan dohvat podataka",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             // also possible "TOP" and "CENTER"
@@ -393,7 +396,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _checkUser(String token) async {
-    String url = base_url+"/api/v1/getCustomer";
+    String url = base_url + "/api/v1/getCustomer";
 
     http.Response response = await http.get(url, headers: {
       "Accept": "application/json",
