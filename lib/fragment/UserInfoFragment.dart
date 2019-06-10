@@ -32,13 +32,6 @@ class _UserInfoState extends State<UserInfoFragment> {
   }
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-
-    ]);
     if (MediaQuery.of(context).orientation == Orientation.landscape){
       return Scaffold(
           resizeToAvoidBottomPadding: false,
@@ -54,7 +47,7 @@ class _UserInfoState extends State<UserInfoFragment> {
                   child: Icon(
                     Icons.screen_rotation,
                     color: Colors.black,
-                    size: 50.0,
+                    size: 35.0,
                   ),
                 ),
               ),
@@ -78,7 +71,7 @@ class _UserInfoState extends State<UserInfoFragment> {
                                 // Code string. (required)
                                 codeType: BarCodeType.Code128,
                                 // Code type (required)
-                                lineWidth: 2.0,
+                                lineWidth: 3.0,
                                 // width for a single black/white bar (default: 2.0)
                                 barHeight: 150.0,
                                 // height for the entire widget (default: 100.0)

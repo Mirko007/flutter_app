@@ -9,9 +9,7 @@ class AkcijeFragment extends StatefulWidget {
 class _AkcijeState extends State<AkcijeFragment> {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,  DeviceOrientation.portraitDown,
-    ]);
+
     return new WillPopScope(
 
       onWillPop: _onWillPop,

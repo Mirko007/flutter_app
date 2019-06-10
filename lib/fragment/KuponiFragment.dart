@@ -10,9 +10,7 @@ class KuponiFragment extends StatefulWidget {
 class _KuponiState extends State<KuponiFragment> {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,  DeviceOrientation.portraitDown,
-    ]);
+
     return new WillPopScope(
 
       onWillPop: _onWillPop,

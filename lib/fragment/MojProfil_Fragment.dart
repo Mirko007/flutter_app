@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
 //DOminik test
 //String base_url = "http://165.227.137.83:9000";
 //produkcija
@@ -194,10 +195,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+
     return new WillPopScope(
         onWillPop: _onWillPop,
         child: new Scaffold(
@@ -488,48 +486,28 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
 //                : SizedBox(),
             RaisedButton(
               child: Text("Česta pitanja"),
-              onPressed: () {
-                setState(() {
-                  pressedPitanja = !pressedPitanja;
-                });
+              onPressed: (){_launchURL("https://leoclub.polleosport.hr/cesta-pitanja");
               },
             ),
-            pressedPitanja ? SizedBox() : SizedBox(),
+
             RaisedButton(
               child: Text("Poslovnice i kontakti"),
-              onPressed: () {
-                setState(() {
-                  pressedPoslovnice = !pressedPoslovnice;
-                });
+              onPressed: () {_launchURL("https://polleosport.hr/poslovnice-i-kontakti");
               },
             ),
-            pressedPoslovnice
-                ?
-//                WebView(
-//                  initialUrl:
-//                  'https://polleosport.hr/poslovnice-i-kontakti',
-//                  javascriptMode: JavascriptMode.unrestricted,
-//                )
-                SizedBox()
-                : SizedBox(),
             RaisedButton(
               child: Text("Opći uvjeti korištenja"),
               onPressed: () {
-                setState(() {
-                  pressedOpci = !pressedOpci;
-                });
+                _launchURL("https://leoclub.polleosport.hr/pravila-programa");
               },
             ),
-            pressedOpci ? SizedBox() : SizedBox(),
+
             RaisedButton(
               child: Text("Zaštita podataka"),
               onPressed: () {
-                setState(() {
-                  pressedZastita = !pressedZastita;
-                });
+                _launchURL("https://leoclub.polleosport.hr/pravila-privatnosti");
               },
             ),
-            pressedZastita ? SizedBox() : SizedBox(),
           ],
         ),
       ),
@@ -672,5 +650,14 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
         throw Exception('Failed to load post');
       }
     });
+  }
+
+  _launchURL(String url) async {
+    print(url);
+    if (await canLaunch(url)) {
+      launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

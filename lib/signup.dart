@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 //DOminik test
 //String base_url = "http://165.227.137.83:9000";
@@ -89,10 +90,7 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+
     return new Scaffold(
       resizeToAvoidBottomPadding: false,
       body: SingleChildScrollView(
@@ -336,15 +334,17 @@ class _SignupPageState extends State<SignupPage> {
                         items: _dropDownMenuItemscategoryTypeList,
                         onChanged: changedDropDownItemCategory,
                       ),
+
                       CheckboxListTile(
                           value: terms_of_use,
-                          title: new Text(
+                          title:new Text(
                               "Prihvaćam i slažem se s Uvjetima korištenja"),
                           onChanged: (bool value) {
                             setState(() {
                               terms_of_use = value;
                             });
                           }),
+                      RaisedButton(onPressed: _launchURL,padding: EdgeInsets.all(5),child: new Text("Uvjeti korištenja"),),
                       CheckboxListTile(
                           value: gdpr_privola,
                           title: new Text(
@@ -687,5 +687,14 @@ class _SignupPageState extends State<SignupPage> {
         throw Exception('Failed to load post');
       }
     });
+  }
+  _launchURL() async {
+    const url = "https://leoclub.polleosport.hr/pravila-programa";
+    print(url);
+    if (await canLaunch(url)) {
+      launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

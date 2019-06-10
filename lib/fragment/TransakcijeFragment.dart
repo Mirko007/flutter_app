@@ -30,10 +30,7 @@ class _TransakcijeState extends State<TransakcijeFragment> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+
     return new WillPopScope(
 
       onWillPop: _onWillPop,
@@ -110,9 +107,7 @@ class ListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-    ]);
+
     return Scaffold(
       appBar: AppBar(title: Text('Transakcije'),
         automaticallyImplyLeading: false,),
