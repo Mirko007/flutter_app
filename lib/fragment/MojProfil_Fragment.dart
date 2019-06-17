@@ -12,7 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 //produkcija
 String base_url = "http://leoclub.hr";
 //test SSL
-//private static String BASE_URL = "http://test.leoclub.hr";
+//String base_url = "http://test.leoclub.hr";
 
 class MojProfil_Fragment extends StatefulWidget {
   @override

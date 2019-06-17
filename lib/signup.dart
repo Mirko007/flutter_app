@@ -10,12 +10,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'fragment/main_fragment.dart';
+
 //DOminik test
 //String base_url = "http://165.227.137.83:9000";
 //produkcija
 String base_url = "http://leoclub.hr";
 //test SSL
-//private static String BASE_URL = "http://test.leoclub.hr";
+//String base_url = "http://test.leoclub.hr";
 
 class SignupPage extends StatefulWidget {
   @override
@@ -254,6 +256,9 @@ class _SignupPageState extends State<SignupPage> {
                         inputType: inputType,
                         format: formats[inputType],
                         editable: editable,
+                        firstDate: DateTime(1940),
+                        lastDate: DateTime.now().subtract(Duration(days: 5840),),
+                        initialDate: DateTime.now().subtract(Duration(days: 5841),),
                         decoration: InputDecoration(
                             hintText: "Datum rođenja",
                             labelText: 'Datum rođenja',
@@ -366,7 +371,7 @@ class _SignupPageState extends State<SignupPage> {
                             elevation: 7.0,
                             child: GestureDetector(
                               onTap: () {
-                                if (gdpr_privola && terms_of_use) {
+                                if (gdpr_privola && terms_of_use && !(datumRodenja.text == "")) {
                                   fvoidServisEmail(EmailText.text);
                                 } else {
                                   print(
@@ -523,9 +528,9 @@ class _SignupPageState extends State<SignupPage> {
 
   void fvoidServisEmail(String text) async {
     String url = base_url+"/api/v1/requestOTP";
-    String json_body = '{"isActive" : true, "email" : "$text"}';
+    String json_body = '{"active" : false, "email" : "$text"}';
 
-    http.Response response = await http.post(url, body: json_body, headers: {
+    await http.post(url, body: json_body, headers: {
       "Accept": "application/json",
       "content-type": "application/json"
     }).then((http.Response response) {
@@ -587,7 +592,7 @@ class _SignupPageState extends State<SignupPage> {
     String url = base_url+"/api/v1/confirmOTP";
     String json_body = '{"otp" : "$dialogOTP", "email" : "$EmailTextConfirm"}';
 
-    http.Response response = await http.post(url, body: json_body, headers: {
+     await http.post(url, body: json_body, headers: {
       "Accept": "application/json",
       "content-type": "application/json"
     }).then((http.Response response) {
@@ -636,7 +641,7 @@ class _SignupPageState extends State<SignupPage> {
         '"firstName" : "$firstName","lastName" : "$lastName","email" : "$email","termsOfUse" : true,"gdpr_privola_email" : true,"gdpr_privola_mob" : true,"gdpr_privola_posta" : true,"categoryType" : $_currentcategoryTypeIndex,'
         '"fitnessType" : $_currentfitnessTypeIndex,"sportType" : $_currentsportTypeIndex}';
 
-    http.Response response = await http.post(url, body: json_body, headers: {
+     await http.post(url, body: json_body, headers: {
       "Accept": "application/json",
       "content-type": "application/json",
       "req_type": "mob",

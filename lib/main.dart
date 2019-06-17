@@ -14,7 +14,7 @@ import 'signup.dart';
 //produkcija
 String base_url = "http://leoclub.hr";
 //test SSL
-//private static String BASE_URL = "http://test.leoclub.hr";
+//String base_url = "http://test.leoclub.hr";
 
 void main() {
   debugPaintSizeEnabled = false;
@@ -227,9 +227,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _callServisEmail(String EmailText) async {
     String url = base_url + "/api/v1/requestOTP";
-    String json_body = '{"isActive" : true, "email" : "$EmailText"}';
+    String json_body = '{"active" : true, "email" : "$EmailText"}';
 
-    http.Response response = await http.post(url, body: json_body, headers: {
+    await http.post(url, body: json_body, headers: {
       "Accept": "application/json",
       "content-type": "application/json"
     }).then((http.Response response) {
@@ -329,7 +329,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void fvoidGetCustomer(String token, String EmailText) async {
     String url = base_url + "/api/v1/getCustomer";
 
-    http.Response response = await http.get(url, headers: {
+     await http.get(url, headers: {
       "Accept": "application/json",
       "content-type": "application/json",
       "req_type": "mob",

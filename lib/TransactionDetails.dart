@@ -1,12 +1,76 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+String token='';
+List data;
+
+final EmailText = TextEditingController();
+final ImeText = TextEditingController();
+final PrezimeText = TextEditingController();
+
 
 class TransactionDetails extends StatefulWidget {
+  String uuid;
+
+  TransactionDetails({this.uuid});
+
+
   @override
-  TransactionDetailsState createState() => TransactionDetailsState();
+  TransactionDetailsState createState() => TransactionDetailsState(uid: uuid);
 }
 
 class TransactionDetailsState extends State<TransactionDetails> {
+  String uid;
+
+  TransactionDetailsState({this.uid});
+
+  @override
+  void initState() {
+    super.initState();
+    _getPref();
+  }
+
+  _getPref() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      token = (prefs.getString('token')??"");
+      this.getTransactionData();
+    });
+  }
+
+  Future<String> getTransactionData() async {
+    //String base_url = "http://165.227.137.83:9000";
+     //produkcija
+    String base_url = "http://leoclub.hr";
+      //test SSL
+   //String base_url = "http://test.leoclub.hr";
+    String url = base_url+"/api/v1/transaction/{$uid}";
+
+    http.Response response = await http.get(url, headers: {"Accept": "application/json","content-type": "application/json","token": "$token"}).then((http.Response response) async {
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.contentLength}");
+      print(response.headers);
+      print(response.request);
+      print(response.statusCode);
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        setState(() {
+          var resBody = json.decode(response.body);
+
+          data = resBody[""];
+        });
+      } else {
+        // If that call was not successful, throw an error.
+        throw Exception('Failed to load post');
+      }
+    }
+    );
+
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -121,9 +185,10 @@ Widget _buildContent(BuildContext context) {
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   )),
+                  //todo kn fali
                   Padding(
                     padding: EdgeInsets.all(5),
-                    child: Text("799,00 kn",
+                    child: TextField(controller: EmailText,
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold)),
                   ),
@@ -152,52 +217,27 @@ Widget _buildContent(BuildContext context) {
 
 Widget listview_artikli() {
   return ListView.builder(
-      itemCount: _artikli.length,
+      itemCount: data.length,
       itemBuilder: (BuildContext content, int index) {
-        Artikli artikli = _artikli[index];
-        return getArtiklItem(artikli);
+        return Container(
+          // margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 4.0),
+            padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+            height: 50,
+            color: Colors.white,
+            child: Row(children: <Widget>[
+              Expanded(
+                child: Text(data[index]["itemName"], style: TextStyle(fontSize: 18)),
+              ),
+              Padding(
+                  padding: EdgeInsets.fromLTRB(20, 0, 40, 0),
+                  child: Text(
+                    data[index]["quantity"],
+                    style: TextStyle(fontSize: 18),
+                  )),
+              Padding(
+                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                  child: Text(data[index]["itemPrice"], style: TextStyle(fontSize: 18))),
+            ]));
       });
 }
 
-List<Artikli> _artikli = [
-  Artikli(naziv: 'UA Womans Graphic Capri', kolicina: '10', cijena: "50.0"),
-  Artikli(naziv: 'UA Womans Graphic Capri', kolicina: '10', cijena: "50.0"),
-  Artikli(naziv: 'UA Womans Graphic Capri', kolicina: '10', cijena: "50.0"),
-  Artikli(naziv: 'UA Womans Graphic Capri', kolicina: '10', cijena: "50.0"),
-  Artikli(naziv: 'UA Womans Graphic Capri', kolicina: '10', cijena: "50.0"),
-  Artikli(naziv: 'UA Womans Graphic Capri', kolicina: '10', cijena: "50.0"),
-  Artikli(naziv: 'UA Womans Graphic Capri', kolicina: '10', cijena: "50.0"),
-  Artikli(naziv: 'UA Womans Graphic Capri', kolicina: '10', cijena: "50.0"),
-  Artikli(naziv: 'UA Womans Graphic Capri', kolicina: '10', cijena: "50.0"),
-  Artikli(naziv: 'UA Womans Graphic Capri', kolicina: '10', cijena: "50.0"),
-];
-
-class Artikli {
-  Artikli({this.naziv, this.kolicina, this.cijena});
-
-  final String naziv;
-  final String kolicina;
-  final String cijena;
-}
-
-Widget getArtiklItem(Artikli artikli) {
-  return Container(
-      // margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 4.0),
-      padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-      height: 50,
-      color: Colors.white,
-      child: Row(children: <Widget>[
-        Expanded(
-          child: Text(artikli.naziv, style: TextStyle(fontSize: 18)),
-        ),
-        Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 40, 0),
-            child: Text(
-              artikli.kolicina,
-              style: TextStyle(fontSize: 18),
-            )),
-        Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-            child: Text(artikli.cijena, style: TextStyle(fontSize: 18))),
-      ]));
-}

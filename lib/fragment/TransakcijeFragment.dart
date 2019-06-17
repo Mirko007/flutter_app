@@ -65,7 +65,8 @@ class _TransakcijeState extends State<TransakcijeFragment> {
 //produkcija
   String base_url = "http://leoclub.hr";
 //test SSL
-//private static String BASE_URL = "http://test.leoclub.hr";
+ // String base_url = "http://test.leoclub.hr";
+
     Future<String> getTransactionData() async {
       String url = base_url+"/api/v1/transaction";
 
@@ -125,7 +126,7 @@ class ListPage extends StatelessWidget {
 
           return GestureDetector(
             onTap: () {
-              //getTransactionDetails(data[index]["locationName"], content);
+              //getTransactionDetails(data[index]["uuid"], content);
             },
             child: Container(
                 margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 4.0),
@@ -179,9 +180,9 @@ class ListPage extends StatelessWidget {
 
 }
 
-void getTransactionDetails(String location_name, BuildContext context) {
+void getTransactionDetails(String uuid, BuildContext context) {
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => TransactionDetails()),
+    MaterialPageRoute(builder: (context) => TransactionDetails(uuid: uuid)),
   );
 }

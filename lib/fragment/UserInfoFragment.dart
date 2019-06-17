@@ -131,10 +131,7 @@ class _UserInfoState extends State<UserInfoFragment> {
     ) ?? false;
   }
 
-  start() {Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => TransactionDetails()),
-  );}
+
 }
 
 
