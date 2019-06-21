@@ -11,13 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'fragment/main_fragment.dart';
-
-//DOminik test
-//String base_url = "http://165.227.137.83:9000";
-//produkcija
-String base_url = "http://leoclub.hr";
-//test SSL
-//String base_url = "http://test.leoclub.hr";
+import 'global_variable.dart' as globals;
 
 class SignupPage extends StatefulWidget {
   @override
@@ -42,10 +36,11 @@ class _SignupPageState extends State<SignupPage> {
   final PostanskiBrojText = TextEditingController();
   final GradText = TextEditingController();
   final datumRodenja = TextEditingController();
+
   bool gdpr_privola = false;
   bool terms_of_use = false;
 
-  List _gender = ["Musko", "Zensko", "Ostalo"];
+  List _gender = ["Musko", "Zensko", "Ne želim se izjasniti"];
 
   List<DropdownMenuItem<String>> _dropDownMenuItemsGender;
   String _currentGender;
@@ -62,7 +57,7 @@ class _SignupPageState extends State<SignupPage> {
   String _currentcategoryType;
   int _currentcategoryTypeIndex;
 
-  final String url = base_url+"/api/v1/getPrefTypes";
+  final String url = globals.base_url + "/api/v1/getPrefTypes";
 
   List data_fitnessType;
   List data_sportType;
@@ -92,7 +87,6 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return new Scaffold(
       resizeToAvoidBottomPadding: false,
       body: SingleChildScrollView(
@@ -185,7 +179,7 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                            labelText: 'Mobitel',
+                            labelText: 'Mobitel (Opcionalno)',
                             hintText: "+385911234567",
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
@@ -212,7 +206,7 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                            labelText: 'Kućna adresa',
+                            labelText: 'Kućna adresa (Opcionalno)',
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
@@ -225,7 +219,7 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                            labelText: 'Poštanski broj',
+                            labelText: 'Poštanski broj (Opcionalno)',
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
@@ -238,7 +232,7 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                            labelText: 'Grad',
+                            labelText: 'Grad (Opcionalno)',
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
@@ -257,11 +251,15 @@ class _SignupPageState extends State<SignupPage> {
                         format: formats[inputType],
                         editable: editable,
                         firstDate: DateTime(1940),
-                        lastDate: DateTime.now().subtract(Duration(days: 5840),),
-                        initialDate: DateTime.now().subtract(Duration(days: 5841),),
+                        lastDate: DateTime.now().subtract(
+                          Duration(days: 5840),
+                        ),
+                        initialDate: DateTime.now().subtract(
+                          Duration(days: 5841),
+                        ),
                         decoration: InputDecoration(
                             hintText: "Datum rođenja",
-                            labelText: 'Datum rođenja',
+                            labelText: 'Datum rođenja (Opcionalno)',
                             hasFloatingPlaceholder: false,
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
@@ -339,17 +337,20 @@ class _SignupPageState extends State<SignupPage> {
                         items: _dropDownMenuItemscategoryTypeList,
                         onChanged: changedDropDownItemCategory,
                       ),
-
                       CheckboxListTile(
                           value: terms_of_use,
-                          title:new Text(
+                          title: new Text(
                               "Prihvaćam i slažem se s Uvjetima korištenja"),
                           onChanged: (bool value) {
                             setState(() {
                               terms_of_use = value;
                             });
                           }),
-                      RaisedButton(onPressed: _launchURL,padding: EdgeInsets.all(5),child: new Text("Uvjeti korištenja"),),
+                      RaisedButton(
+                        onPressed: _launchURL,
+                        padding: EdgeInsets.all(5),
+                        child: new Text("Uvjeti korištenja"),
+                      ),
                       CheckboxListTile(
                           value: gdpr_privola,
                           title: new Text(
@@ -371,14 +372,17 @@ class _SignupPageState extends State<SignupPage> {
                             elevation: 7.0,
                             child: GestureDetector(
                               onTap: () {
-                                if (gdpr_privola && terms_of_use && !(datumRodenja.text == "")) {
+                                if (gdpr_privola &&
+                                    terms_of_use &&
+                                    !(ImeText.text == "") &&
+                                    !(PrezimeText.text == "")) {
                                   fvoidServisEmail(EmailText.text);
                                 } else {
                                   print(
                                       "gdpr_privola" + gdpr_privola.toString());
                                   Fluttertoast.showToast(
                                       msg:
-                                          "Molimo unesite sve podatke i omogućite privolu",
+                                          "Molimo unesite sve obavezne podatke i omogućite privolu",
                                       toastLength: Toast.LENGTH_SHORT,
                                       gravity: ToastGravity.BOTTOM,
                                       // also possible "TOP" and "CENTER"
@@ -431,7 +435,7 @@ class _SignupPageState extends State<SignupPage> {
   @override
   void initState() {
     _dropDownMenuItemsGender = getDropDownMenuItems();
-    _currentGender = _dropDownMenuItemsGender[0].value;
+    _currentGender = _dropDownMenuItemsGender[2].value;
     this.getPrefTypeData();
     super.initState();
   }
@@ -527,7 +531,7 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void fvoidServisEmail(String text) async {
-    String url = base_url+"/api/v1/requestOTP";
+    String url = globals.base_url + "/api/v1/requestOTP";
     String json_body = '{"active" : false, "email" : "$text"}';
 
     await http.post(url, body: json_body, headers: {
@@ -545,6 +549,12 @@ class _SignupPageState extends State<SignupPage> {
       if (response.statusCode == 200) {
         _asyncInputDialog(context, text);
       } else {
+        Fluttertoast.showToast(
+            msg: "Neuspješna registracija, email se već koristi",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            // also possible "TOP" and "CENTER"
+            textColor: Colors.white);
         // If that call was not successful, throw an error.
         throw Exception('Failed to load post');
       }
@@ -589,10 +599,10 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void fvoidServisEmailOTP(String dialogOTP, String EmailTextConfirm) async {
-    String url = base_url+"/api/v1/confirmOTP";
+    String url = globals.base_url + "/api/v1/confirmOTP";
     String json_body = '{"otp" : "$dialogOTP", "email" : "$EmailTextConfirm"}';
 
-     await http.post(url, body: json_body, headers: {
+    await http.post(url, body: json_body, headers: {
       "Accept": "application/json",
       "content-type": "application/json"
     }).then((http.Response response) {
@@ -609,6 +619,12 @@ class _SignupPageState extends State<SignupPage> {
         print(resBody["token"]);
         fvoidCreateCustomer(resBody["token"], EmailTextConfirm);
       } else {
+        Fluttertoast.showToast(
+            msg: "Neuspješna registracija, kriva jednokratna lozinka",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            // also possible "TOP" and "CENTER"
+            textColor: Colors.white);
         // If that call was not successful, throw an error.
         throw Exception('Failed to load post');
       }
@@ -616,13 +632,26 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void fvoidCreateCustomer(String token, String emailTextConfirm) async {
-    String url = base_url+"/api/v1/updateCustomer";
+    String url = globals.base_url + "/api/v1/updateCustomer";
 
     String datum_rodenja = datumRodenja.text;
+    final now = DateTime.now();
+    final date_minus_year = new DateTime(now.year - 16, now.month, now.day);
+    if (datumRodenja.text == "")
+      datum_rodenja = DateFormat('dd/MM/yyyy').format(date_minus_year);
+
     String kucna_adresa = KucnaAdresaText.text;
+    if (KucnaAdresaText.text == "") kucna_adresa = " ";
+
     String city = GradText.text;
+    if (GradText.text == "") city = " ";
+
     String zipCode = PostanskiBrojText.text;
+    if (PostanskiBrojText.text == "") zipCode = " ";
+
     String phoneNumber = MobitelText.text;
+    if (MobitelText.text == "") phoneNumber = globals.phone_number_dummmy;
+
     String firstName = ImeText.text;
     String lastName = PrezimeText.text;
     String email = EmailText.text;
@@ -641,7 +670,7 @@ class _SignupPageState extends State<SignupPage> {
         '"firstName" : "$firstName","lastName" : "$lastName","email" : "$email","termsOfUse" : true,"gdpr_privola_email" : true,"gdpr_privola_mob" : true,"gdpr_privola_posta" : true,"categoryType" : $_currentcategoryTypeIndex,'
         '"fitnessType" : $_currentfitnessTypeIndex,"sportType" : $_currentsportTypeIndex}';
 
-     await http.post(url, body: json_body, headers: {
+    await http.post(url, body: json_body, headers: {
       "Accept": "application/json",
       "content-type": "application/json",
       "req_type": "mob",
@@ -674,25 +703,58 @@ class _SignupPageState extends State<SignupPage> {
             'gdpr_privola_email', resBody["gdpr_privola_email"]);
         await prefs.setBool(
             'gdpr_privola_posta', resBody["gdpr_privola_posta"]);
-        await prefs.setDouble('currentPoints', resBody["currentPoints"]);
+
+        String currentPoints = resBody["currentPoints"].toString();
+        await prefs.setDouble('currentPoints', double.parse(currentPoints));
+
         await prefs.setString('dateOfBirth', resBody["dateOfBirth"]);
         await prefs.setString('gender', resBody["gender"]);
-        await prefs.setString('address', resBody["address"]);
-        await prefs.setString('city', resBody["city"]);
-        await prefs.setString('zipCode', resBody["zipCode"]);
-        await prefs.setString('phoneNumber', resBody["phoneNumber"]);
+
+        if (resBody["address"] == " ")
+          await prefs.setString('address', "");
+        else
+          await prefs.setString('address', resBody["address"]);
+
+        if (resBody["city"] == " ")
+          await prefs.setString('city', "");
+        else
+          await prefs.setString('city', resBody["city"]);
+
+        if (resBody["zipCode"] == " ")
+          await prefs.setString('zipCode', "");
+        else
+          await prefs.setString('zipCode', resBody["zipCode"]);
+
+        if (resBody["phoneNumber"] == globals.phone_number_dummmy)
+          await prefs.setString('phoneNumber', "");
+        else
+          await prefs.setString('phoneNumber', resBody["phoneNumber"]);
+
         await prefs.setString('categoryName', resBody["categoryName"]);
         await prefs.setString('fitnessName', resBody["fitnessName"]);
         await prefs.setString('sportName', resBody["sportName"]);
         await prefs.setString(
             'placeOfRegistration', resBody["placeOfRegistration"]);
+        Fluttertoast.showToast(
+            msg: "Uspješna registracija",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            // also possible "TOP" and "CENTER"
+            textColor: Colors.white);
         Navigator.of(context).pushNamed('/main');
       } else {
+        Fluttertoast.showToast(
+            msg: "Neuspješna registracija",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            // also possible "TOP" and "CENTER"
+            textColor: Colors.white);
         // If that call was not successful, throw an error.
         throw Exception('Failed to load post');
       }
     });
   }
+
   _launchURL() async {
     const url = "https://leoclub.polleosport.hr/pravila-programa";
     print(url);

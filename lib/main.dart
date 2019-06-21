@@ -7,14 +7,8 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'fragment/main_fragment.dart';
+import 'global_variable.dart' as globals;
 import 'signup.dart';
-
-//DOminik test
-//String base_url = "http://165.227.137.83:9000";
-//produkcija
-String base_url = "http://leoclub.hr";
-//test SSL
-//String base_url = "http://test.leoclub.hr";
 
 void main() {
   debugPaintSizeEnabled = false;
@@ -67,7 +61,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return new Scaffold(
         resizeToAvoidBottomPadding: false,
         body: Column(
@@ -226,7 +219,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _callServisEmail(String EmailText) async {
-    String url = base_url + "/api/v1/requestOTP";
+    String url = globals.base_url + "/api/v1/requestOTP";
     String json_body = '{"active" : true, "email" : "$EmailText"}';
 
     await http.post(url, body: json_body, headers: {
@@ -294,7 +287,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void fvoidServisEmailOTP(String dialogOTP, String EmailTextConfirm) async {
-    String url = base_url + "/api/v1/confirmOTP";
+    String url = globals.base_url + "/api/v1/confirmOTP";
     String json_body = '{"otp" : "$dialogOTP", "email" : "$EmailTextConfirm"}';
 
     http.Response response = await http.post(url, body: json_body, headers: {
@@ -327,9 +320,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void fvoidGetCustomer(String token, String EmailText) async {
-    String url = base_url + "/api/v1/getCustomer";
+    String url = globals.base_url + "/api/v1/getCustomer";
 
-     await http.get(url, headers: {
+    await http.get(url, headers: {
       "Accept": "application/json",
       "content-type": "application/json",
       "req_type": "mob",
@@ -361,10 +354,27 @@ class _MyHomePageState extends State<MyHomePage> {
         await prefs.setDouble('currentPoints', resBody["currentPoints"]);
         await prefs.setString('dateOfBirth', resBody["dateOfBirth"]);
         await prefs.setString('gender', resBody["gender"]);
-        await prefs.setString('address', resBody["address"]);
-        await prefs.setString('city', resBody["city"]);
-        await prefs.setString('zipCode', resBody["zipCode"]);
-        await prefs.setString('phoneNumber', resBody["phoneNumber"]);
+
+        if (resBody["address"] == " ")
+          await prefs.setString('address', "");
+        else
+          await prefs.setString('address', resBody["address"]);
+
+        if (resBody["city"] == " ")
+          await prefs.setString('city', "");
+        else
+          await prefs.setString('city', resBody["city"]);
+
+        if (resBody["zipCode"] == " ")
+          await prefs.setString('zipCode', "");
+        else
+          await prefs.setString('zipCode', resBody["zipCode"]);
+
+        if (resBody["phoneNumber"] == globals.phone_number_dummmy)
+          await prefs.setString('phoneNumber', "");
+        else
+          await prefs.setString('phoneNumber', resBody["phoneNumber"]);
+
         await prefs.setString('categoryName', resBody["categoryName"]);
         await prefs.setString('fitnessName', resBody["fitnessName"]);
         await prefs.setString('sportName', resBody["sportName"]);
@@ -393,7 +403,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _checkUser(String token) async {
-    String url = base_url + "/api/v1/getCustomer";
+    String url = globals.base_url + "/api/v1/getCustomer";
 
     http.Response response = await http.get(url, headers: {
       "Accept": "application/json",

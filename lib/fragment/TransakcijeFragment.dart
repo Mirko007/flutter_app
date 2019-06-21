@@ -4,6 +4,8 @@ import 'package:Loyalty_client/TransactionDetails.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../global_variable.dart' as globals;
 String token='';
 
 List data;
@@ -60,15 +62,10 @@ class _TransakcijeState extends State<TransakcijeFragment> {
       ),
     ) ?? false;
   }
-//DOminik test
-//String base_url = "http://165.227.137.83:9000";
-//produkcija
-  String base_url = "http://leoclub.hr";
-//test SSL
- // String base_url = "http://test.leoclub.hr";
+
 
     Future<String> getTransactionData() async {
-      String url = base_url+"/api/v1/transaction";
+      String url = globals.base_url+"/api/v1/transaction";
 
       http.Response response = await http.get(url, headers: {"Accept": "application/json","content-type": "application/json","token": "$token"}).then((http.Response response) async {
         print("Response status: ${response.statusCode}");

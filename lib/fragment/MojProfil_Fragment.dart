@@ -7,12 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
-//DOminik test
-//String base_url = "http://165.227.137.83:9000";
-//produkcija
-String base_url = "http://leoclub.hr";
-//test SSL
-//String base_url = "http://test.leoclub.hr";
+
+import '../global_variable.dart' as globals;
+
 
 class MojProfil_Fragment extends StatefulWidget {
   @override
@@ -42,7 +39,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
   TextEditingController _controller_pos_broj;
   TextEditingController _controller_mail;
 
-  List _gender = ["Musko", "Zensko", "Ostalo"];
+  List _gender = ["Musko", "Zensko", "Ne želim se izjasniti"];
 
   List<DropdownMenuItem<String>> _dropDownMenuItemsGender;
   String _currentGender;
@@ -59,7 +56,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
   String _currentcategoryType;
   int _currentcategoryTypeIndex;
 
-  final String url = base_url+"/api/v1/getPrefTypes";
+  final String url = globals.base_url+"/api/v1/getPrefTypes";
 
   List data_fitnessType;
   List data_sportType;
@@ -165,6 +162,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
 
       _controller_ime = new TextEditingController(text: ime);
       _controller_prezime = new TextEditingController(text: prezime);
+
       _controller_mobitel = new TextEditingController(
           text: (prefs.getString('phoneNumber') ?? ""));
       _controller_grad =
@@ -173,6 +171,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
           new TextEditingController(text: (prefs.getString('address') ?? ""));
       _controller_pos_broj =
           new TextEditingController(text: (prefs.getString('zipCode') ?? ""));
+
       _controller_mail =
           new TextEditingController(text: (prefs.getString('email') ?? ""));
 
@@ -185,7 +184,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
       } else if (prefs.getString('gender') == "Female") {
         _currentGender = "Zensko";
       } else {
-        _currentGender = "Ostalo";
+        _currentGender = "Ne želim se izjasniti";
       }
       print(_currentGender);
       print("_currentGender");
@@ -563,13 +562,22 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
   }
 
   void fvoidUpdateCustomer() async {
-    String url = base_url+"/api/v1/updateCustomer";
+    String url = globals.base_url+"/api/v1/updateCustomer";
 
     //String datum_rodenja = datumRodenja.text;
     String kucna_adresa = _controller_adresa.text;
+    if (_controller_adresa.text == "") kucna_adresa = " ";
+
     String city = _controller_grad.text;
+    if (_controller_grad.text == "") city = " ";
+
     String zipCode = _controller_pos_broj.text;
+    if (_controller_pos_broj.text == "") zipCode = " ";
+
     String phoneNumber = _controller_mobitel.text;
+    if (_controller_mobitel.text == "") phoneNumber =  globals.phone_number_dummmy;
+
+
     String firstName = _controller_ime.text;
     String lastName = _controller_prezime.text;
     String email = _controller_mail.text;
@@ -589,7 +597,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
         '"firstName" : "$firstName","lastName" : "$lastName","email" : "$email","termsOfUse" : true,"gdpr_privola_email" : $gdpr_privola_email,"gdpr_privola_mob" : $gdpr_privola_mob,"gdpr_privola_posta" : $gdpr_privola_posta,"categoryType" : $_currentcategoryTypeIndex,'
         '"fitnessType" : $_currentfitnessTypeIndex,"sportType" : $_currentsportTypeIndex}';
 
-    http.Response response = await http.post(url, body: json_body, headers: {
+     await http.post(url, body: json_body, headers: {
       "Accept": "application/json",
       "content-type": "application/json",
       "req_type": "mob",
@@ -623,10 +631,27 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
         await prefs.setDouble('currentPoints', resBody["currentPoints"]);
         await prefs.setString('dateOfBirth', resBody["dateOfBirth"]);
         await prefs.setString('gender', resBody["gender"]);
+
+        if (resBody["address"] == " ")
+          await prefs.setString('address', "");
+        else
         await prefs.setString('address', resBody["address"]);
+
+        if (resBody["city"] == " ")
+          await prefs.setString('city', "");
+        else
         await prefs.setString('city', resBody["city"]);
+
+        if (resBody["zipCode"] == " ")
+          await prefs.setString('zipCode', "");
+        else
         await prefs.setString('zipCode', resBody["zipCode"]);
+
+        if (resBody["phoneNumber"] == globals.phone_number_dummmy)
+          await prefs.setString('phoneNumber', "");
+        else
         await prefs.setString('phoneNumber', resBody["phoneNumber"]);
+
         await prefs.setString('categoryName', resBody["categoryName"]);
         await prefs.setString('fitnessName', resBody["fitnessName"]);
         await prefs.setString('sportName', resBody["sportName"]);
