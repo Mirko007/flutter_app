@@ -165,7 +165,7 @@ class ListPage extends StatelessWidget {
                     Expanded(
                         child: Column(
                           children: <Widget>[Text("BODOVI"),
-                            Text(data[index]["spentPoints"].toString(),style: TextStyle(fontSize: 50,color: Colors.blue),)
+                            getBodovi(index)
                           ],
                         ))
                   ],
@@ -175,6 +175,16 @@ class ListPage extends StatelessWidget {
         });
   }
 
+
+}
+
+getBodovi(int index) {
+  if(data[index]["spentPoints"]<0)
+   return Text(data[index]["spentPoints"].toString(),style: TextStyle(fontSize: 50,color: Colors.red),);
+  else if(data[index]["spentPoints"]>0)
+    return Text(data[index]["spentPoints"].toString(),style: TextStyle(fontSize: 50,color: Colors.green),);
+  else
+    return Text(data[index]["spentPoints"].toString(),style: TextStyle(fontSize: 50,color: Colors.blue),);
 }
 
 void getTransactionDetails(String uuid, BuildContext context) {

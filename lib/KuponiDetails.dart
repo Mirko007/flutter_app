@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:Loyalty_client/fragment/KuponiFragment.dart';
 
 class KuponiDetails extends StatelessWidget {
-  final Coupons coupon;
+  Coupon coupon;
 
   // In the constructor, require a Person
   KuponiDetails({Key key, @required this.coupon}) : super(key: key);
@@ -23,7 +23,7 @@ class KuponiDetails extends StatelessWidget {
   }
 }
 
-Widget _buildContent(BuildContext context, Coupons coupon) {
+Widget _buildContent(BuildContext context, Coupon _coupon) {
   return Padding(
     padding: EdgeInsets.all(10),
     child: Container(
@@ -40,7 +40,8 @@ Widget _buildContent(BuildContext context, Coupons coupon) {
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(10, 5, 15, 5),
                   child: new BarCodeImage(
-                    data: "1234ABC",
+                    data: _coupon.barcode,
+                    //coupon.voucherName,
                     // Code string. (required)
                     codeType: BarCodeType.Code128,
                     // Code type (required)
@@ -64,8 +65,19 @@ Widget _buildContent(BuildContext context, Coupons coupon) {
             color: Colors.blue,
             child: Center(
                 child: Text(
-              coupon.spentPoints + " bodova",
+              _coupon.customerPointsRequired + " bodova",
               style: TextStyle(fontSize: 30, color: Colors.white),
+            )),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+            child: Center(
+                child: Text(
+              _coupon.voucherName,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 15, color: Colors.white),
             )),
           ),
           Expanded(
@@ -77,7 +89,7 @@ Widget _buildContent(BuildContext context, Coupons coupon) {
           ),
           Padding(
               padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-              child: Text("Vrijedi do " + coupon.date))
+              child: Text("Vrijedi do " + _coupon.validTo))
         ],
       ),
     ),

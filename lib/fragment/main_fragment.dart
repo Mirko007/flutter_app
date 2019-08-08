@@ -16,13 +16,6 @@ class Main_Fragment extends StatefulWidget {
 
 class _Main_FragmentState extends State<Main_Fragment> {
   int _selectedTab = 2;
-  final _pageOptions = [
-    UserInfoFragment(),
-    UserInfoFragment(),
-    UserInfoFragment(),
-    UserInfoFragment(),
-    UserInfoFragment(),
-  ];
 
   Widget callPage(int currentIndex) {
     switch (currentIndex) {
@@ -114,6 +107,8 @@ class _Main_FragmentState extends State<Main_Fragment> {
 //      ),
         ;
   }
+
+
 
 
 }

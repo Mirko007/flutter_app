@@ -18,7 +18,7 @@ class _AkcijeState extends State<AkcijeFragment> {
           automaticallyImplyLeading: false,
           title: new Text("Akcije"),
         ),
-        body: new SizedBox(
+        body:   new SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Image.asset(
             "assets/images/nema_sadrzaja.PNG",
@@ -26,6 +26,17 @@ class _AkcijeState extends State<AkcijeFragment> {
           ),
           width: MediaQuery.of(context).size.width,
         )
+//        Scaffold(
+//      appBar: AppBar(title: Text('Akcije')),
+//    backgroundColor: Colors.blue,
+//    body: Container(
+//    color: Colors.blue,
+//    child:
+//
+//    //buildContent(),
+//    ),
+//    )
+
       ),
     );
 //    return Scaffold(

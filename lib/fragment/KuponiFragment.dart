@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:Loyalty_client/KuponiDetails.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import '../global_variable.dart' as globals;
+
+String token = '';
+List allCoupons = [];
+bool pressed = true;
 
 class KuponiFragment extends StatefulWidget {
   @override
@@ -9,163 +19,350 @@ class KuponiFragment extends StatefulWidget {
 
 class _KuponiState extends State<KuponiFragment> {
   @override
-  Widget build(BuildContext context) {
-
-    return new WillPopScope(
-
-      onWillPop: _onWillPop,
-      child: new Scaffold(
-        appBar: new AppBar(
-          automaticallyImplyLeading: false,
-          title: new Text("Kuponi"),
-        ),
-        body: new SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Image.asset(
-            "assets/images/nema_sadrzaja.PNG",
-            fit: BoxFit.fill,
-          ),
-          width: MediaQuery.of(context).size.width,
-        )
-      ),
-    );
-//    return  new ListKuponiPage();
+  void initState() {
+    super.initState();
+    _getData();
   }
-  Future<bool> _onWillPop() {
-    return showDialog(
-      context: context,
-      builder: (context) => new AlertDialog(
-        title: new Text('Jeste li sigurni?'),
-        content: new Text('Želite li izaći iz aplikacije'),
-        actions: <Widget>[
-          new FlatButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: new Text('Ne'),
-          ),
-          new FlatButton(
-            onPressed: () =>  SystemNavigator.pop(),
-            child: new Text('Da'),
-          ),
-        ],
-      ),
-    ) ?? false;
+
+  _getData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      token = (prefs.getString('token') ?? "");
+      if (pressed)
+        this.getCouponsPonuda(token);
+      else
+        this.getCouponsOsobni(token);
+    });
   }
-}
 
+  Future<String> getCouponsPonuda(String token) async {
+    String url = globals.base_url + "/api/v1/getVoucher";
 
-class Coupons {
-  Coupons({this.date, this.spentPoints, this.totalAmount, this.locationName});
+    http.Response response = await http.get(url, headers: {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "token": "$token"
+    }).then((http.Response response) async {
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.contentLength}");
+      print(response.headers);
+      print(response.request);
+      print(response.statusCode);
+      print(response.body);
 
-  final String date;
-  final String spentPoints;
-  final String totalAmount;
-  final String locationName;
-}
+      if (response.statusCode == 200) {
+        setState(() {
+          var resBody = json.decode(response.body);
+          allCoupons.clear();
+          allCoupons = resBody;
+        });
+      } else {
+        // If that call was not successful, throw an error.
+        throw Exception('Failed to load post');
+      }
+    });
+  }
 
-class ListKuponiPage extends StatelessWidget {
-  ListKuponiPage({Key key, this.onLayoutToggle}) : super(key: key);
-  final VoidCallback onLayoutToggle;
+  Future<String> getCouponsOsobni(String token) async {
+    String url = globals.base_url + "/api/v1/getCustomer";
+
+    http.Response response = await http.get(url, headers: {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "req_type": "mob",
+      "token": "$token"
+    }).then((http.Response response) async {
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.contentLength}");
+      print(response.headers);
+      print(response.request);
+      print(response.statusCode);
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        setState(() {
+          var resBody = json.decode(response.body);
+          allCoupons.clear();
+          allCoupons = resBody["voucherList"];
+        });
+      } else {
+        // If that call was not successful, throw an error.
+        throw Exception('Failed to load post');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Kuponi')),
-      body: Container(
-        color: Colors.white,
-        child: _buildContent(context),
-      ),
-    );
-  }
-
-  Widget _buildContent(BuildContext context) {
-    return GridView.count(
-      // Create a grid with 2 columns. If you change the scrollDirection to
-      // horizontal, this would produce 2 rows.
-      crossAxisCount: 2,
-      // Generate 100 Widgets that display their index in the List
-      children: List.generate(allCoupons.length, (index) {
-        return getCouponItem(allCoupons[index], context,index);
-      }),
-    );
-  }
-
-  List<Coupons> allCoupons = [
-    Coupons(
-        date: '26.10.2018',
-        spentPoints: '10',
-        totalAmount: "50",
-        locationName: "Zagreb - Žitnjak"),
-    Coupons(
-        date: '28.10.2018',
-        spentPoints: '22',
-        totalAmount: "120",
-        locationName: "Zagreb - Jankomir"),
-    Coupons(
-        date: '06.11.2018',
-        spentPoints: '30',
-        totalAmount: "170",
-        locationName: "Velesajam"),
-    Coupons(
-        date: '12.11.2018',
-        spentPoints: '45',
-        totalAmount: "200",
-        locationName: "Osijek"),
-  ];
-
-  Widget getCouponItem(Coupons coupon, BuildContext context,int index) {
-    return Padding(
-      padding: EdgeInsets.all(10),
-      child: InkWell(
-        onTap: () {
-          getKuponDetails(index, context);
-        },
-        child: Container(
-          decoration: BoxDecoration(
-              color: Colors.black12,
-              borderRadius: BorderRadius.all(Radius.circular(15.0))),
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(15.0),
-                          topRight: Radius.circular(15.0))),
-                  child: Center(
-                      child: Text(
-                    coupon.spentPoints + " bodova",
-                    style: TextStyle(fontSize: 30, color: Colors.white),
-                  )),
-                ),
-              ),
-              SizedBox(
-                height: 100.0,
-                child: Image.asset(
-                  "assets/images/kupon_fragment_slika.PNG",
-                  fit: BoxFit.fill,
-                ),
-                width: MediaQuery.of(context).size.width,
-              ),
-              Expanded(
-                  child: Padding(
-                      padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                      child: Text("Vrijedi do " + coupon.date)))
-            ],
+    return new WillPopScope(
+      onWillPop: _onWillPop,
+      child: new Scaffold(
+          appBar: new AppBar(
+            automaticallyImplyLeading: false,
+            title: new Text("Kuponi"),
           ),
-        ),
-      ),
+          //body: _buildContent(context)
+          body: Container(
+              color: Colors.white,
+              child:         new SizedBox(
+    height: MediaQuery.of(context).size.height,
+    child: Image.asset(
+    "assets/images/nema_sadrzaja.PNG",
+    fit: BoxFit.fill,
+    ),
+    width: MediaQuery.of(context).size.width,
+    )
+//              Column(
+//                  crossAxisAlignment: CrossAxisAlignment.start,
+//                  children: <Widget>[
+//                    Row(
+//                      children: <Widget>[
+//                        Container(
+//                          height: 60.0,
+//                          width: MediaQuery.of(context).size.width / 2,
+//                          child: Padding(
+//                            padding: const EdgeInsets.fromLTRB(
+//                              10.0,
+//                              10.0,
+//                              0.0,
+//                              10.0,
+//                            ),
+//                            child: RaisedButton(
+//                              color: pressed ? Colors.red : Colors.blue,
+//                              shape: OutlineInputBorder(
+//                                  borderRadius: BorderRadius.only(
+//                                      topLeft: Radius.circular(15.0),
+//                                      bottomLeft: Radius.circular(15.0))),
+//                              onPressed: () => setState(() {
+//                                    pressed = true;
+//                                    if (pressed)
+//                                      this.getCouponsPonuda(token);
+//                                    else
+//                                      this.getCouponsOsobni(token);
+//                                  }),
+//                              child: Padding(
+//                                padding: const EdgeInsets.all(5.0),
+//                                child: Center(
+//                                    child: Text(
+//                                  "PONUDA",
+//                                  style: TextStyle(
+//                                      fontSize: 25, color: Colors.white),
+//                                )),
+//                              ),
+//                            ),
+//                          ),
+//                        ),
+//                        Container(
+//                          height: 60.0,
+//                          width: MediaQuery.of(context).size.width / 2,
+//                          child: Padding(
+//                            padding: const EdgeInsets.fromLTRB(
+//                              0.0,
+//                              10.0,
+//                              10.0,
+//                              10.0,
+//                            ),
+//                            child: RaisedButton(
+//                              color: pressed ? Colors.blue : Colors.red,
+//                              shape: OutlineInputBorder(
+//                                  borderRadius: BorderRadius.only(
+//                                      topRight: Radius.circular(15.0),
+//                                      bottomRight: Radius.circular(15.0))),
+//                              onPressed: () => setState(() {
+//                                    pressed = false;
+//                                    if (pressed)
+//                                      this.getCouponsPonuda(token);
+//                                    else
+//                                      this.getCouponsOsobni(token);
+//                                  }),
+//                              child: Padding(
+//                                padding: const EdgeInsets.all(5.0),
+//                                child: Center(
+//                                    child: Text(
+//                                  "OSOBNI",
+//                                  style: TextStyle(
+//                                      fontSize: 25, color: Colors.white),
+//                                )),
+//                              ),
+//                            ),
+//                          ),
+//                        ),
+//                      ],
+//                    ),
+//                    Expanded(
+//                      child: GridView.builder(
+//                          gridDelegate:
+//                              new SliverGridDelegateWithFixedCrossAxisCount(
+//                            crossAxisCount: 2,
+//                          ),
+//                          scrollDirection: Axis.vertical,
+//                          shrinkWrap: true,
+//                          itemCount: allCoupons == null ? 0 : allCoupons.length,
+//                          itemBuilder: (BuildContext content, int index) {
+//                            return GestureDetector(
+//                              onTap: () {
+//                                //getTransactionDetails(data[index]["uuid"], content);
+//                              },
+//                              child: Padding(
+//                                padding: EdgeInsets.all(10),
+//                                child: InkWell(
+//                                  onTap: () {
+//                                    getKuponDetails(index, context);
+//                                  },
+//                                  child: Container(
+//                                    decoration: BoxDecoration(
+//                                        color: Colors.black12,
+//                                        borderRadius: BorderRadius.all(
+//                                            Radius.circular(15.0))),
+//                                    child: Column(
+//                                      children: <Widget>[
+//                                        Expanded(
+//                                          child: Container(
+//                                            decoration: BoxDecoration(
+//                                                color: Colors.blue,
+//                                                borderRadius: BorderRadius.only(
+//                                                    topLeft:
+//                                                        Radius.circular(15.0),
+//                                                    topRight:
+//                                                        Radius.circular(15.0))),
+//                                            child: Center(
+//                                                child: Text(
+//                                              getCustomerRequiredpoints(index) +
+//                                                  // allCoupons[index]["voucherType"]["customerPointsRequired"].toString() +
+//                                                  " bodova",
+//                                              style: TextStyle(
+//                                                  fontSize: 25,
+//                                                  color: Colors.white),
+//                                            )),
+//                                          ),
+//                                        ),
+//                                        Expanded(
+//                                          child: Container(
+//                                            decoration: BoxDecoration(
+//                                              color: Colors.blue,
+//                                            ),
+//                                            child: Center(
+//                                                child: Text(
+//                                              allCoupons[index]
+//                                                          ["voucherName"] ==
+//                                                      null
+//                                                  ? ""
+//                                                  : allCoupons[index]
+//                                                      ["voucherName"],
+//                                              overflow: TextOverflow.ellipsis,
+//                                              style: TextStyle(
+//                                                  fontSize: 15,
+//                                                  color: Colors.white),
+//                                            )),
+//                                          ),
+//                                        ),
+//                                        Container(
+//                                          height: 80.0,
+//                                          color: Colors.white,
+//                                          child: getImage(index),
+//                                          width:
+//                                              MediaQuery.of(context).size.width,
+//                                        ),
+//                                        Expanded(
+//                                            child: Padding(
+//                                                padding: EdgeInsets.fromLTRB(
+//                                                    10, 5, 10, 5),
+//                                                child: Text("Vrijedi do " + getValidto(index))))
+//                                      ],
+//                                    ),
+//                                  ),
+//                                ),
+//                              ),
+//                            );
+//                          }),
+//                    )
+//                  ]))
+          )
+          ),
     );
   }
-  void getKuponDetails(int index, BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => KuponiDetails(
-            coupon: allCoupons[index],
-          )),
-    );
+
+  Future<bool> _onWillPop() {
+    return showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+                title: new Text('Jeste li sigurni?'),
+                content: new Text('Želite li izaći iz aplikacije'),
+                actions: <Widget>[
+                  new FlatButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: new Text('Ne'),
+                  ),
+                  new FlatButton(
+                    onPressed: () => SystemNavigator.pop(),
+                    child: new Text('Da'),
+                  ),
+                ],
+              ),
+        ) ??
+        false;
   }
 }
 
+String getCustomerRequiredpoints(int index) {
+  if (pressed)
+    return allCoupons[index]["customerPointsRequired"] == null
+        ? "0"
+        : allCoupons[index]["customerPointsRequired"].toString();
+  else
+    return allCoupons[index]["customerPointsRequired"] == null
+        ? "0"
+        : "2";
+        //: allCoupons[index]["voucherType"]["customerPointsRequired"].toString();
+}
 
+String getValidto(int index) {
+  //return pressed ==true ? allCoupons[index]["validTo"]: allCoupons[index]["voucherType"]["validTo"];
+  return pressed == true ? allCoupons[index]["validTo"] : "2";
+}
+
+class Coupon {
+  Coupon(
+      {this.id,
+      this.barcode,
+      this.validTo,
+      this.customerPointsRequired,
+      this.image,
+      this.locationName,
+      this.voucherName});
+
+  final int id;
+  final String barcode;
+  final String validTo;
+  final String customerPointsRequired;
+  final String image;
+  final String locationName;
+  final String voucherName;
+}
+
+void getKuponDetails(int index, BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+        builder: (context) => KuponiDetails(
+              coupon: Coupon(
+                  id: allCoupons[index]["id"],
+                  barcode: allCoupons[index]["barcode"],
+                  validTo: allCoupons[index]["validTo"],
+                  customerPointsRequired:
+                      allCoupons[index]["customerPointsRequired"].toString(),
+                  image: allCoupons[index]["image"],
+                  locationName: allCoupons[index]["locationName"],
+                  voucherName: allCoupons[index]["voucherName"]),
+            )),
+  );
+}
+
+getImage(int index) {
+  return allCoupons[index]["image"] == null
+      ? null
+      : Image.memory(
+          Base64Decoder().convert(allCoupons[index]["image"]),
+          fit: BoxFit.fill,
+        );
+}

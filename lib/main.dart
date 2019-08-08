@@ -351,7 +351,10 @@ class _MyHomePageState extends State<MyHomePage> {
             'gdpr_privola_email', resBody["gdpr_privola_email"]);
         await prefs.setBool(
             'gdpr_privola_posta', resBody["gdpr_privola_posta"]);
-        await prefs.setDouble('currentPoints', resBody["currentPoints"]);
+
+        await prefs.setDouble('currentPoints', double.parse(resBody["currentPoints"].toString()));
+
+        //await prefs.setDouble('currentPoints', resBody["currentPoints"]);
         await prefs.setString('dateOfBirth', resBody["dateOfBirth"]);
         await prefs.setString('gender', resBody["gender"]);
 
@@ -420,6 +423,50 @@ class _MyHomePageState extends State<MyHomePage> {
 
       if (response.statusCode == 200) {
         var resBody = json.decode(response.body);
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+
+        prefs.setString('email', resBody["email"]);
+        prefs.setString('token', token);
+        await prefs.setString('ime', resBody["firstName"]);
+        await prefs.setString('prezime', resBody["lastName"]);
+        await prefs.setString('referenceNumber', resBody["referenceNumber"]);
+        await prefs.setBool('termsOfUse', resBody["termsOfUse"]);
+        await prefs.setBool('gdpr_privola_mob', resBody["gdpr_privola_mob"]);
+        await prefs.setBool(
+            'gdpr_privola_email', resBody["gdpr_privola_email"]);
+        await prefs.setBool(
+            'gdpr_privola_posta', resBody["gdpr_privola_posta"]);
+
+        await prefs.setDouble('currentPoints', resBody["currentPoints"]);
+        await prefs.setString('dateOfBirth', resBody["dateOfBirth"]);
+        await prefs.setString('gender', resBody["gender"]);
+
+        if (resBody["address"] == " ")
+          await prefs.setString('address', "");
+        else
+          await prefs.setString('address', resBody["address"]);
+
+        if (resBody["city"] == " ")
+          await prefs.setString('city', "");
+        else
+          await prefs.setString('city', resBody["city"]);
+
+        if (resBody["zipCode"] == " ")
+          await prefs.setString('zipCode', "");
+        else
+          await prefs.setString('zipCode', resBody["zipCode"]);
+
+        if (resBody["phoneNumber"] == globals.phone_number_dummmy)
+          await prefs.setString('phoneNumber', "");
+        else
+          await prefs.setString('phoneNumber', resBody["phoneNumber"]);
+
+        await prefs.setString('categoryName', resBody["categoryName"]);
+        await prefs.setString('fitnessName', resBody["fitnessName"]);
+        await prefs.setString('sportName', resBody["sportName"]);
+        await prefs.setString(
+            'placeOfRegistration', resBody["placeOfRegistration"]);
         Navigator.of(context).pushNamed('/main');
       } else {
         // If that call was not successful, throw an error.

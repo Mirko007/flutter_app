@@ -14,12 +14,13 @@ class UserInfoFragment extends StatefulWidget {
 }
 
 class _UserInfoState extends State<UserInfoFragment> {
+
   @override
   void initState() {
     super.initState();
     _loadCounter();
-
   }
+
   _loadCounter() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -30,6 +31,7 @@ class _UserInfoState extends State<UserInfoFragment> {
       referenceNumber = (prefs.getString('referenceNumber')??"");
     });
   }
+
   @override
   Widget build(BuildContext context) {
     if (MediaQuery.of(context).orientation == Orientation.landscape){
