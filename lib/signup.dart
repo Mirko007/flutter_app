@@ -57,15 +57,22 @@ class _SignupPageState extends State<SignupPage> {
   String _currentcategoryType;
   int _currentcategoryTypeIndex;
 
-  final String url = globals.base_url + "/api/v1/getPrefTypes";
+
 
   List data_fitnessType;
   List data_sportType;
   List data_categoryType;
 
   Future<String> getPrefTypeData() async {
+
+    String url = globals.base_url + "/api/v1/getPrefTypes";
     var res = await http.get(Uri.parse(url));
 
+    if(json.decode(res.body)["fitnessTypeList"]==null)
+      {
+        String url = globals.base_url_novi + "/api/v1/getPrefTypes";
+        res = await http.get(Uri.parse(url));
+      }
     setState(() {
       var resBody = json.decode(res.body);
       data_fitnessType = resBody["fitnessTypeList"];
@@ -407,27 +414,6 @@ class _SignupPageState extends State<SignupPage> {
           ),
         ),
 
-        // SizedBox(height: 15.0),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.center,
-        //   children: <Widget>[
-        //     Text(
-        //       'New to Spotify?',
-        //       style: TextStyle(
-        //         fontFamily: 'Montserrat',
-        //       ),
-        //     ),
-        //     SizedBox(width: 5.0),
-        //     InkWell(
-        //       child: Text('Register',
-        //           style: TextStyle(
-        //               color: Colors.green,
-        //               fontFamily: 'Montserrat',
-        //               fontWeight: FontWeight.bold,
-        //               decoration: TextDecoration.underline)),
-        //     )
-        //   ],
-        // )
       ])),
     );
   }
@@ -531,7 +517,12 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void fvoidServisEmail(String text) async {
-    String url = globals.base_url + "/api/v1/requestOTP";
+    String url;
+    if (globals.which_url == 0)
+      url = globals.base_url + "/api/v1/requestOTP";
+    else
+      url = globals.base_url_novi + "/api/v1/requestOTP";
+
     String json_body = '{"active" : false, "email" : "$text"}';
 
     await http.post(url, body: json_body, headers: {
@@ -599,7 +590,12 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void fvoidServisEmailOTP(String dialogOTP, String EmailTextConfirm) async {
-    String url = globals.base_url + "/api/v1/confirmOTP";
+    String url;
+    if (globals.which_url == 0)
+      url = globals.base_url + "/api/v1/confirmOTP";
+    else
+      url = globals.base_url_novi + "/api/v1/confirmOTP";
+
     String json_body = '{"otp" : "$dialogOTP", "email" : "$EmailTextConfirm"}';
 
     await http.post(url, body: json_body, headers: {
@@ -632,7 +628,11 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void fvoidCreateCustomer(String token, String emailTextConfirm) async {
-    String url = globals.base_url + "/api/v1/updateCustomer";
+    String url;
+    if (globals.which_url == 0)
+      url = globals.base_url + "/api/v1/updateCustomer";
+    else
+      url = globals.base_url_novi + "/api/v1/updateCustomer";
 
     String datum_rodenja = datumRodenja.text;
     final now = DateTime.now();

@@ -43,7 +43,11 @@ class TransactionDetailsState extends State<TransactionDetails> {
   }
 
   Future<String> getTransactionData() async {
-    String url = globals.base_url+"/api/v1/transaction/{$uid}";
+    String url;
+    if (globals.which_url == 0)
+      url = globals.base_url + "/api/v1/transaction/{$uid}";
+    else
+      url = globals.base_url_novi + "/api/v1/transaction/{$uid}";
 
     http.Response response = await http.get(url, headers: {"Accept": "application/json","content-type": "application/json","token": "$token"}).then((http.Response response) async {
       print("Response status: ${response.statusCode}");

@@ -36,7 +36,12 @@ class _KuponiState extends State<KuponiFragment> {
   }
 
   Future<String> getCouponsPonuda(String token) async {
-    String url = globals.base_url + "/api/v1/getVoucher";
+    String url;
+    if (globals.which_url == 0)
+      url = globals.base_url + "/api/v1/getVoucher";
+    else
+      url = globals.base_url_novi + "/api/v1/getVoucher";
+//    String url = globals.base_url + "/api/v1/getVoucher";
 
     http.Response response = await http.get(url, headers: {
       "Accept": "application/json",
@@ -64,7 +69,12 @@ class _KuponiState extends State<KuponiFragment> {
   }
 
   Future<String> getCouponsOsobni(String token) async {
-    String url = globals.base_url + "/api/v1/getCustomer";
+    String url;
+    if (globals.which_url == 0)
+      url = globals.base_url + "/api/v1/getCustomer";
+    else
+      url = globals.base_url_novi + "/api/v1/getCustomer";
+   // String url = globals.base_url + "/api/v1/getCustomer";
 
     http.Response response = await http.get(url, headers: {
       "Accept": "application/json",

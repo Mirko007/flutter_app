@@ -42,22 +42,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final String url = "https://swapi.co/api/starships";
-  List data;
-
   final EmailText = TextEditingController();
-
-  Future<String> getSWData() async {
-    var res =
-        await http.get(Uri.parse(url), headers: {"Accept": "application/json"});
-
-    setState(() {
-      var resBody = json.decode(res.body);
-      data = resBody["results"];
-    });
-
-    return "Success!";
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -146,60 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             Expanded(
-              child:
-//                ListView.builder(
-//              itemCount: data == null ? 0 : data.length,
-//              itemBuilder: (BuildContext context, int index) {
-//                return Container(
-//                  child: Center(
-//                    child: Column(
-//                      crossAxisAlignment: CrossAxisAlignment.stretch,
-//                      children: <Widget>[
-//                        Card(
-//                          child: Container(
-//                              padding: EdgeInsets.all(15.0),
-//                              child: Row(
-//                                children: <Widget>[
-//                                  Text("Name: "),
-//                                  Text(data[index]["name"],
-//                                      style: TextStyle(
-//                                          fontSize: 18.0,
-//                                          color: Colors.black87)),
-//                                ],
-//                              )),
-//                        ),
-//                        Card(
-//                          child: Container(
-//                              padding: EdgeInsets.all(15.0),
-//                              child: Row(
-//                                children: <Widget>[
-//                                  Text("Model: "),
-//                                  Text(data[index]["model"],
-//                                      style: TextStyle(
-//                                          fontSize: 18.0, color: Colors.red)),
-//                                ],
-//                              )),
-//                        ),
-//                        Card(
-//                          child: Container(
-//                              padding: EdgeInsets.all(15.0),
-//                              child: Row(
-//                                children: <Widget>[
-//                                  Text("Cargo Capacity: "),
-//                                  Text(data[index]["cargo_capacity"],
-//                                      style: TextStyle(
-//                                          fontSize: 18.0,
-//                                          color: Colors.black87)),
-//                                ],
-//                              )),
-//                        ),
-//                      ],
-//                    ),
-//                  ),
-//                );
-//              },
-//            )
-                  Align(
+              child: Align(
                 alignment: FractionalOffset.bottomCenter,
                 child: Image.asset(
                   "assets/images/prijava_logo_polleo.png",
@@ -214,8 +146,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _getPref();
-
-    //this.getSWData();
   }
 
   _callServisEmail(String EmailText) async {
@@ -225,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
     await http.post(url, body: json_body, headers: {
       "Accept": "application/json",
       "content-type": "application/json"
-    }).then((http.Response response) {
+    }).then((http.Response response) async {
       print("Response status: ${response.statusCode}");
       print("Response body: ${response.contentLength}");
       print(response.headers);
@@ -237,14 +167,57 @@ class _MyHomePageState extends State<MyHomePage> {
       if (response.statusCode == 200) {
         _asyncInputDialog(context, EmailText);
       } else {
-        Fluttertoast.showToast(
-            msg: "Neuspješan dohvat podataka",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            // also possible "TOP" and "CENTER"
-            textColor: Colors.white);
-        // If that call was not successful, throw an error.
-        throw Exception('Failed to load post');
+//        Fluttertoast.showToast(
+//            msg: "Neuspješan dohvat podataka",
+//            toastLength: Toast.LENGTH_SHORT,
+//            gravity: ToastGravity.BOTTOM,
+//            // also possible "TOP" and "CENTER"
+//            textColor: Colors.white);
+//        // If that call was not successful, throw an error.
+//        throw Exception('Failed to load post');
+        //todo http, https
+        /************************************************/
+        /************************************************/
+        /************************************************/
+        /************************************************/
+        /************************************************/
+        await http.post(globals.base_url_novi + "/api/v1/requestOTP",
+            body: json_body,
+            headers: {
+              "Accept": "application/json",
+              "content-type": "application/json"
+            }).then((http.Response response) {
+          print("Response status: ${response.statusCode}");
+          print("Response body: ${response.contentLength}");
+          print(response.headers);
+          print(response.request);
+          print(response.statusCode);
+          print(json_body);
+          print(response.body);
+
+          if (response.statusCode == 200) {
+            globals.which_url = 1;
+            _asyncInputDialog(context, EmailText);
+          } else {
+            globals.which_url = 0;
+            Fluttertoast.showToast(
+                msg: "Neuspješan dohvat podataka",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                // also possible "TOP" and "CENTER"
+                textColor: Colors.white);
+            // If that call was not successful, throw an error.
+            throw Exception('Failed to load post');
+            //todo http, https
+
+          }
+        });
+
+        /************************************************/
+        /************************************************/
+        /************************************************/
+        /************************************************/
+        /************************************************/
       }
     });
   }
@@ -287,7 +260,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void fvoidServisEmailOTP(String dialogOTP, String EmailTextConfirm) async {
-    String url = globals.base_url + "/api/v1/confirmOTP";
+    String url;
+    if (globals.which_url == 0)
+      url = globals.base_url + "/api/v1/confirmOTP";
+    else
+      url = globals.base_url_novi + "/api/v1/confirmOTP";
     String json_body = '{"otp" : "$dialogOTP", "email" : "$EmailTextConfirm"}';
 
     http.Response response = await http.post(url, body: json_body, headers: {
@@ -320,7 +297,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void fvoidGetCustomer(String token, String EmailText) async {
-    String url = globals.base_url + "/api/v1/getCustomer";
+    String url;
+    if (globals.which_url == 0)
+      url = globals.base_url + "/api/v1/getCustomer";
+    else
+      url = globals.base_url_novi + "/api/v1/getCustomer";
 
     await http.get(url, headers: {
       "Accept": "application/json",
@@ -352,7 +333,8 @@ class _MyHomePageState extends State<MyHomePage> {
         await prefs.setBool(
             'gdpr_privola_posta', resBody["gdpr_privola_posta"]);
 
-        await prefs.setDouble('currentPoints', double.parse(resBody["currentPoints"].toString()));
+        await prefs.setDouble(
+            'currentPoints', double.parse(resBody["currentPoints"].toString()));
 
         //await prefs.setDouble('currentPoints', resBody["currentPoints"]);
         await prefs.setString('dateOfBirth', resBody["dateOfBirth"]);
@@ -469,6 +451,86 @@ class _MyHomePageState extends State<MyHomePage> {
             'placeOfRegistration', resBody["placeOfRegistration"]);
         Navigator.of(context).pushNamed('/main');
       } else {
+        //todo ako nije http probaj https
+        /***************************************************************************/
+        /***************************************************************************/
+        /***************************************************************************/
+        /***************************************************************************/
+        await http.get(globals.base_url_novi + "/api/v1/getCustomer", headers: {
+          "Accept": "application/json",
+          "content-type": "application/json",
+          "req_type": "mob",
+          "token": "$token"
+        }).then((http.Response response) async {
+          print("Response status: ${response.statusCode}");
+          print("Response body: ${response.contentLength}");
+          print(response.headers);
+          print(response.request);
+          print(response.statusCode);
+          print(response.body);
+
+          if (response.statusCode == 200) {
+            //mijenja da se ide na https
+            globals.which_url = 1;
+            var resBody = json.decode(response.body);
+
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+
+            prefs.setString('email', resBody["email"]);
+            prefs.setString('token', token);
+            await prefs.setString('ime', resBody["firstName"]);
+            await prefs.setString('prezime', resBody["lastName"]);
+            await prefs.setString(
+                'referenceNumber', resBody["referenceNumber"]);
+            await prefs.setBool('termsOfUse', resBody["termsOfUse"]);
+            await prefs.setBool(
+                'gdpr_privola_mob', resBody["gdpr_privola_mob"]);
+            await prefs.setBool(
+                'gdpr_privola_email', resBody["gdpr_privola_email"]);
+            await prefs.setBool(
+                'gdpr_privola_posta', resBody["gdpr_privola_posta"]);
+
+            await prefs.setDouble('currentPoints', resBody["currentPoints"]);
+            await prefs.setString('dateOfBirth', resBody["dateOfBirth"]);
+            await prefs.setString('gender', resBody["gender"]);
+
+            if (resBody["address"] == " ")
+              await prefs.setString('address', "");
+            else
+              await prefs.setString('address', resBody["address"]);
+
+            if (resBody["city"] == " ")
+              await prefs.setString('city', "");
+            else
+              await prefs.setString('city', resBody["city"]);
+
+            if (resBody["zipCode"] == " ")
+              await prefs.setString('zipCode', "");
+            else
+              await prefs.setString('zipCode', resBody["zipCode"]);
+
+            if (resBody["phoneNumber"] == globals.phone_number_dummmy)
+              await prefs.setString('phoneNumber', "");
+            else
+              await prefs.setString('phoneNumber', resBody["phoneNumber"]);
+
+            await prefs.setString('categoryName', resBody["categoryName"]);
+            await prefs.setString('fitnessName', resBody["fitnessName"]);
+            await prefs.setString('sportName', resBody["sportName"]);
+            await prefs.setString(
+                'placeOfRegistration', resBody["placeOfRegistration"]);
+            Navigator.of(context).pushNamed('/main');
+          } else {
+            globals.which_url = 0;
+            // If that call was not successful, throw an error.
+            throw Exception('Failed to load post');
+          }
+        });
+
+        /***************************************************************************/
+        /***************************************************************************/
+        /***************************************************************************/
+        /***************************************************************************/
         // If that call was not successful, throw an error.
         throw Exception('Failed to load post');
       }
