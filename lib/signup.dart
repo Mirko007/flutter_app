@@ -370,44 +370,44 @@ class _SignupPageState extends State<SignupPage> {
                       SizedBox(
                         height: 10.0,
                       ),
-                      Container(
-                          height: 40.0,
-                          child: Material(
-                            borderRadius: BorderRadius.circular(20.0),
-                            shadowColor: Colors.blueAccent,
-                            color: Colors.blue,
-                            elevation: 7.0,
-                            child: GestureDetector(
-                              onTap: () {
-                                if (gdpr_privola &&
-                                    terms_of_use &&
-                                    !(ImeText.text == "") &&
-                                    !(EmailText.text == "") &&
-                                    !(PrezimeText.text == "")) {
-                                  fvoidServisEmail(EmailText.text);
-                                } else {
-                                  print(
-                                      "gdpr_privola" + gdpr_privola.toString());
-                                  Fluttertoast.showToast(
-                                      msg:
-                                          "Molimo unesite sve obavezne podatke i omogućite privolu",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      // also possible "TOP" and "CENTER"
-                                      textColor: Colors.white);
-                                }
-                              },
+                      GestureDetector(
+                        onTap: () {
+                          if (gdpr_privola &&
+                              terms_of_use &&
+                              !(ImeText.text == "") &&
+                              !(EmailText.text == "") &&
+                              !(PrezimeText.text == "")) {
+                            fvoidServisEmail(EmailText.text);
+                          } else {
+                            print(
+                                "gdpr_privola" + gdpr_privola.toString());
+                            Fluttertoast.showToast(
+                                msg:
+                                "Molimo unesite sve obavezne podatke i omogućite privolu",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                // also possible "TOP" and "CENTER"
+                                textColor: Colors.white);
+                          }
+                        },
+                        child: Container(
+                            height: 40.0,
+                            child: Material(
+                              borderRadius: BorderRadius.circular(20.0),
+                              shadowColor: Colors.blueAccent,
+                              color: Colors.blue,
+                              elevation: 7.0,
                               child: Center(
-                                child: Text(
-                                  'Registriraj se',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Montserrat'),
-                                ),
+                                  child: Text(
+                                    'Registriraj se',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Montserrat'),
+                                  ),
                               ),
-                            ),
-                          )),
+                            )),
+                      ),
                       SizedBox(height: 20.0),
                     ],
                   )),
