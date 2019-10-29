@@ -37,9 +37,7 @@ class _KuponiState extends State<KuponiFragment> {
 
   Future<String> getCouponsPonuda(String token) async {
     String url;
-    if (globals.which_url == 0)
-      url = globals.base_url + "/api/v1/getVoucher";
-    else
+
       url = globals.base_url_novi + "/api/v1/getVoucher";
 //    String url = globals.base_url + "/api/v1/getVoucher";
 
@@ -68,11 +66,10 @@ class _KuponiState extends State<KuponiFragment> {
     });
   }
 
+
   Future<String> getCouponsOsobni(String token) async {
     String url;
-    if (globals.which_url == 0)
-      url = globals.base_url + "/api/v1/getCustomer";
-    else
+
       url = globals.base_url_novi + "/api/v1/getCustomer";
    // String url = globals.base_url + "/api/v1/getCustomer";
 
@@ -112,9 +109,11 @@ class _KuponiState extends State<KuponiFragment> {
             title: new Text("Kuponi"),
           ),
           //body: _buildContent(context)
-          body: Container(
+          body:
+          Container(
               color: Colors.white,
-              child:         new SizedBox(
+              child:
+              new SizedBox(
     height: MediaQuery.of(context).size.height,
     child: Image.asset(
     "assets/images/nema_sadrzaja.PNG",
@@ -259,6 +258,7 @@ class _KuponiState extends State<KuponiFragment> {
 //                                                  ? ""
 //                                                  : allCoupons[index]
 //                                                      ["voucherName"],
+//                                              maxLines: 2,
 //                                              overflow: TextOverflow.ellipsis,
 //                                              style: TextStyle(
 //                                                  fontSize: 15,
@@ -287,8 +287,8 @@ class _KuponiState extends State<KuponiFragment> {
 //                          }),
 //                    )
 //                  ]))
-          )
-          ),
+          ))
+
     );
   }
 

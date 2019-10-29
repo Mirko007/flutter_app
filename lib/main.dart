@@ -6,9 +6,84 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'database_helper.dart';
 import 'fragment/main_fragment.dart';
 import 'global_variable.dart' as globals;
 import 'signup.dart';
+
+import 'package:background_fetch/background_fetch.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+import 'package:path/path.dart' as Path;
+import 'package:sqflite/sqflite.dart';
+
+const EVENTS_KEY = "fetch_events";
+
+List data;
+final dbHelperHeadless = DatabaseHelper.instance;
+
+/// This "Headless Task" is run when app is terminated.
+void backgroundFetchHeadlessTask() async {
+  print('[BackgroundFetch] Headless event received.');
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  // Read fetch_events from SharedPreferences
+  List<String> events = [];
+  String jsons = prefs.getString(EVENTS_KEY);
+  if (jsons != null) {
+    events = jsonDecode(jsons).cast<String>();
+  }
+  // Add new event.
+  events.insert(0, new DateTime.now().toString() + ' [Headless]');
+
+  print('[Vanja] Headless event received.' + events[0]);
+  // Persist fetch events in SharedPreferences
+  prefs.setString(EVENTS_KEY, jsonEncode(events));
+
+  _showNotification();
+
+  String url = globals.base_url_novi + "/api/v1/messages";
+
+  String token = (prefs.getString('token') ?? "");
+
+  http.Response response = await http.get(url, headers: {
+    "Accept": "application/json",
+    "content-type": "application/json",
+    "token": "$token",
+    "req_type": "mob"
+  }).then((http.Response response) async {
+    print("Response status: ${response.statusCode}");
+    print("Response body: ${response.contentLength}");
+    print(response.headers);
+    print(response.request);
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      // ignore: missing_return
+      List dataMessage = json.decode(response.body);
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load post');
+    }
+  });
+  Map<String, dynamic> row = {
+    DatabaseHelper.columnIdMessage: "32",
+    DatabaseHelper.columnCreated: "w4123432141",
+    DatabaseHelper.columnTitle: "Vanja",
+    DatabaseHelper.columnMessage: "uspjeh",
+    DatabaseHelper.columnDeleted: "",
+    DatabaseHelper.columnReadStatus: 0,
+  };
+  final rowsAffected = await dbHelperHeadless.update(row);
+  print('updated $rowsAffected row(s)');
+  dbHelperHeadless.delete(30);
+  dbHelperHeadless.delete(31);
+  dbHelperHeadless.delete(32);
+
+  BackgroundFetch.finish();
+}
 
 void main() {
   debugPaintSizeEnabled = false;
@@ -17,9 +92,15 @@ void main() {
     statusBarColor: Colors.blue, // status bar color
   ));
   runApp(new MyApp());
+
+  // Register to receive BackgroundFetch events after app is terminated.
+  // Requires {stopOnTerminate: false, enableHeadless: true}
+  //BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 }
 
 class MyApp extends StatelessWidget {
+  // reference to our single class that manages the database
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -42,7 +123,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  List<String> _events = [];
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  final dbHelper = DatabaseHelper.instance;
+
   final EmailText = TextEditingController();
+  static const EMPTY_TEXT = Center(child: Text('Waiting for fetch events.'));
 
   @override
   Widget build(BuildContext context) {
@@ -140,16 +226,49 @@ class _MyHomePageState extends State<MyHomePage> {
             )
           ],
         ));
+//        body: (data == null)
+//            ? EMPTY_TEXT
+//            : Container(
+//                child: new ListView.builder(
+//                    itemCount: data == null ? 0 : data.length,
+//                    itemBuilder: (BuildContext context, int index) {
+//                      String timestamp = data[index]["message"];
+//                      return GestureDetector(
+//                        onTap: () => onTapped(index),
+////                            Scaffold
+////                            .of(context)
+////                            .showSnackBar(SnackBar(content: Text(data[index]["title"]))),
+//                        child: InputDecorator(
+//                            decoration: InputDecoration(
+//                                contentPadding: EdgeInsets.only(
+//                                    left: 5.0, top: 5.0, bottom: 5.0),
+//                                labelStyle: TextStyle(
+//                                    color: Colors.blue, fontSize: 20.0),
+//                                labelText: data[index]["title"]),
+//                            child: new Text(timestamp,
+//                                style: TextStyle(
+//                                    color: Colors.black, fontSize: 16.0))),
+//                      );
+//                    }),
+//              ));
   }
 
   @override
   void initState() {
     super.initState();
+//    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+//    var android = new AndroidInitializationSettings('@mipmap/launcher_icon');
+//    var iOS = new IOSInitializationSettings();
+//    var initSetttings = new InitializationSettings(android, iOS);
+//    flutterLocalNotificationsPlugin.initialize(initSetttings,
+//        onSelectNotification: onSelectNotification);
+//    _query();
+    //initPlatformState();
     _getPref();
   }
 
   _callServisEmail(String EmailText) async {
-    String url = globals.base_url + "/api/v1/requestOTP";
+    String url = globals.base_url_novi + "/api/v1/requestOTP";
     String json_body = '{"active" : true, "email" : "$EmailText"}';
 
     await http.post(url, body: json_body, headers: {
@@ -196,10 +315,8 @@ class _MyHomePageState extends State<MyHomePage> {
           print(response.body);
 
           if (response.statusCode == 200) {
-            globals.which_url = 1;
             _asyncInputDialog(context, EmailText);
           } else {
-            globals.which_url = 0;
             Fluttertoast.showToast(
                 msg: "Neuspješan dohvat podataka",
                 toastLength: Toast.LENGTH_SHORT,
@@ -261,23 +378,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void fvoidServisEmailOTP(String dialogOTP, String EmailTextConfirm) async {
     String url;
-    if (globals.which_url == 0)
-      url = globals.base_url + "/api/v1/confirmOTP";
-    else
-      url = globals.base_url_novi + "/api/v1/confirmOTP";
+
+    url = globals.base_url_novi + "/api/v1/confirmOTP";
     String json_body = '{"otp" : "$dialogOTP", "email" : "$EmailTextConfirm"}';
 
     http.Response response = await http.post(url, body: json_body, headers: {
       "Accept": "application/json",
       "content-type": "application/json"
     }).then((http.Response response) {
-      print("Response status: ${response.statusCode}");
-      print("Response body: ${response.contentLength}");
-      print(response.headers);
-      print(response.request);
-      print(response.statusCode);
-      print(json_body);
-      print(response.body);
 
       if (response.statusCode == 200) {
         var resBody = json.decode(response.body);
@@ -298,10 +406,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void fvoidGetCustomer(String token, String EmailText) async {
     String url;
-    if (globals.which_url == 0)
-      url = globals.base_url + "/api/v1/getCustomer";
-    else
-      url = globals.base_url_novi + "/api/v1/getCustomer";
+
+    url = globals.base_url_novi + "/api/v1/getCustomer";
 
     await http.get(url, headers: {
       "Accept": "application/json",
@@ -388,7 +494,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _checkUser(String token) async {
-    String url = globals.base_url + "/api/v1/getCustomer";
+    String url = globals.base_url_novi + "/api/v1/getCustomer";
 
     http.Response response = await http.get(url, headers: {
       "Accept": "application/json",
@@ -471,7 +577,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
           if (response.statusCode == 200) {
             //mijenja da se ide na https
-            globals.which_url = 1;
             var resBody = json.decode(response.body);
 
             SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -521,7 +626,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 'placeOfRegistration', resBody["placeOfRegistration"]);
             Navigator.of(context).pushNamed('/main');
           } else {
-            globals.which_url = 0;
             // If that call was not successful, throw an error.
             throw Exception('Failed to load post');
           }
@@ -536,4 +640,204 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     });
   }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlatformState() async {
+    // Load persisted fetch events from SharedPreferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String json = prefs.getString(EVENTS_KEY);
+    if (json != null) {
+      setState(() {
+        _events = jsonDecode(json).cast<String>();
+      });
+    }
+    // Configure BackgroundFetch.
+    BackgroundFetch.configure(
+            BackgroundFetchConfig(
+              minimumFetchInterval: 15,
+              stopOnTerminate: false,
+              startOnBoot: true,
+              enableHeadless: true,
+            ),
+            _onBackgroundFetch)
+        .then((int status) {
+      print('[BackgroundFetch] configure success: $status');
+      setState(() {
+        // _status = status;
+      });
+    }).catchError((e) {
+      print('[BackgroundFetch] configure ERROR: $e');
+      setState(() {
+        //_status = e;
+      });
+    });
+
+    // Optionally query the current BackgroundFetch status.
+    int status = await BackgroundFetch.status;
+    setState(() {
+      // _status = status;
+    });
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+  }
+
+  void _onBackgroundFetch() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // This is the fetch-event callback.
+    print('[BackgroundFetch] Event received');
+    setState(() {
+      _events.insert(0, new DateTime.now().toString());
+    });
+    // Persist fetch events in SharedPreferences
+    prefs.setString(EVENTS_KEY, jsonEncode(_events));
+    _showNotification();
+
+    String url = globals.base_url_novi + "/api/v1/messages";
+
+    String token = (prefs.getString('token') ?? "");
+
+    http.Response response = await http.get(url, headers: {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "token": "$token",
+      "req_type": "mob"
+    }).then((http.Response response) async {
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.contentLength}");
+      print(response.headers);
+      print(response.request);
+      print(response.statusCode);
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        setState(() {
+          List dataMessage = json.decode(response.body);
+          if (dataMessage.length != null)
+            for (int i = 0; i < dataMessage.length; i++) {
+              Map<String, dynamic> row = {
+                DatabaseHelper.columnIdMessage: dataMessage[i]["id"],
+                DatabaseHelper.columnCreated:
+                    dataMessage[i]["created"].toString(),
+                DatabaseHelper.columnTitle: dataMessage[i]["title"],
+                DatabaseHelper.columnMessage: dataMessage[i]["message"],
+                DatabaseHelper.columnDeleted: "",
+                DatabaseHelper.columnReadStatus: 0,
+              };
+              dbHelper.insert(row);
+            }
+          _query();
+        });
+      } else {
+        // If that call was not successful, throw an error.
+        throw Exception('Failed to load post');
+      }
+    });
+
+    // IMPORTANT:  You must signal completion of your fetch task or the OS can punish your app
+    // for taking too long in the background.
+    BackgroundFetch.finish();
+  }
+
+  Future<void> _showNotification() async {
+    var android = new AndroidNotificationDetails(
+        'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
+        priority: Priority.High, importance: Importance.Max);
+    var iOS = new IOSNotificationDetails();
+    var platform = new NotificationDetails(android, iOS);
+    await flutterLocalNotificationsPlugin
+        .show(0, 'Nova poruka', 'Test tekst', platform, payload: 'Poruka');
+  }
+
+  Future<void> onSelectNotification(String payload) async {
+    if (payload != null) {
+      debugPrint('notification payload: ' + payload);
+    }
+
+    //Postaviti na poruke
+//    await Navigator.push(
+//      context,
+//      MaterialPageRoute(builder: (context) => SecondScreen(payload)),
+//    );
+  }
+
+  void _query() async {
+    final allRows = await dbHelper.queryAllRows();
+    print('query all rows:');
+
+    setState(() {
+      data = allRows;
+    });
+    allRows.forEach((row) => print(row));
+  }
+
+  void onTapped(int index) {
+    print(data[index]["title"] + " poruka !");
+    showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text(data[index]["title"]),
+        content: new Text(data[index]["message"]),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => showtoast(index, 1, context),
+            child: new Text('Obrisati poruku'),
+          ),
+          new FlatButton(
+            onPressed: () => showtoast(index, 2, context),
+            child: new Text('Da'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+void showtoast(int index, int i, BuildContext context) {
+  String msg = "";
+  if (i == 1) {
+    msg = " poruka obrisana!";
+  } else {
+    msg = " poruka pročitana!";
+  }
+  Fluttertoast.showToast(
+      msg: data[index]["title"] + msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      // also possible "TOP" and "CENTER"
+      textColor: Colors.white);
+  Navigator.of(context).pop();
+}
+
+Future<void> _showNotification() async {
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+  var android = new AndroidInitializationSettings('@mipmap/launcher_icon');
+  var iOS = new IOSInitializationSettings();
+  var initSetttings = new InitializationSettings(android, iOS);
+  flutterLocalNotificationsPlugin.initialize(initSetttings,
+      onSelectNotification: onSelectNotification);
+
+  var android1 = new AndroidNotificationDetails(
+      'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
+      priority: Priority.High, importance: Importance.Max);
+  var iOS1 = new IOSNotificationDetails();
+  var platform = new NotificationDetails(android1, iOS1);
+  await flutterLocalNotificationsPlugin
+      .show(0, 'Nova poruka', 'Test tekst', platform, payload: 'Poruka');
+}
+
+Future<void> onSelectNotification(String payload) async {
+  if (payload != null) {
+    debugPrint('notification payload: ' + payload);
+  }
+
+  //Postaviti na poruke
+//    await Navigator.push(
+//      context,
+//      MaterialPageRoute(builder: (context) => SecondScreen(payload)),
+//    );
 }

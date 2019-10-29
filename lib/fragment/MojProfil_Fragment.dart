@@ -113,9 +113,6 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
   Future<String> getPrefTypeData() async {
     String url;
 
-    if (globals.which_url == 0)
-      url = globals.base_url + "/api/v1/getPrefTypes";
-    else
       url = globals.base_url_novi + "/api/v1/getPrefTypes";
 
     var res = await http.get(Uri.parse(url));
@@ -474,7 +471,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                   )
                 : SizedBox(),
 //            RaisedButton(
-//              child: Text("Poruke (2)"),
+//              child: Text("Poruke"),
 //              onPressed: () {
 //                setState(() {
 //                  pressedPoruke = !pressedPoruke;
@@ -569,9 +566,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
 
   void fvoidUpdateCustomer() async {
     String url;
-    if (globals.which_url == 0)
-      url = globals.base_url + "/api/v1/updateCustomer";
-    else
+
       url = globals.base_url_novi + "/api/v1/updateCustomer";
     //String url = globals.base_url+"/api/v1/updateCustomer";
 

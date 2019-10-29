@@ -65,14 +65,14 @@ class _SignupPageState extends State<SignupPage> {
 
   Future<String> getPrefTypeData() async {
 
-    String url = globals.base_url + "/api/v1/getPrefTypes";
+    String url = globals.base_url_novi + "/api/v1/getPrefTypes";
     var res = await http.get(Uri.parse(url));
 
-    if(json.decode(res.body)["fitnessTypeList"]==null)
-      {
-        String url = globals.base_url_novi + "/api/v1/getPrefTypes";
-        res = await http.get(Uri.parse(url));
-      }
+//    if(json.decode(res.body)["fitnessTypeList"]==null)
+//      {
+//        String url = globals.base_url_novi + "/api/v1/getPrefTypes";
+//        res = await http.get(Uri.parse(url));
+//      }
     setState(() {
       var resBody = json.decode(res.body);
       data_fitnessType = resBody["fitnessTypeList"];
@@ -382,6 +382,7 @@ class _SignupPageState extends State<SignupPage> {
                                 if (gdpr_privola &&
                                     terms_of_use &&
                                     !(ImeText.text == "") &&
+                                    !(EmailText.text == "") &&
                                     !(PrezimeText.text == "")) {
                                   fvoidServisEmail(EmailText.text);
                                 } else {
@@ -518,9 +519,9 @@ class _SignupPageState extends State<SignupPage> {
 
   void fvoidServisEmail(String text) async {
     String url;
-    if (globals.which_url == 0)
-      url = globals.base_url + "/api/v1/requestOTP";
-    else
+//    if (globals.which_url == 0)
+//      url = globals.base_url + "/api/v1/requestOTP";
+//    else
       url = globals.base_url_novi + "/api/v1/requestOTP";
 
     String json_body = '{"active" : false, "email" : "$text"}';
@@ -591,9 +592,9 @@ class _SignupPageState extends State<SignupPage> {
 
   void fvoidServisEmailOTP(String dialogOTP, String EmailTextConfirm) async {
     String url;
-    if (globals.which_url == 0)
-      url = globals.base_url + "/api/v1/confirmOTP";
-    else
+//    if (globals.which_url == 0)
+//      url = globals.base_url + "/api/v1/confirmOTP";
+//    else
       url = globals.base_url_novi + "/api/v1/confirmOTP";
 
     String json_body = '{"otp" : "$dialogOTP", "email" : "$EmailTextConfirm"}';
@@ -629,9 +630,7 @@ class _SignupPageState extends State<SignupPage> {
 
   void fvoidCreateCustomer(String token, String emailTextConfirm) async {
     String url;
-    if (globals.which_url == 0)
-      url = globals.base_url + "/api/v1/updateCustomer";
-    else
+
       url = globals.base_url_novi + "/api/v1/updateCustomer";
 
     String datum_rodenja = datumRodenja.text;
