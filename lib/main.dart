@@ -69,7 +69,7 @@ void backgroundFetchHeadlessTask() async {
     }
   });
   Map<String, dynamic> row = {
-    DatabaseHelper.columnIdMessage: "32",
+    DatabaseHelper.columnIdMessage: "34",
     DatabaseHelper.columnCreated: "w4123432141",
     DatabaseHelper.columnTitle: "Vanja",
     DatabaseHelper.columnMessage: "uspjeh",
@@ -78,9 +78,9 @@ void backgroundFetchHeadlessTask() async {
   };
   final rowsAffected = await dbHelperHeadless.update(row);
   print('updated $rowsAffected row(s)');
-  dbHelperHeadless.delete(30);
-  dbHelperHeadless.delete(31);
-  dbHelperHeadless.delete(32);
+  dbHelperHeadless.delete(33);
+  //dbHelperHeadless.delete(34);
+
 
   BackgroundFetch.finish();
 }
@@ -95,7 +95,7 @@ void main() {
 
   // Register to receive BackgroundFetch events after app is terminated.
   // Requires {stopOnTerminate: false, enableHeadless: true}
-  //BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
+  BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 }
 
 class MyApp extends StatelessWidget {
@@ -134,136 +134,136 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return new Scaffold(
         resizeToAvoidBottomPadding: false,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(
-              height: 300.0,
-              child: Image.asset(
-                "assets/images/prijava_logo.png",
-                fit: BoxFit.fill,
-              ),
-              width: MediaQuery.of(context).size.width,
-            ),
-            Container(
-                padding: EdgeInsets.only(top: 35.0, left: 36.0, right: 36.0),
-                child: Column(
-                  children: <Widget>[
-                    TextField(
-                      decoration: InputDecoration(
-                          labelText: 'EMAIL',
-                          labelStyle: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0))),
-                      controller: EmailText,
-                    ),
-                    SizedBox(height: 20.0),
-                    SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        height: 50.0,
-                        child: Material(
-                          borderRadius: BorderRadius.circular(10.0),
-                          shadowColor: Colors.blueAccent,
-                          color: Colors.blue,
-                          elevation: 7.0,
-                          child: RaisedButton(
-                            padding: const EdgeInsets.all(8.0),
-                            splashColor: Colors.blueAccent,
-                            textColor: Colors.white,
-                            color: Colors.blue,
-                            onPressed: () {
-                              if (EmailText.text == "Apple/Test") {
-                                Navigator.of(context).pushNamed('/main');
-                              } else
-                                _callServisEmail(EmailText.text);
-                              //Navigator.of(context).pushNamed('/main');
-                            },
-                            child: Text(
-                              'LOGIN',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Montserrat'),
-                            ),
-                          ),
-                        )),
-                  ],
-                )),
-            SizedBox(height: 15.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Nisi član LeoCluba?',
-                  style: TextStyle(fontFamily: 'Montserrat'),
-                ),
-                SizedBox(width: 5.0),
-                InkWell(
-                  onTap: () {
-                    Navigator.of(context).pushNamed('/signup');
-                  },
-                  child: Text(
-                    'Registriraj se ovdje.',
-                    style: TextStyle(
-                        color: Colors.blue,
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.underline),
-                  ),
-                )
-              ],
-            ),
-            Expanded(
-              child: Align(
-                alignment: FractionalOffset.bottomCenter,
-                child: Image.asset(
-                  "assets/images/prijava_logo_polleo.png",
-                ),
-              ),
-            )
-          ],
-        ));
-//        body: (data == null)
-//            ? EMPTY_TEXT
-//            : Container(
-//                child: new ListView.builder(
-//                    itemCount: data == null ? 0 : data.length,
-//                    itemBuilder: (BuildContext context, int index) {
-//                      String timestamp = data[index]["message"];
-//                      return GestureDetector(
-//                        onTap: () => onTapped(index),
-////                            Scaffold
-////                            .of(context)
-////                            .showSnackBar(SnackBar(content: Text(data[index]["title"]))),
-//                        child: InputDecorator(
-//                            decoration: InputDecoration(
-//                                contentPadding: EdgeInsets.only(
-//                                    left: 5.0, top: 5.0, bottom: 5.0),
-//                                labelStyle: TextStyle(
-//                                    color: Colors.blue, fontSize: 20.0),
-//                                labelText: data[index]["title"]),
-//                            child: new Text(timestamp,
-//                                style: TextStyle(
-//                                    color: Colors.black, fontSize: 16.0))),
-//                      );
-//                    }),
-//              ));
+//        body: Column(
+//          crossAxisAlignment: CrossAxisAlignment.start,
+//          children: <Widget>[
+//            SizedBox(
+//              height: 300.0,
+//              child: Image.asset(
+//                "assets/images/prijava_logo.png",
+//                fit: BoxFit.fill,
+//              ),
+//              width: MediaQuery.of(context).size.width,
+//            ),
+//            Container(
+//                padding: EdgeInsets.only(top: 35.0, left: 36.0, right: 36.0),
+//                child: Column(
+//                  children: <Widget>[
+//                    TextField(
+//                      decoration: InputDecoration(
+//                          labelText: 'EMAIL',
+//                          labelStyle: TextStyle(
+//                              fontFamily: 'Montserrat',
+//                              fontWeight: FontWeight.bold,
+//                              color: Colors.black),
+//                          border: OutlineInputBorder(
+//                              borderRadius: BorderRadius.circular(10.0))),
+//                      controller: EmailText,
+//                    ),
+//                    SizedBox(height: 20.0),
+//                    SizedBox(
+//                        width: MediaQuery.of(context).size.width,
+//                        height: 50.0,
+//                        child: Material(
+//                          borderRadius: BorderRadius.circular(10.0),
+//                          shadowColor: Colors.blueAccent,
+//                          color: Colors.blue,
+//                          elevation: 7.0,
+//                          child: RaisedButton(
+//                            padding: const EdgeInsets.all(8.0),
+//                            splashColor: Colors.blueAccent,
+//                            textColor: Colors.white,
+//                            color: Colors.blue,
+//                            onPressed: () {
+//                              if (EmailText.text == "Apple/Test") {
+//                                Navigator.of(context).pushNamed('/main');
+//                              } else
+//                                _callServisEmail(EmailText.text);
+//                              //Navigator.of(context).pushNamed('/main');
+//                            },
+//                            child: Text(
+//                              'LOGIN',
+//                              style: TextStyle(
+//                                  color: Colors.white,
+//                                  fontWeight: FontWeight.bold,
+//                                  fontFamily: 'Montserrat'),
+//                            ),
+//                          ),
+//                        )),
+//                  ],
+//                )),
+//            SizedBox(height: 15.0),
+//            Row(
+//              mainAxisAlignment: MainAxisAlignment.center,
+//              children: <Widget>[
+//                Text(
+//                  'Nisi član LeoCluba?',
+//                  style: TextStyle(fontFamily: 'Montserrat'),
+//                ),
+//                SizedBox(width: 5.0),
+//                InkWell(
+//                  onTap: () {
+//                    Navigator.of(context).pushNamed('/signup');
+//                  },
+//                  child: Text(
+//                    'Registriraj se ovdje.',
+//                    style: TextStyle(
+//                        color: Colors.blue,
+//                        fontFamily: 'Montserrat',
+//                        fontWeight: FontWeight.bold,
+//                        decoration: TextDecoration.underline),
+//                  ),
+//                )
+//              ],
+//            ),
+//            Expanded(
+//              child: Align(
+//                alignment: FractionalOffset.bottomCenter,
+//                child: Image.asset(
+//                  "assets/images/prijava_logo_polleo.png",
+//                ),
+//              ),
+//            )
+//          ],
+//        ));
+        body: (data == null)
+            ? EMPTY_TEXT
+            : Container(
+                child: new ListView.builder(
+                    itemCount: data == null ? 0 : data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      String timestamp = data[index]["message"];
+                      return GestureDetector(
+                        onTap: () => onTapped(index),
+//                            Scaffold
+//                            .of(context)
+//                            .showSnackBar(SnackBar(content: Text(data[index]["title"]))),
+                        child: InputDecorator(
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.only(
+                                    left: 5.0, top: 5.0, bottom: 5.0),
+                                labelStyle: TextStyle(
+                                    color: Colors.blue, fontSize: 20.0),
+                                labelText: data[index]["title"]),
+                            child: new Text(timestamp,
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16.0))),
+                      );
+                    }),
+              ));
   }
 
   @override
   void initState() {
     super.initState();
-//    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-//    var android = new AndroidInitializationSettings('@mipmap/launcher_icon');
-//    var iOS = new IOSInitializationSettings();
-//    var initSetttings = new InitializationSettings(android, iOS);
-//    flutterLocalNotificationsPlugin.initialize(initSetttings,
-//        onSelectNotification: onSelectNotification);
-//    _query();
-    //initPlatformState();
+    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    var android = new AndroidInitializationSettings('@mipmap/launcher_icon');
+    var iOS = new IOSInitializationSettings();
+    var initSetttings = new InitializationSettings(android, iOS);
+    flutterLocalNotificationsPlugin.initialize(initSetttings,
+        onSelectNotification: onSelectNotification);
+    _query();
+    initPlatformState();
     _getPref();
   }
 

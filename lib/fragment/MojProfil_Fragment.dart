@@ -444,28 +444,29 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                               gdpr_privola_email = value;
                             });
                           }),
-                      Container(
-                          height: 40.0,
-                          child: Material(
-                            borderRadius: BorderRadius.circular(20.0),
-                            shadowColor: Colors.blueAccent,
-                            color: Colors.blue,
-                            elevation: 7.0,
-                            child: GestureDetector(
-                              onTap: () {
-                                  fvoidUpdateCustomer();
-                              },
+                      GestureDetector(
+                        onTap: () {
+                          fvoidUpdateCustomer();
+                        },
+                        child: Container(
+                            height: 40.0,
+                            child: Material(
+                              borderRadius: BorderRadius.circular(20.0),
+                              shadowColor: Colors.blueAccent,
+                              color: Colors.blue,
+                              elevation: 7.0,
                               child: Center(
-                                child: Text(
-                                  'POTVRDA',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Montserrat'),
+                                  child: Text(
+                                    'POTVRDA',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Montserrat'),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          )),
+
+                            )),
+                      ),
                       SizedBox(height: 20.0),
                     ],
                   )
@@ -686,7 +687,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
   _launchURL(String url) async {
     print(url);
     if (await canLaunch(url)) {
-      launch(url);
+      launch(url,enableJavaScript: true);
     } else {
       throw 'Could not launch $url';
     }
