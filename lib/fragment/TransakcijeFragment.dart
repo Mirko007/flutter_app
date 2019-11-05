@@ -123,7 +123,7 @@ class ListPage extends StatelessWidget {
 
           return GestureDetector(
             onTap: () {
-             // getTransactionDetails(data[index]["uuid"], content);
+              getTransactionDetails(data[index]["uuid"], content);
             },
             child: Container(
                 margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 4.0),

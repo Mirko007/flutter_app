@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:ui' as prefix0;
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -10,6 +12,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
+final Set<Factory> gestureRecognizers = [
+  Factory(() => EagerGestureRecognizer()),
+].toSet();
 
 class AkcijeFragment extends StatefulWidget {
   @override
@@ -42,7 +47,10 @@ class _AkcijeState extends State<AkcijeFragment> {
 //                  .width,
 //            ))
           Scaffold(
-        appBar: AppBar(title: Text('Akcije'),automaticallyImplyLeading: false,),
+        appBar: AppBar(
+          title: Text('Akcije'),
+          automaticallyImplyLeading: false,
+        ),
         backgroundColor: Colors.white,
         body: new ListView.builder(
           itemBuilder: (BuildContext context, int index) {
@@ -185,12 +193,12 @@ class _AkcijeState extends State<AkcijeFragment> {
           for (int i = 0; i < data.length; i++) {
             if (data[i]["catalogList"] != "") {
               List dataKatalog = data[i]["catalogList"];
-              List<MyTile> listMiniKatalog= List<MyTile>();
+              List<MyTile> listMiniKatalog = List<MyTile>();
               for (int j = 0; j < dataKatalog.length; j++) {
-                listMiniKatalog.add(new MyTile(dataKatalog[j]["name"], <MyTile>[new MyTile(dataKatalog[j]["link"])]));
+                listMiniKatalog.add(new MyTile(dataKatalog[j]["name"],
+                    <MyTile>[new MyTile(dataKatalog[j]["link"])]));
               }
-              listOfTiles.add(new MyTile(data[i]["name"],listMiniKatalog));
-
+              listOfTiles.add(new MyTile(data[i]["name"], listMiniKatalog));
             }
           }
         });
@@ -203,7 +211,7 @@ class StuffInTiles extends StatelessWidget {
   final MyTile myTile;
 
   final Completer<WebViewController> _controller =
-  Completer<WebViewController>();
+      Completer<WebViewController>();
 
   StuffInTiles(this.myTile);
 
@@ -219,6 +227,7 @@ class StuffInTiles extends StatelessWidget {
 //        width: MediaQuery.of(context).size.width,
       width: 400,
         child: new WebView(
+          gestureRecognizers: gestureRecognizers,
           initialUrl: t.title,
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) {
@@ -226,6 +235,8 @@ class StuffInTiles extends StatelessWidget {
           },
         ),
       );
+
+
 //      ListTile(
 //          dense: true,
 //          enabled: true,
@@ -234,13 +245,12 @@ class StuffInTiles extends StatelessWidget {
 //          onTap: () => print("tap"),
 //          selected: true,
 //          title: new Text(t.title));
-
-    return new ExpansionTile(
-
-      key: new PageStorageKey<int>(3),
-      title: new Text(t.title),
-      children: t.children.map(_buildTiles).toList(),
-    );
+    else
+      return new ExpansionTile(
+        key: new PageStorageKey<int>(3),
+        title: new Text(t.title),
+        children: t.children.map(_buildTiles).toList(),
+      );
   }
 }
 
