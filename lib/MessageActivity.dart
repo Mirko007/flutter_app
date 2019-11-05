@@ -93,6 +93,7 @@ Widget _buildContent(BuildContext context) {
 
 void onTapped(int index) {
   print(data[index]["title"] + " poruka !");
+  print(data[index]["title"] + " poruka !");
 
 }
 
