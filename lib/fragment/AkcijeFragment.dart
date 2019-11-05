@@ -42,7 +42,7 @@ class _AkcijeState extends State<AkcijeFragment> {
 //                  .width,
 //            ))
           Scaffold(
-        appBar: AppBar(title: Text('Akcije')),
+        appBar: AppBar(title: Text('Akcije'),automaticallyImplyLeading: false,),
         backgroundColor: Colors.white,
         body: new ListView.builder(
           itemBuilder: (BuildContext context, int index) {

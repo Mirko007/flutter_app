@@ -67,22 +67,35 @@ void backgroundFetchHeadlessTask() async {
     if (response.statusCode == 200) {
       // ignore: missing_return
       List dataMessage = json.decode(response.body);
+      if (dataMessage.length != null)
+        for (int i = 0; i < dataMessage.length; i++) {
+          Map<String, dynamic> row = {
+            DatabaseHelper.columnIdMessage: dataMessage[i]["id"],
+            DatabaseHelper.columnCreated:
+            dataMessage[i]["created"].toString(),
+            DatabaseHelper.columnTitle: dataMessage[i]["title"],
+            DatabaseHelper.columnMessage: dataMessage[i]["message"],
+            DatabaseHelper.columnDeleted: "",
+            DatabaseHelper.columnReadStatus: 0,
+          };
+          dbHelper.insert(row);
+        }
     } else {
       // If that call was not successful, throw an error.
       throw Exception('Failed to load post');
     }
   });
-  Map<String, dynamic> row = {
-    DatabaseHelper.columnIdMessage: "36",
-    DatabaseHelper.columnCreated: "w4123432141",
-    DatabaseHelper.columnTitle: "Vanja",
-    DatabaseHelper.columnMessage: "uspjeh",
-    DatabaseHelper.columnDeleted: "",
-    DatabaseHelper.columnReadStatus: 0,
-  };
-  final rowsAffected = await dbHelperHeadless.update(row);
-  print('updated $rowsAffected row(s)');
-  dbHelperHeadless.delete(36);
+//  Map<String, dynamic> row = {
+//    DatabaseHelper.columnIdMessage: "36",
+//    DatabaseHelper.columnCreated: "w4123432141",
+//    DatabaseHelper.columnTitle: "Vanja",
+//    DatabaseHelper.columnMessage: "uspjeh",
+//    DatabaseHelper.columnDeleted: "",
+//    DatabaseHelper.columnReadStatus: 0,
+//  };
+//  final rowsAffected = await dbHelperHeadless.update(row);
+//  print('updated $rowsAffected row(s)');
+  //dbHelperHeadless.delete(36);
   //dbHelperHeadless.delete(34);
 
   BackgroundFetch.finish();

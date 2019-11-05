@@ -37,9 +37,9 @@ class _UserInfoState extends State<UserInfoFragment> {
     if (MediaQuery.of(context).orientation == Orientation.landscape){
       return Scaffold(
           resizeToAvoidBottomPadding: false,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.blue,
           body: Container(
-            color: Colors.white,
+            color: Colors.blue,
             child:Column(
               children: <Widget>[
               SizedBox(height: 24.0,),

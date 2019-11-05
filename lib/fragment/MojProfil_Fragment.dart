@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -9,8 +10,9 @@ import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../MessageActivity.dart';
+import '../database_helper.dart';
 import '../global_variable.dart' as globals;
-
+import '../main.dart';
 
 class MojProfil_Fragment extends StatefulWidget {
   @override
@@ -56,7 +58,6 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
   List<DropdownMenuItem<String>> _dropDownMenuItemscategoryTypeList;
   String _currentcategoryType;
   int _currentcategoryTypeIndex;
-
 
   List data_fitnessType;
   List data_sportType;
@@ -114,7 +115,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
   Future<String> getPrefTypeData() async {
     String url;
 
-      url = globals.base_url_novi + "/api/v1/getPrefTypes";
+    url = globals.base_url_novi + "/api/v1/getPrefTypes";
 
     var res = await http.get(Uri.parse(url));
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -198,7 +199,6 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
 
   @override
   Widget build(BuildContext context) {
-
     return new WillPopScope(
         onWillPop: _onWillPop,
         child: new Scaffold(
@@ -211,22 +211,23 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
 
   Future<bool> _onWillPop() {
     return showDialog(
-      context: context,
-      builder: (context) => new AlertDialog(
-        title: new Text('Jeste li sigurni?'),
-        content: new Text('Želite li izaći iz aplikacije'),
-        actions: <Widget>[
-          new FlatButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: new Text('Ne'),
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Jeste li sigurni?'),
+            content: new Text('Želite li izaći iz aplikacije'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('Ne'),
+              ),
+              new FlatButton(
+                onPressed: () => SystemNavigator.pop(),
+                child: new Text('Da'),
+              ),
+            ],
           ),
-          new FlatButton(
-            onPressed: () =>  SystemNavigator.pop(),
-            child: new Text('Da'),
-          ),
-        ],
-      ),
-    ) ?? false;
+        ) ??
+        false;
   }
 
   Widget buildContent(BuildContext context) {
@@ -420,8 +421,8 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                       ),
                       CheckboxListTile(
                           value: gdpr_privola_posta,
-                          title: new Text(
-                              "Želim primati obavijesti putem pošte"),
+                          title:
+                              new Text("Želim primati obavijesti putem pošte"),
                           onChanged: (bool value) {
                             setState(() {
                               gdpr_privola_posta = value;
@@ -438,8 +439,8 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                           }),
                       CheckboxListTile(
                           value: gdpr_privola_email,
-                          title: new Text(
-                              "Želim primati obavijesti putem maila"),
+                          title:
+                              new Text("Želim primati obavijesti putem maila"),
                           onChanged: (bool value) {
                             setState(() {
                               gdpr_privola_email = value;
@@ -457,15 +458,14 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                               color: Colors.blue,
                               elevation: 7.0,
                               child: Center(
-                                  child: Text(
-                                    'POTVRDA',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'Montserrat'),
-                                  ),
+                                child: Text(
+                                  'POTVRDA',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Montserrat'),
                                 ),
-
+                              ),
                             )),
                       ),
                       SizedBox(height: 20.0),
@@ -481,16 +481,21 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                 );
               },
             ),
-
             RaisedButton(
               child: Text("Česta pitanja"),
-              onPressed: (){_launchURL("https://leoclub.polleosport.hr/cesta-pitanja");
+              onPressed: () {
+                _showNotification();
+                //_launchURL("https://leoclub.polleosport.hr/cesta-pitanja");
               },
             ),
-
             RaisedButton(
               child: Text("Poslovnice i kontakti"),
-              onPressed: () {_launchURL("https://polleosport.hr/poslovnice-i-kontakti");
+              onPressed: () {
+
+                dbHelperHeadless.deleteAll();
+
+
+                //_launchURL("https://polleosport.hr/poslovnice-i-kontakti");
               },
             ),
             RaisedButton(
@@ -499,11 +504,11 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                 _launchURL("https://leoclub.polleosport.hr/pravila-programa");
               },
             ),
-
             RaisedButton(
               child: Text("Zaštita podataka"),
               onPressed: () {
-                _launchURL("https://leoclub.polleosport.hr/pravila-privatnosti");
+                _launchURL(
+                    "https://leoclub.polleosport.hr/pravila-privatnosti");
               },
             ),
           ],
@@ -563,7 +568,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
   void fvoidUpdateCustomer() async {
     String url;
 
-      url = globals.base_url_novi + "/api/v1/updateCustomer";
+    url = globals.base_url_novi + "/api/v1/updateCustomer";
     //String url = globals.base_url+"/api/v1/updateCustomer";
 
     //String datum_rodenja = datumRodenja.text;
@@ -577,13 +582,12 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
     if (_controller_pos_broj.text == "") zipCode = " ";
 
     String phoneNumber = _controller_mobitel.text;
-    if (_controller_mobitel.text == "") phoneNumber =  globals.phone_number_dummmy;
-
+    if (_controller_mobitel.text == "")
+      phoneNumber = globals.phone_number_dummmy;
 
     String firstName = _controller_ime.text;
     String lastName = _controller_prezime.text;
     String email = _controller_mail.text;
-
 
     String spol = "";
     if (_currentGender == "Musko") {
@@ -599,7 +603,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
         '"firstName" : "$firstName","lastName" : "$lastName","email" : "$email","termsOfUse" : true,"gdpr_privola_email" : $gdpr_privola_email,"gdpr_privola_mob" : $gdpr_privola_mob,"gdpr_privola_posta" : $gdpr_privola_posta,"categoryType" : $_currentcategoryTypeIndex,'
         '"fitnessType" : $_currentfitnessTypeIndex,"sportType" : $_currentsportTypeIndex}';
 
-     await http.post(url, body: json_body, headers: {
+    await http.post(url, body: json_body, headers: {
       "Accept": "application/json",
       "content-type": "application/json",
       "req_type": "mob",
@@ -628,8 +632,10 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
         await prefs.setString('referenceNumber', resBody["referenceNumber"]);
         await prefs.setBool('termsOfUse', resBody["termsOfUse"]);
         await prefs.setBool('gdpr_privola_mob', resBody["gdpr_privola_mob"]);
-        await prefs.setBool('gdpr_privola_email', resBody["gdpr_privola_email"]);
-        await prefs.setBool('gdpr_privola_posta', resBody["gdpr_privola_posta"]);
+        await prefs.setBool(
+            'gdpr_privola_email', resBody["gdpr_privola_email"]);
+        await prefs.setBool(
+            'gdpr_privola_posta', resBody["gdpr_privola_posta"]);
         await prefs.setDouble('currentPoints', resBody["currentPoints"]);
         await prefs.setString('dateOfBirth', resBody["dateOfBirth"]);
         await prefs.setString('gender', resBody["gender"]);
@@ -637,38 +643,37 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
         if (resBody["address"] == " ")
           await prefs.setString('address', "");
         else
-        await prefs.setString('address', resBody["address"]);
+          await prefs.setString('address', resBody["address"]);
 
         if (resBody["city"] == " ")
           await prefs.setString('city', "");
         else
-        await prefs.setString('city', resBody["city"]);
+          await prefs.setString('city', resBody["city"]);
 
         if (resBody["zipCode"] == " ")
           await prefs.setString('zipCode', "");
         else
-        await prefs.setString('zipCode', resBody["zipCode"]);
+          await prefs.setString('zipCode', resBody["zipCode"]);
 
         if (resBody["phoneNumber"] == globals.phone_number_dummmy)
           await prefs.setString('phoneNumber', "");
         else
-        await prefs.setString('phoneNumber', resBody["phoneNumber"]);
+          await prefs.setString('phoneNumber', resBody["phoneNumber"]);
 
         await prefs.setString('categoryName', resBody["categoryName"]);
         await prefs.setString('fitnessName', resBody["fitnessName"]);
         await prefs.setString('sportName', resBody["sportName"]);
-        await prefs.setString('placeOfRegistration', resBody["placeOfRegistration"]);
+        await prefs.setString(
+            'placeOfRegistration', resBody["placeOfRegistration"]);
         Fluttertoast.showToast(
-            msg:
-            "Uspješno ažurirani podatci",
+            msg: "Uspješno ažurirani podatci",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             // also possible "TOP" and "CENTER"
             textColor: Colors.white);
       } else {
         Fluttertoast.showToast(
-            msg:
-            "Neuspješno ažurirani podatci",
+            msg: "Neuspješno ažurirani podatci",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             // also possible "TOP" and "CENTER"
@@ -682,9 +687,76 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
   _launchURL(String url) async {
     print(url);
     if (await canLaunch(url)) {
-      launch(url,enableJavaScript: true);
+      launch(url, enableJavaScript: true);
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  Future<void> onSelectNotification(String payload) async {
+    Fluttertoast.showToast(
+        msg: "Uspješan dohvat",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        // also possible "TOP" and "CENTER"
+        textColor: Colors.white);
+  }
+
+  Future<void> _showNotification() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String url = globals.base_url_novi + "/api/v1/messages";
+
+    String token = (prefs.getString('token') ?? "");
+
+    http.Response response = await http.get(url, headers: {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "token": "$token",
+      "req_type": "mob"
+    }).then((http.Response response) async {
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.contentLength}");
+      print(response.headers);
+      print(response.request);
+      print(response.statusCode);
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        setState(() {
+          List dataMessage = json.decode(response.body);
+          if (dataMessage.length != null)
+            for (int i = 0; i < dataMessage.length; i++) {
+              Map<String, dynamic> row = {
+                DatabaseHelper.columnIdMessage: dataMessage[i]["id"],
+                DatabaseHelper.columnCreated:
+                    dataMessage[i]["created"].toString(),
+                DatabaseHelper.columnTitle: dataMessage[i]["title"],
+                DatabaseHelper.columnMessage: dataMessage[i]["message"],
+                DatabaseHelper.columnDeleted: "",
+                DatabaseHelper.columnReadStatus: 0,
+              };
+              dbHelper.insert(row);
+            }
+        });
+      } else {
+        // If that call was not successful, throw an error.
+        throw Exception('Failed to load post');
+      }
+    });
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    var android = new AndroidInitializationSettings('@mipmap/launcher_icon');
+    var iOS = new IOSInitializationSettings();
+    var initSetttings = new InitializationSettings(android, iOS);
+    flutterLocalNotificationsPlugin.initialize(initSetttings,
+        onSelectNotification: onSelectNotification);
+
+    var android1 = new AndroidNotificationDetails(
+        'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
+        priority: Priority.High, importance: Importance.Max);
+    var iOS1 = new IOSNotificationDetails();
+    var platform = new NotificationDetails(android1, iOS1);
+    await flutterLocalNotificationsPlugin
+        .show(0, 'Nova poruka', 'Test tekst', platform, payload: 'Poruka');
   }
 }
