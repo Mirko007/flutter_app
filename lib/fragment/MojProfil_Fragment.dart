@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../MessageActivity.dart';
 import '../global_variable.dart' as globals;
 
 
@@ -471,22 +472,16 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                     ],
                   )
                 : SizedBox(),
-//            RaisedButton(
-//              child: Text("Poruke"),
-//              onPressed: () {
-//                setState(() {
-//                  pressedPoruke = !pressedPoruke;
-//                });
-//              },
-//            ),
-//            pressedPoruke
-//                ? Column(
-//              children: <Widget>[
-//                Text("Nove ponude za ožujak"),
-//                Text(" Povoljniji uvjeti za korisnike ")
-//              ],
-//            )
-//                : SizedBox(),
+            RaisedButton(
+              child: Text("Poruke"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MessageActivity()),
+                );
+              },
+            ),
+
             RaisedButton(
               child: Text("Česta pitanja"),
               onPressed: (){_launchURL("https://leoclub.polleosport.hr/cesta-pitanja");

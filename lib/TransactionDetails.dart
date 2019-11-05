@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'global_variable.dart' as globals;
 String token='';
-List data;
+var data;
 
 final EmailText = TextEditingController();
 final ImeText = TextEditingController();
@@ -43,7 +43,8 @@ class TransactionDetailsState extends State<TransactionDetails> {
   }
 
   Future<String> getTransactionData() async {
-    String url = globals.base_url_novi + "/api/v1/transaction/{$uid}";
+    print("uid:UBIME:"+uid);
+    String url = globals.base_url_novi + "/api/v1/transaction/"+uid;
 
     http.Response response = await http.get(url, headers: {"Accept": "application/json","content-type": "application/json","token": "$token"}).then((http.Response response) async {
       print("Response status: ${response.statusCode}");
@@ -101,7 +102,7 @@ Widget _buildContent(BuildContext context) {
                   Padding(
                     padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
                     child: Text(
-                      "Arena Centar, Zagreb",
+                      data == null ? "AAAAAAAA" : data["locationName"],
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.left,
@@ -183,12 +184,12 @@ Widget _buildContent(BuildContext context) {
                     ),
                   )),
                   //todo kn fali
-                  Padding(
-                    padding: EdgeInsets.all(5),
-                    child: TextField(controller: EmailText,
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold)),
-                  ),
+//                  Padding(
+//                    padding: EdgeInsets.all(5),
+//                    child: TextField(controller: EmailText,
+//                        style: TextStyle(
+//                            fontSize: 20, fontWeight: FontWeight.bold)),
+//                  ),
                 ],
               ),
             ],
@@ -214,7 +215,7 @@ Widget _buildContent(BuildContext context) {
 
 Widget listview_artikli() {
   return ListView.builder(
-      itemCount: data.length,
+      itemCount: data == null ? 0 : data.length,
       itemBuilder: (BuildContext content, int index) {
         return Container(
           // margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 4.0),

@@ -22,37 +22,37 @@ class _AkcijeState extends State<AkcijeFragment> {
     return new WillPopScope(
       onWillPop: _onWillPop,
       child: new
-        Scaffold(
-            appBar: new AppBar(
-              automaticallyImplyLeading: false,
-              title: new Text("Akcije"),
-            ),
-            body: new SizedBox(
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height,
-              child: Image.asset(
-                "assets/images/nema_sadrzaja.PNG",
-                fit: BoxFit.fill,
-              ),
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width,
-            ))
-//          Scaffold(
-//        appBar: AppBar(title: Text('Akcije')),
-//        backgroundColor: Colors.white,
-//        body: new ListView.builder(
-//          itemBuilder: (BuildContext context, int index) {
-//            return new StuffInTiles(listOfTiles[index]);
-//          },
-//          itemCount: listOfTiles.length,
-//        ),
-//
-//        //buildContent(),
-//      ),
+//        Scaffold(
+//            appBar: new AppBar(
+//              automaticallyImplyLeading: false,
+//              title: new Text("Akcije"),
+//            ),
+//            body: new SizedBox(
+//              height: MediaQuery
+//                  .of(context)
+//                  .size
+//                  .height,
+//              child: Image.asset(
+//                "assets/images/nema_sadrzaja.PNG",
+//                fit: BoxFit.fill,
+//              ),
+//              width: MediaQuery
+//                  .of(context)
+//                  .size
+//                  .width,
+//            ))
+          Scaffold(
+        appBar: AppBar(title: Text('Akcije')),
+        backgroundColor: Colors.white,
+        body: new ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            return new StuffInTiles(listOfTiles[index]);
+          },
+          itemCount: listOfTiles.length,
+        ),
+
+        //buildContent(),
+      ),
     );
     //  );
 //    return Scaffold(

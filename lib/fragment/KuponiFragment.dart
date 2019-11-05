@@ -110,184 +110,184 @@ class _KuponiState extends State<KuponiFragment> {
           ),
           //body: _buildContent(context)
           body:
-          Container(
-              color: Colors.white,
-              child:
-              new SizedBox(
-    height: MediaQuery.of(context).size.height,
-    child: Image.asset(
-    "assets/images/nema_sadrzaja.PNG",
-    fit: BoxFit.fill,
-    ),
-    width: MediaQuery.of(context).size.width,
-    )
-//              Column(
-//                  crossAxisAlignment: CrossAxisAlignment.start,
-//                  children: <Widget>[
-//                    Row(
-//                      children: <Widget>[
-//                        Container(
-//                          height: 60.0,
-//                          width: MediaQuery.of(context).size.width / 2,
-//                          child: Padding(
-//                            padding: const EdgeInsets.fromLTRB(
-//                              10.0,
-//                              10.0,
-//                              0.0,
-//                              10.0,
-//                            ),
-//                            child: RaisedButton(
-//                              color: pressed ? Colors.red : Colors.blue,
-//                              shape: OutlineInputBorder(
-//                                  borderRadius: BorderRadius.only(
-//                                      topLeft: Radius.circular(15.0),
-//                                      bottomLeft: Radius.circular(15.0))),
-//                              onPressed: () => setState(() {
-//                                    pressed = true;
-//                                    if (pressed)
-//                                      this.getCouponsPonuda(token);
-//                                    else
-//                                      this.getCouponsOsobni(token);
-//                                  }),
-//                              child: Padding(
-//                                padding: const EdgeInsets.all(5.0),
-//                                child: Center(
-//                                    child: Text(
-//                                  "PONUDA",
-//                                  style: TextStyle(
-//                                      fontSize: 25, color: Colors.white),
-//                                )),
-//                              ),
-//                            ),
-//                          ),
-//                        ),
-//                        Container(
-//                          height: 60.0,
-//                          width: MediaQuery.of(context).size.width / 2,
-//                          child: Padding(
-//                            padding: const EdgeInsets.fromLTRB(
-//                              0.0,
-//                              10.0,
-//                              10.0,
-//                              10.0,
-//                            ),
-//                            child: RaisedButton(
-//                              color: pressed ? Colors.blue : Colors.red,
-//                              shape: OutlineInputBorder(
-//                                  borderRadius: BorderRadius.only(
-//                                      topRight: Radius.circular(15.0),
-//                                      bottomRight: Radius.circular(15.0))),
-//                              onPressed: () => setState(() {
-//                                    pressed = false;
-//                                    if (pressed)
-//                                      this.getCouponsPonuda(token);
-//                                    else
-//                                      this.getCouponsOsobni(token);
-//                                  }),
-//                              child: Padding(
-//                                padding: const EdgeInsets.all(5.0),
-//                                child: Center(
-//                                    child: Text(
-//                                  "OSOBNI",
-//                                  style: TextStyle(
-//                                      fontSize: 25, color: Colors.white),
-//                                )),
-//                              ),
-//                            ),
-//                          ),
-//                        ),
-//                      ],
-//                    ),
-//                    Expanded(
-//                      child: GridView.builder(
-//                          gridDelegate:
-//                              new SliverGridDelegateWithFixedCrossAxisCount(
-//                            crossAxisCount: 2,
-//                          ),
-//                          scrollDirection: Axis.vertical,
-//                          shrinkWrap: true,
-//                          itemCount: allCoupons == null ? 0 : allCoupons.length,
-//                          itemBuilder: (BuildContext content, int index) {
-//                            return GestureDetector(
-//                              onTap: () {
-//                                //getTransactionDetails(data[index]["uuid"], content);
-//                              },
-//                              child: Padding(
-//                                padding: EdgeInsets.all(10),
-//                                child: InkWell(
-//                                  onTap: () {
-//                                    getKuponDetails(index, context);
-//                                  },
-//                                  child: Container(
-//                                    decoration: BoxDecoration(
-//                                        color: Colors.black12,
-//                                        borderRadius: BorderRadius.all(
-//                                            Radius.circular(15.0))),
-//                                    child: Column(
-//                                      children: <Widget>[
-//                                        Expanded(
-//                                          child: Container(
-//                                            decoration: BoxDecoration(
-//                                                color: Colors.blue,
-//                                                borderRadius: BorderRadius.only(
-//                                                    topLeft:
-//                                                        Radius.circular(15.0),
-//                                                    topRight:
-//                                                        Radius.circular(15.0))),
-//                                            child: Center(
-//                                                child: Text(
-//                                              getCustomerRequiredpoints(index) +
-//                                                  // allCoupons[index]["voucherType"]["customerPointsRequired"].toString() +
-//                                                  " bodova",
-//                                              style: TextStyle(
-//                                                  fontSize: 25,
-//                                                  color: Colors.white),
-//                                            )),
-//                                          ),
-//                                        ),
-//                                        Expanded(
-//                                          child: Container(
-//                                            decoration: BoxDecoration(
-//                                              color: Colors.blue,
-//                                            ),
-//                                            child: Center(
-//                                                child: Text(
-//                                              allCoupons[index]
-//                                                          ["voucherName"] ==
-//                                                      null
-//                                                  ? ""
-//                                                  : allCoupons[index]
-//                                                      ["voucherName"],
-//                                              maxLines: 2,
-//                                              overflow: TextOverflow.ellipsis,
-//                                              style: TextStyle(
-//                                                  fontSize: 15,
-//                                                  color: Colors.white),
-//                                            )),
-//                                          ),
-//                                        ),
-//                                        Container(
-//                                          height: 80.0,
-//                                          color: Colors.white,
-//                                          child: getImage(index),
-//                                          width:
-//                                              MediaQuery.of(context).size.width,
-//                                        ),
-//                                        Expanded(
-//                                            child: Padding(
-//                                                padding: EdgeInsets.fromLTRB(
-//                                                    10, 5, 10, 5),
-//                                                child: Text("Vrijedi do " + getValidto(index))))
-//                                      ],
-//                                    ),
-//                                  ),
-//                                ),
-//                              ),
-//                            );
-//                          }),
-//                    )
-//                  ]))
-          ))
+//          Container(
+//              color: Colors.white,
+//              child:
+//              new SizedBox(
+//    height: MediaQuery.of(context).size.height,
+//    child: Image.asset(
+//    "assets/images/nema_sadrzaja.PNG",
+//    fit: BoxFit.fill,
+//    ),
+//    width: MediaQuery.of(context).size.width,
+//    )
+              Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Container(
+                          height: 60.0,
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                              10.0,
+                              10.0,
+                              0.0,
+                              10.0,
+                            ),
+                            child: RaisedButton(
+                              color: pressed ? Colors.red : Colors.blue,
+                              shape: OutlineInputBorder(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(15.0),
+                                      bottomLeft: Radius.circular(15.0))),
+                              onPressed: () => setState(() {
+                                    pressed = true;
+                                    if (pressed)
+                                      this.getCouponsPonuda(token);
+                                    else
+                                      this.getCouponsOsobni(token);
+                                  }),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Center(
+                                    child: Text(
+                                  "PONUDA",
+                                  style: TextStyle(
+                                      fontSize: 25, color: Colors.white),
+                                )),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 60.0,
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                              0.0,
+                              10.0,
+                              10.0,
+                              10.0,
+                            ),
+                            child: RaisedButton(
+                              color: pressed ? Colors.blue : Colors.red,
+                              shape: OutlineInputBorder(
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(15.0),
+                                      bottomRight: Radius.circular(15.0))),
+                              onPressed: () => setState(() {
+                                    pressed = false;
+                                    if (pressed)
+                                      this.getCouponsPonuda(token);
+                                    else
+                                      this.getCouponsOsobni(token);
+                                  }),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Center(
+                                    child: Text(
+                                  "OSOBNI",
+                                  style: TextStyle(
+                                      fontSize: 25, color: Colors.white),
+                                )),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Expanded(
+                      child: GridView.builder(
+                          gridDelegate:
+                              new SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                          ),
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: allCoupons == null ? 0 : allCoupons.length,
+                          itemBuilder: (BuildContext content, int index) {
+                            return GestureDetector(
+                              onTap: () {
+                                //getTransactionDetails(data[index]["uuid"], content);
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.all(10),
+                                child: InkWell(
+                                  onTap: () {
+                                    getKuponDetails(index, context);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.black12,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(15.0))),
+                                    child: Column(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: Colors.blue,
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(15.0),
+                                                    topRight:
+                                                        Radius.circular(15.0))),
+                                            child: Center(
+                                                child: Text(
+                                              getCustomerRequiredpoints(index) +
+                                                  // allCoupons[index]["voucherType"]["customerPointsRequired"].toString() +
+                                                  " bodova",
+                                              style: TextStyle(
+                                                  fontSize: 25,
+                                                  color: Colors.white),
+                                            )),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.blue,
+                                            ),
+                                            child: Center(
+                                                child: Text(
+                                              allCoupons[index]
+                                                          ["voucherName"] ==
+                                                      null
+                                                  ? ""
+                                                  : allCoupons[index]
+                                                      ["voucherName"],
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.white),
+                                            )),
+                                          ),
+                                        ),
+                                        Container(
+                                          height: 80.0,
+                                          color: Colors.white,
+                                          child: getImage(index),
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                        ),
+                                        Expanded(
+                                            child: Padding(
+                                                padding: EdgeInsets.fromLTRB(
+                                                    10, 5, 10, 5),
+                                                child: Text("Vrijedi do " + getValidto(index))))
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                    )
+                  ]))
+  //        ))
 
     );
   }

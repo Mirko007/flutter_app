@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../global_variable.dart' as globals;
 String token='';
 
-List data;
+List data = null;
 class TransakcijeFragment extends StatefulWidget {
   @override
   _TransakcijeState createState() => _TransakcijeState();
@@ -123,7 +123,7 @@ class ListPage extends StatelessWidget {
 
           return GestureDetector(
             onTap: () {
-              //getTransactionDetails(data[index]["uuid"], content);
+             // getTransactionDetails(data[index]["uuid"], content);
             },
             child: Container(
                 margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 4.0),
@@ -188,6 +188,7 @@ getBodovi(int index) {
 }
 
 void getTransactionDetails(String uuid, BuildContext context) {
+  print("UUID UBIME:"+uuid);
   Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => TransactionDetails(uuid: uuid)),
