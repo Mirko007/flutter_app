@@ -45,8 +45,6 @@ void backgroundFetchHeadlessTask() async {
   // Persist fetch events in SharedPreferences
   prefs.setString(EVENTS_KEY, jsonEncode(events));
 
-  _showNotification();
-
   String url = globals.base_url_novi + "/api/v1/messages";
 
   String token = (prefs.getString('token') ?? "");
@@ -63,7 +61,8 @@ void backgroundFetchHeadlessTask() async {
     print(response.request);
     print(response.statusCode);
     print(response.body);
-
+    String title = "";
+    String message = "";
     if (response.statusCode == 200) {
       // ignore: missing_return
       List dataMessage = json.decode(response.body);
@@ -71,15 +70,17 @@ void backgroundFetchHeadlessTask() async {
         for (int i = 0; i < dataMessage.length; i++) {
           Map<String, dynamic> row = {
             DatabaseHelper.columnIdMessage: dataMessage[i]["id"],
-            DatabaseHelper.columnCreated:
-            dataMessage[i]["created"].toString(),
+            DatabaseHelper.columnCreated: dataMessage[i]["created"].toString(),
             DatabaseHelper.columnTitle: dataMessage[i]["title"],
             DatabaseHelper.columnMessage: dataMessage[i]["message"],
             DatabaseHelper.columnDeleted: "",
             DatabaseHelper.columnReadStatus: 0,
           };
           dbHelper.insert(row);
+          title = dataMessage[i]["title"];
+          message = dataMessage[i]["message"];
         }
+      _showNotification(title, message);
     } else {
       // If that call was not successful, throw an error.
       throw Exception('Failed to load post');
@@ -112,12 +113,12 @@ void main() {
   // Register to receive BackgroundFetch events after app is terminated.
   // Requires {stopOnTerminate: false, enableHeadless: true}
   BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
-
 }
 
 class MyApp extends StatelessWidget {
   // reference to our single class that manages the database
   MyApp({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -138,6 +139,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key}) : super(key: key);
+
   @override
   _MyHomePageState createState() => new _MyHomePageState();
 }
@@ -406,7 +408,6 @@ class _MyHomePageState extends State<MyHomePage> {
       "Accept": "application/json",
       "content-type": "application/json"
     }).then((http.Response response) {
-
       if (response.statusCode == 200) {
         var resBody = json.decode(response.body);
         print(resBody["token"]);
@@ -724,7 +725,6 @@ class _MyHomePageState extends State<MyHomePage> {
     await dbHelperHeadless.insert(row);
     // Persist fetch events in SharedPreferences
     prefs.setString(EVENTS_KEY, jsonEncode(_events));
-    _showNotification();
 
     String url = globals.base_url_novi + "/api/v1/messages";
 
@@ -743,6 +743,8 @@ class _MyHomePageState extends State<MyHomePage> {
       print(response.statusCode);
       print(response.body);
 
+      String title = "";
+      String message = "";
       if (response.statusCode == 200) {
         setState(() {
           List dataMessage = json.decode(response.body);
@@ -757,9 +759,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 DatabaseHelper.columnDeleted: "",
                 DatabaseHelper.columnReadStatus: 0,
               };
+              title = dataMessage[i]["title"];
+              message = dataMessage[i]["message"];
               dbHelper.insert(row);
             }
           _query();
+          _showNotification(title, message);
         });
       } else {
         // If that call was not successful, throw an error.
@@ -772,14 +777,14 @@ class _MyHomePageState extends State<MyHomePage> {
     BackgroundFetch.finish();
   }
 
-  Future<void> _showNotification() async {
+  Future<void> _showNotification(String title, String message) async {
     var android = new AndroidNotificationDetails(
         'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
         priority: Priority.High, importance: Importance.Max);
     var iOS = new IOSNotificationDetails();
     var platform = new NotificationDetails(android, iOS);
-    await flutterLocalNotificationsPlugin
-        .show(0, 'Nova poruka', 'Test tekst', platform, payload: 'Poruka');
+    await flutterLocalNotificationsPlugin.show(0, title, message, platform,
+        payload: 'Poruka');
   }
 
   Future<void> onSelectNotification(String payload) async {
@@ -842,7 +847,7 @@ void showtoast(int index, int i, BuildContext context) {
   Navigator.of(context).pop();
 }
 
-Future<void> _showNotification() async {
+Future<void> _showNotification(String title, String message) async {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
   var android = new AndroidInitializationSettings('@mipmap/launcher_icon');
@@ -857,13 +862,10 @@ Future<void> _showNotification() async {
   var iOS1 = new IOSNotificationDetails();
   var platform = new NotificationDetails(android1, iOS1);
   await flutterLocalNotificationsPlugin
-      .show(0, 'Nova poruka', 'Test tekst', platform, payload: 'Poruka');
+      .show(0, title, message, platform, payload: 'Poruka');
 }
 
 Future<void> onSelectNotification(String payload) async {
-
   //Postaviti na poruke
   navigatorKey.currentState.pushNamed('/messages');
-
 }
-

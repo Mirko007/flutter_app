@@ -5,19 +5,18 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'global_variable.dart' as globals;
-String token='';
+
+String token = '';
 var data;
 
 final EmailText = TextEditingController();
 final ImeText = TextEditingController();
 final PrezimeText = TextEditingController();
 
-
 class TransactionDetails extends StatefulWidget {
   String uuid;
 
   TransactionDetails({this.uuid});
-
 
   @override
   TransactionDetailsState createState() => TransactionDetailsState(uid: uuid);
@@ -37,16 +36,19 @@ class TransactionDetailsState extends State<TransactionDetails> {
   _getPref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      token = (prefs.getString('token')??"");
+      token = (prefs.getString('token') ?? "");
       this.getTransactionData();
     });
   }
 
   Future<String> getTransactionData() async {
-    print("uid:UBIME:"+uid);
-    String url = globals.base_url_novi + "/api/v1/transaction/"+uid;
+    String url = globals.base_url_novi + "/api/v1/transaction/" + uid;
 
-    http.Response response = await http.get(url, headers: {"Accept": "application/json","content-type": "application/json","token": "$token"}).then((http.Response response) async {
+    http.Response response = await http.get(url, headers: {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "token": "$token"
+    }).then((http.Response response) async {
       print("Response status: ${response.statusCode}");
       print("Response body: ${response.contentLength}");
       print(response.headers);
@@ -58,20 +60,19 @@ class TransactionDetailsState extends State<TransactionDetails> {
         setState(() {
           var resBody = json.decode(response.body);
 
-          data = resBody[""];
+          data = resBody;
+          print("data");
+          print(data);
         });
       } else {
         // If that call was not successful, throw an error.
         throw Exception('Failed to load post');
       }
-    }
-    );
-
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(title: Text('Transakcije detalji')),
       body: Container(
@@ -102,7 +103,7 @@ Widget _buildContent(BuildContext context) {
                   Padding(
                     padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
                     child: Text(
-                      data == null ? "AAAAAAAA" : data["locationName"],
+                      data == null ? "" : data["locationName"],
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.left,
@@ -119,7 +120,7 @@ Widget _buildContent(BuildContext context) {
                     textAlign: TextAlign.right,
                   ),
                   Text(
-                    "22. veljače 2019.",
+                    data == null ? "" : data["created"],
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.right,
                   ),
@@ -160,8 +161,9 @@ Widget _buildContent(BuildContext context) {
                       style: TextStyle(fontSize: 15, color: Colors.grey))),
             ])),
         Container(
+          color: Colors.white,
           child: listview_artikli(),
-          height: 200,
+          height:250,
         ),
         Container(
           color: Colors.white,
@@ -184,12 +186,12 @@ Widget _buildContent(BuildContext context) {
                     ),
                   )),
                   //todo kn fali
-//                  Padding(
-//                    padding: EdgeInsets.all(5),
-//                    child: TextField(controller: EmailText,
-//                        style: TextStyle(
-//                            fontSize: 20, fontWeight: FontWeight.bold)),
-//                  ),
+                  Padding(
+                    padding: EdgeInsets.all(5),
+                    child: Text(getRacunUkupno(),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
+                  ),
                 ],
               ),
             ],
@@ -202,40 +204,58 @@ Widget _buildContent(BuildContext context) {
           children: <Widget>[Icon(Icons.message), Text("Bodovi")],
         ),
         Center(
-          child: Text(
-            "+25",
-            style: TextStyle(
-                fontSize: 100, color: Colors.blue,),
-          ),
+          child:
+            getPointsDifference(),
         )
       ],
     ),
   );
 }
 
+String getRacunUkupno() {
+  double vDoub_RacunUkupno=0.0;
+  for(int i=0;i<data["itemList"].length; i++){
+
+    vDoub_RacunUkupno = vDoub_RacunUkupno + (data["itemList"][i]["quantity"] * data["itemList"][i]["itemPrice"]);
+  }
+  return "= "+vDoub_RacunUkupno.toString();
+}
+ getPointsDifference() {
+
+  int Bodovi= data["totalAcquiredPoints"] - data["spentPoints"];
+  if( Bodovi<0)
+    return Text(Bodovi.toString(),style: TextStyle(fontSize: 100,color: Colors.red),);
+  else if(Bodovi>0)
+    return Text("+"+Bodovi.toString(),style: TextStyle(fontSize: 100,color: Colors.green),);
+  else
+    return Text(Bodovi.toString(),style: TextStyle(fontSize: 100,color: Colors.blue),);
+
+}
+
 Widget listview_artikli() {
   return ListView.builder(
-      itemCount: data == null ? 0 : data.length,
+      itemCount: data["itemList"] == null ? 0 : data["itemList"].length,
       itemBuilder: (BuildContext content, int index) {
         return Container(
-          // margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 4.0),
+            // margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 4.0),
             padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
             height: 50,
             color: Colors.white,
             child: Row(children: <Widget>[
               Expanded(
-                child: Text(data[index]["itemName"], style: TextStyle(fontSize: 18)),
+                child: Text(data["itemList"][index]["itemName"],
+                    style: TextStyle(fontSize: 18)),
               ),
               Padding(
                   padding: EdgeInsets.fromLTRB(20, 0, 40, 0),
                   child: Text(
-                    data[index]["quantity"],
+                    data["itemList"][index]["quantity"].toString(),
                     style: TextStyle(fontSize: 18),
                   )),
               Padding(
                   padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: Text(data[index]["itemPrice"], style: TextStyle(fontSize: 18))),
+                  child: Text(data["itemList"][index]["itemPrice"].toString(),
+                      style: TextStyle(fontSize: 18))),
             ]));
       });
 }
-
