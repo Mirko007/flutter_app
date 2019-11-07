@@ -454,7 +454,7 @@ getImage(int index) {
         ? null
         : Image.memory(
       Base64Decoder().convert(allCoupons[index]["image"]),
-      fit: BoxFit.fill,
+      fit: BoxFit.scaleDown,
     );
   else {
     String VoucherImage = "";
@@ -465,7 +465,7 @@ getImage(int index) {
         ? null
         : Image.memory(
       Base64Decoder().convert(VoucherImage),
-      fit: BoxFit.fill,
+      fit: BoxFit.scaleDown,
     );
   }
 }
