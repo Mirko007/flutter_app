@@ -69,22 +69,32 @@ Widget _buildContent(BuildContext context) {
       child: new ListView.builder(
           itemCount: data == null ? 0 : data.length,
           itemBuilder: (BuildContext context, int index) {
-            String timestamp = data[index]["message"];
+            String message = data[index]["message"];
             return GestureDetector(
               onTap: () => onTapped(index),
 //                            Scaffold
 //                            .of(context)
 //                            .showSnackBar(SnackBar(content: Text(data[index]["title"]))),
-              child: InputDecorator(
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(
-                          left: 5.0, top: 5.0, bottom: 5.0),
-                      labelStyle: TextStyle(
-                          color: Colors.blue, fontSize: 20.0),
-                      labelText: data[index]["title"]),
-                  child: new Text(timestamp,
-                      style: TextStyle(
-                          color: Colors.black, fontSize: 16.0))),
+              child:Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    new Text("Datum kreiranja :" + data[index]["created"],
+                        style: TextStyle(
+                            color: Colors.black, fontSize: 16.0)),
+                    new Text("Datum spremanja :" + data[index]["deleted"],
+                        style: TextStyle(
+                            color: Colors.black, fontSize: 16.0)),
+                    InputDecorator(
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(
+                            left: 5.0, top: 5.0, bottom: 5.0),
+                        labelStyle: TextStyle(
+                            color: Colors.blue, fontSize: 20.0),
+                        labelText: data[index]["title"]),
+                    child: new Text(message,
+                        style: TextStyle(
+                            color: Colors.black, fontSize: 16.0))),
+              ],)
             );
           }),
     ));

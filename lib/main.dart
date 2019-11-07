@@ -73,7 +73,7 @@ void backgroundFetchHeadlessTask() async {
             DatabaseHelper.columnCreated: dataMessage[i]["created"].toString(),
             DatabaseHelper.columnTitle: dataMessage[i]["title"],
             DatabaseHelper.columnMessage: dataMessage[i]["message"],
-            DatabaseHelper.columnDeleted: "",
+            DatabaseHelper.columnDeleted: DateTime.now().toString(),
             DatabaseHelper.columnReadStatus: 0,
           };
           dbHelper.insert(row);
@@ -86,15 +86,15 @@ void backgroundFetchHeadlessTask() async {
       throw Exception('Failed to load post');
     }
   });
-  Map<String, dynamic> row = {
-    DatabaseHelper.columnIdMessage: "36",
-    DatabaseHelper.columnCreated: "w4123432141",
-    DatabaseHelper.columnTitle: "Vanja",
-    DatabaseHelper.columnMessage: "uspjeh Headless",
-    DatabaseHelper.columnDeleted: "",
-    DatabaseHelper.columnReadStatus: 0,
-  };
-  final rowsAffected = await dbHelperHeadless.insert(row);
+//  Map<String, dynamic> row = {
+//    DatabaseHelper.columnIdMessage: "36",
+//    DatabaseHelper.columnCreated: "w4123432141",
+//    DatabaseHelper.columnTitle: "Vanja",
+//    DatabaseHelper.columnMessage: "uspjeh Headless",
+//    DatabaseHelper.columnDeleted: "",
+//    DatabaseHelper.columnReadStatus: 0,
+//  };
+//  final rowsAffected = await dbHelperHeadless.insert(row);
 //  print('updated $rowsAffected row(s)');
   //dbHelperHeadless.delete(36);
   //dbHelperHeadless.delete(34);
@@ -714,15 +714,15 @@ class _MyHomePageState extends State<MyHomePage> {
       _events.insert(0, new DateTime.now().toString());
     });
 
-    Map<String, dynamic> row = {
-      DatabaseHelper.columnIdMessage: "36",
-      DatabaseHelper.columnCreated: "w4123432141",
-      DatabaseHelper.columnTitle: "Vanja",
-      DatabaseHelper.columnMessage: "uspjeh",
-      DatabaseHelper.columnDeleted: "",
-      DatabaseHelper.columnReadStatus: 0,
-    };
-    await dbHelperHeadless.insert(row);
+//    Map<String, dynamic> row = {
+//      DatabaseHelper.columnIdMessage: "36",
+//      DatabaseHelper.columnCreated: "w4123432141",
+//      DatabaseHelper.columnTitle: "Vanja",
+//      DatabaseHelper.columnMessage: "uspjeh",
+//      DatabaseHelper.columnDeleted: "",
+//      DatabaseHelper.columnReadStatus: 0,
+//    };
+//    await dbHelperHeadless.insert(row);
     // Persist fetch events in SharedPreferences
     prefs.setString(EVENTS_KEY, jsonEncode(_events));
 
@@ -756,7 +756,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     dataMessage[i]["created"].toString(),
                 DatabaseHelper.columnTitle: dataMessage[i]["title"],
                 DatabaseHelper.columnMessage: dataMessage[i]["message"],
-                DatabaseHelper.columnDeleted: "",
+                DatabaseHelper.columnDeleted: DateTime.now().toString(),
                 DatabaseHelper.columnReadStatus: 0,
               };
               title = dataMessage[i]["title"];

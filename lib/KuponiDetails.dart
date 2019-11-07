@@ -129,6 +129,7 @@ Widget _buildContent(BuildContext context, Coupon _coupon) {
                     ),
                   )),
               onPressed: () {
+                //_buyVoucher(_coupon,context);
                 _dialogBuyVoucher(_coupon,context);
               },
             )
@@ -162,9 +163,6 @@ Widget _buildContent(BuildContext context, Coupon _coupon) {
   );
 }
 
-getBarcodeImage() {
-
-}
 
 _dialogBuyVoucher(Coupon coupon,BuildContext context) {
   print("ASdadsadasdsafd");
@@ -194,6 +192,8 @@ _buyVoucher(Coupon coupon,BuildContext context) async {
   String url = globals.base_url_novi + "/api/v1/getVoucher/"+ coupon.id.toString();
 
   String token = (prefs.getString('token') ?? "");
+  print("token");
+  print(token);
 
   http.Response response = await http.get(url, headers: {
     "Accept": "application/json",
@@ -216,26 +216,30 @@ _buyVoucher(Coupon coupon,BuildContext context) async {
           gravity: ToastGravity.CENTER,
           // also possible "TOP" and "CENTER"
           textColor: Colors.white);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => Main_Fragment(tab: 3)),
-      );
-
+//      Navigator.push(
+//        context,
+//        MaterialPageRoute(
+//            builder: (context) => Main_Fragment(tab: 3)),
+//      );
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
     } else {
       Fluttertoast.showToast(
-          msg: "Neuspješno kupljen kupon",
+          msg: "Neuspješna kupovina kupona",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           backgroundColor: Colors.blue,
           // also possible "TOP" and "CENTER"
           textColor: Colors.white);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                Main_Fragment(tab: 3)),
-      );
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+
+//      Navigator.push(
+//        context,
+//        MaterialPageRoute(
+//            builder: (context) =>
+//                Main_Fragment(tab: 3)),
+//      );
       // If that call was not successful, throw an error.
       throw Exception('Failed to load post');
     }

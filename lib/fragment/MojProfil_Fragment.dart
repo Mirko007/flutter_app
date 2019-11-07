@@ -732,7 +732,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                     dataMessage[i]["created"].toString(),
                 DatabaseHelper.columnTitle: dataMessage[i]["title"],
                 DatabaseHelper.columnMessage: dataMessage[i]["message"],
-                DatabaseHelper.columnDeleted: "",
+                DatabaseHelper.columnDeleted: DateTime.now().toString(),
                 DatabaseHelper.columnReadStatus: 0,
               };
               dbHelper.insert(row);
