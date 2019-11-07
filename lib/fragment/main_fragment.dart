@@ -10,18 +10,22 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 
 class Main_Fragment extends StatefulWidget {
+ int tab;
+  Main_Fragment({this.tab});
   @override
-  _Main_FragmentState createState() => _Main_FragmentState();
+  _Main_FragmentState createState() => _Main_FragmentState(selectedTab : tab);
 }
 
 class _Main_FragmentState extends State<Main_Fragment> {
-  int _selectedTab = 2;
+  int selectedTab;
+
+  _Main_FragmentState({this.selectedTab});
+
 
   Widget callPage(int currentIndex) {
     switch (currentIndex) {
       case 0:
         return TransakcijeFragment();
-
       case 1:
         return AkcijeFragment();
       case 2:
@@ -57,11 +61,11 @@ class _Main_FragmentState extends State<Main_Fragment> {
               animationDuration: Duration(milliseconds: 600),
               onTap: (index) {
                 setState(() {
-                  _selectedTab = index;
+                  selectedTab = index;
                 });
               },
             ),
-            body: callPage(_selectedTab))
+            body: callPage(selectedTab))
 
 //      home: Scaffold(
 //        appBar: AppBar(

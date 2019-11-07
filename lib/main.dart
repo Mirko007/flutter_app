@@ -90,7 +90,7 @@ void backgroundFetchHeadlessTask() async {
     DatabaseHelper.columnIdMessage: "36",
     DatabaseHelper.columnCreated: "w4123432141",
     DatabaseHelper.columnTitle: "Vanja",
-    DatabaseHelper.columnMessage: "uspjeh",
+    DatabaseHelper.columnMessage: "uspjeh Headless",
     DatabaseHelper.columnDeleted: "",
     DatabaseHelper.columnReadStatus: 0,
   };
@@ -129,7 +129,7 @@ class MyApp extends StatelessWidget {
       navigatorKey: navigatorKey,
       routes: <String, WidgetBuilder>{
         '/signup': (BuildContext context) => new SignupPage(),
-        '/main': (BuildContext context) => new Main_Fragment(),
+        '/main': (BuildContext context) => new Main_Fragment(tab: 2,),
         '/messages': (BuildContext context) => new MessageActivity(),
       },
       home: new MyHomePage(),

@@ -210,7 +210,7 @@ class _AkcijeState extends State<AkcijeFragment> {
 class StuffInTiles extends StatelessWidget {
   final MyTile myTile;
 
-  final Completer<WebViewController> _controller =
+  Completer<WebViewController> _controller =
       Completer<WebViewController>();
 
   StuffInTiles(this.myTile);

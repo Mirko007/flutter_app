@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:Loyalty_client/fragment/main_fragment.dart';
 import 'package:barcode_flutter/barcode_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:Loyalty_client/fragment/KuponiFragment.dart';
@@ -14,7 +15,7 @@ import 'global_variable.dart' as globals;
 class KuponiDetails extends StatelessWidget {
   Coupon coupon;
 
-  // In the constructor, require a Person
+  // In the constructor, require a coupon
   KuponiDetails({Key key, @required this.coupon}) : super(key: key);
 
   @override
@@ -218,9 +219,7 @@ _buyVoucher(Coupon coupon,BuildContext context) async {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) =>
-                KuponiFragment(
-                )),
+            builder: (context) => Main_Fragment(tab: 3)),
       );
 
     } else {
@@ -235,8 +234,7 @@ _buyVoucher(Coupon coupon,BuildContext context) async {
         context,
         MaterialPageRoute(
             builder: (context) =>
-                KuponiFragment(
-                )),
+                Main_Fragment(tab: 3)),
       );
       // If that call was not successful, throw an error.
       throw Exception('Failed to load post');
