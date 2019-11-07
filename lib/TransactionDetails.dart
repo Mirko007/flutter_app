@@ -84,157 +84,176 @@ class TransactionDetailsState extends State<TransactionDetails> {
 }
 
 Widget _buildContent(BuildContext context) {
-  return Container(
-    color: Colors.grey,
-    padding: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 5.0),
-    child: Column(
-      children: <Widget>[
-        Container(
-          color: Colors.white,
-          child: Row(
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Text(
-                    "Poslovnica",
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
-                    textAlign: TextAlign.left,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                    child: Text(
-                      data == null ? "" : data["locationName"],
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+  if (data == null)
+    return Container();
+  else
+    return Container(
+      color: Colors.grey,
+      padding: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 5.0),
+      child: Column(
+        children: <Widget>[
+          Container(
+            color: Colors.white,
+            child: Row(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Text(
+                      "Poslovnica",
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
                       textAlign: TextAlign.left,
                     ),
-                  ),
-                ],
-              ),
-              Expanded(
-                  child: Column(
-                children: <Widget>[
-                  Text(
-                    "Datum",
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
-                    textAlign: TextAlign.right,
-                  ),
-                  Text(
-                    data == null ? "" : data["created"],
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.right,
-                  ),
-                ],
-              )),
-            ],
-          ),
-        ),
-        Container(
-          color: Colors.white,
-          child: Container(
-            margin: EdgeInsets.all(5),
-            color: Colors.lightBlueAccent,
-            height: 5,
-          ),
-        ),
-        Container(
-            // margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 4.0),
-            padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-            height: 25,
-            color: Colors.white,
-            child: Row(children: <Widget>[
-              Expanded(
-                child: Text(
-                  "Naziv artikla",
-                  style: TextStyle(fontSize: 15, color: Colors.grey),
-                ),
-              ),
-              Padding(
-                  padding: EdgeInsets.fromLTRB(20, 0, 40, 0),
-                  child: Text(
-                    "Količina",
-                    style: TextStyle(fontSize: 15, color: Colors.grey),
-                  )),
-              Padding(
-                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: Text("Cijena",
-                      style: TextStyle(fontSize: 15, color: Colors.grey))),
-            ])),
-        Container(
-          color: Colors.white,
-          child: listview_artikli(),
-          height:250,
-        ),
-        Container(
-          color: Colors.white,
-          child: Column(
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.all(5),
-                color: Colors.black,
-                height: 5,
-              ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                      child: Padding(
-                    padding: EdgeInsets.all(5),
-                    child: Text(
-                      "Račun ukupno:",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                  )),
-                  //todo kn fali
-                  Padding(
-                    padding: EdgeInsets.all(5),
-                    child: Text(getRacunUkupno(),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                      child: Text(
+                        data == null ? "" : data["locationName"],
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold)),
-                  ),
-                ],
-              ),
-            ],
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                  ],
+                ),
+                Expanded(
+                    child: Column(
+                  children: <Widget>[
+                    Text(
+                      "Datum",
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                      textAlign: TextAlign.right,
+                    ),
+                    Text(
+                      data == null ? "" : data["created"],
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.right,
+                    ),
+                  ],
+                )),
+              ],
+            ),
           ),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        Row(
-          children: <Widget>[Icon(Icons.message), Text("Bodovi")],
-        ),
-        Center(
-          child:
-            getPointsDifference(),
-        )
-      ],
-    ),
-  );
+          Container(
+            color: Colors.white,
+            child: Container(
+              margin: EdgeInsets.all(5),
+              color: Colors.lightBlueAccent,
+              height: 5,
+            ),
+          ),
+          Container(
+              // margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 4.0),
+              padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+              height: 25,
+              color: Colors.white,
+              child: Row(children: <Widget>[
+                Expanded(
+                  child: Text(
+                    "Naziv artikla",
+                    style: TextStyle(fontSize: 15, color: Colors.grey),
+                  ),
+                ),
+                Padding(
+                    padding: EdgeInsets.fromLTRB(20, 0, 40, 0),
+                    child: Text(
+                      "Količina",
+                      style: TextStyle(fontSize: 15, color: Colors.grey),
+                    )),
+                Padding(
+                    padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                    child: Text("Cijena",
+                        style: TextStyle(fontSize: 15, color: Colors.grey))),
+              ])),
+          Container(
+            color: Colors.white,
+            child: listview_artikli(),
+            height: 250,
+          ),
+          Container(
+            color: Colors.white,
+            child: Column(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.all(5),
+                  color: Colors.black,
+                  height: 5,
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                        child: Padding(
+                      padding: EdgeInsets.all(5),
+                      child: Text(
+                        "Račun ukupno:",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    )),
+                    //todo kn fali
+                    Padding(
+                      padding: EdgeInsets.all(5),
+                      child: Text(getRacunUkupno(),
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Padding(
+            padding: EdgeInsets.all(5),
+            child: data["void"] == null ? Container() :
+            Text("STORNO : " + data["void"],
+                style: TextStyle(
+                    fontSize: 20, fontWeight: FontWeight.bold,color: Colors.red)),
+          ),
+          Row(
+            children: <Widget>[Icon(Icons.message), Text("Bodovi")],
+          ),
+          Center(
+            child: getPointsDifference(),
+          )
+        ],
+      ),
+    );
 }
 
 String getRacunUkupno() {
-  double vDoub_RacunUkupno=0.0;
-  for(int i=0;i<data["itemList"].length; i++){
-
-    vDoub_RacunUkupno = vDoub_RacunUkupno + (data["itemList"][i]["quantity"] * data["itemList"][i]["itemPrice"]);
-  }
-  return "= "+vDoub_RacunUkupno.toString();
+  double vDoub_RacunUkupno = 0.0;
+  if (data != null)
+    for (int i = 0; i < data["itemList"].length; i++) {
+      vDoub_RacunUkupno = vDoub_RacunUkupno +
+          (data["itemList"][i]["quantity"] * data["itemList"][i]["itemPrice"]);
+    }
+  return "= " + vDoub_RacunUkupno.toString();
 }
- getPointsDifference() {
 
-  int Bodovi= data["totalAcquiredPoints"] - data["spentPoints"];
-  if( Bodovi<0)
-    return Text(Bodovi.toString(),style: TextStyle(fontSize: 100,color: Colors.red),);
-  else if(Bodovi>0)
-    return Text("+"+Bodovi.toString(),style: TextStyle(fontSize: 100,color: Colors.green),);
+getPointsDifference() {
+  int Bodovi = data["totalAcquiredPoints"] - data["spentPoints"];
+  if (Bodovi < 0)
+    return Text(
+      Bodovi.toString(),
+      style: TextStyle(fontSize: 100, color: Colors.red),
+    );
+  else if (Bodovi > 0)
+    return Text(
+      "+" + Bodovi.toString(),
+      style: TextStyle(fontSize: 100, color: Colors.green),
+    );
   else
-    return Text(Bodovi.toString(),style: TextStyle(fontSize: 100,color: Colors.blue),);
-
+    return Text(
+      Bodovi.toString(),
+      style: TextStyle(fontSize: 100, color: Colors.blue),
+    );
 }
 
 Widget listview_artikli() {
   return ListView.builder(
-      itemCount: data["itemList"] == null ? 0 : data["itemList"].length,
+      itemCount: data == null ? 0 : data["itemList"].length,
       itemBuilder: (BuildContext content, int index) {
         return Container(
             // margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 4.0),

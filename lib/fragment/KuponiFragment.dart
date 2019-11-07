@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:Loyalty_client/KuponiDetails.dart';
@@ -12,7 +14,6 @@ String token = '';
 List allCoupons = [];
 bool pressed = true;
 int allCouponsItemCount = 0;
-
 
 class KuponiFragment extends StatefulWidget {
   @override
@@ -204,78 +205,7 @@ class _KuponiState extends State<KuponiFragment> {
                   ),
                 ],
               ),
-              Expanded(
-                child: GridView.builder(
-                    gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio:0.7,
-                    ),
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    itemCount: allCouponsItemCount,
-                    itemBuilder: (BuildContext content, int index) {
-                      return Padding(
-                        padding: EdgeInsets.all(10),
-                        child: InkWell(
-                          onTap: () {
-                            getKuponDetails(index, context);
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.black12,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15.0))),
-                            child: Column(
-                              children: <Widget>[
-                                Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.blue,
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(15.0),
-                                          topRight: Radius.circular(15.0))),
-                                  child: Center(
-                                      child: Text(
-                                    getCustomerRequiredpoints(index) +
-                                        // allCoupons[index]["voucherType"]["customerPointsRequired"].toString() +
-                                        " bodova",
-                                    style: TextStyle(
-                                        fontSize: 25, color: Colors.white),
-                                  )),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue,
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                                    child: Center(
-                                        child: Text(
-                                      getVoucherName(index),
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontSize: 15, color: Colors.white),
-                                    )),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    color: Colors.white,
-                                    child: getImage(index),
-                                    width: MediaQuery.of(context).size.width,
-                                  ),
-                                ),
-                                Padding(
-                                    padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                    child:
-                                        Text("Vrijedi do " + getValidto(index)))
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    }),
-              )
+              Expanded(child: getGridView(context))
             ]))
         //        ))
 
@@ -302,6 +232,78 @@ class _KuponiState extends State<KuponiFragment> {
         ) ??
         false;
   }
+}
+
+getGridView(BuildContext context) {
+  if (allCoupons == null || allCoupons == "")
+    return Container();
+  else
+    return GridView.builder(
+        gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 0.7,
+        ),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: allCouponsItemCount,
+        itemBuilder: (BuildContext content, int index) {
+          return Padding(
+            padding: EdgeInsets.all(10),
+            child: InkWell(
+              onTap: () {
+                getKuponDetails(index, context);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.black12,
+                    borderRadius: BorderRadius.all(Radius.circular(15.0))),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(15.0),
+                              topRight: Radius.circular(15.0))),
+                      child: Center(
+                          child: Text(
+                        getCustomerRequiredpoints(index) +
+                            // allCoupons[index]["voucherType"]["customerPointsRequired"].toString() +
+                            " bodova",
+                        style: TextStyle(fontSize: 25, color: Colors.white),
+                      )),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                        child: Center(
+                            child: Text(
+                          getVoucherName(index),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 15, color: Colors.white),
+                        )),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        color: Colors.white,
+                        child: getImage(index),
+                        width: MediaQuery.of(context).size.width,
+                      ),
+                    ),
+                    Padding(
+                        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                        child: Text("Vrijedi do " + getValidto(index)))
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
 }
 
 int getCouponCount() {
@@ -338,9 +340,18 @@ String getVoucherName(int index) {
 }
 
 String getValidto(int index) {
-  return pressed == true
-      ? allCoupons[index]["validTo"]
-      : allCoupons[index]["voucherType"]["validTo"];
+
+  if (pressed) {
+    if (allCoupons[index]["validTo"] == null)
+      return "";
+    else
+      return allCoupons[index]["validTo"];
+  } else {
+    if (allCoupons[index]["voucherType"]["validTo"] == null)
+      return "";
+    else
+      return allCoupons[index]["voucherType"]["validTo"];
+  }
   // return pressed == true ? allCoupons[index]["validTo"] : "2";
 }
 
@@ -366,7 +377,6 @@ class Coupon {
 }
 
 void getKuponDetails(int index, BuildContext context) {
-
   if (pressed) {
     Navigator.push(
       context,
