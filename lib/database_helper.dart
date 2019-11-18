@@ -73,6 +73,14 @@ class DatabaseHelper {
     return await db.query(table);
   }
 
+
+  Future<List<Map<String, dynamic>>> queryAllRowsWhereNotDeleted(String deleted) async {
+    Database db = await instance.database;
+
+    return await db.rawQuery('SELECT * FROM `messages` WHERE deleted =? ORDER BY id_message DESC', [''] );
+
+  }
+
   // All of the methods (insert, query, update, delete) can also be done using
   // raw SQL commands. This method uses a raw query to give the row count.
   Future<int> queryRowCount() async {
@@ -80,6 +88,31 @@ class DatabaseHelper {
     return Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM $table'));
   }
 
+  Future<List<Map<String, dynamic>>> queryAllRowsWhereDeleted(String deleted) async {
+    Database db = await instance.database;
+    return await db.rawQuery('SELECT * FROM `messages` WHERE NOT deleted =? ORDER BY id_message DESC', [''] );
+  }
+
+  Future<List<Map<String, dynamic>>> updateReadStatus(String id_message,int read_status) async {
+    Database db = await instance.database;
+    return await db.rawQuery("UPDATE `messages` SET read_status=$read_status WHERE id_message = $id_message");
+  }
+
+  Future<List<Map<String, dynamic>>> updateDeleted(String id_message,String deleted) async {
+    Database db = await instance.database;
+    return await db.rawQuery(
+        "UPDATE `messages` SET deleted=$deleted WHERE id_message = $id_message");
+  }
+
+  Future<int> queryMessageExists(String id_message) async {
+    Database db = await instance.database;
+    return Sqflite.firstIntValue(await db.rawQuery("SELECT COUNT(id_message) FROM `messages` WHERE id_message = $id_message"));
+  }
+
+  Future<int> queryReadMessageExists() async {
+    Database db = await instance.database;
+    return Sqflite.firstIntValue(await db.rawQuery("SELECT COUNT(id_message) FROM `messages` WHERE read_status < 1"));
+  }
   // We are assuming here that the id column in the map is set. The other
   // column values will be used to update the row.
   Future<int> update(Map<String, dynamic> row) async {

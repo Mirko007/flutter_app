@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,7 +37,7 @@ class MessageActivityState extends State<MessageActivity> {
   }
 
   _query() async {
-    final allRows = await dbHelper.queryAllRows();
+    final allRows = await dbHelper.queryAllRowsWhereNotDeleted("");
     print('query all rows:');
 
     setState(() {
@@ -71,19 +73,18 @@ Widget _buildContent(BuildContext context) {
           itemBuilder: (BuildContext context, int index) {
             String message = data[index]["message"];
             return GestureDetector(
-              onTap: () => onTapped(index),
+              onTap: () => onTapped(index,context),
 //                            Scaffold
 //                            .of(context)
 //                            .showSnackBar(SnackBar(content: Text(data[index]["title"]))),
               child:Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    new Text("Datum kreiranja :" + data[index]["created"],
+                    data[index]["read_status"]== 1? Container():
+                    new Text("Nova poruka",
                         style: TextStyle(
-                            color: Colors.black, fontSize: 16.0)),
-                    new Text("Datum spremanja :" + data[index]["deleted"],
-                        style: TextStyle(
-                            color: Colors.black, fontSize: 16.0)),
+                            color: Colors.blue, fontSize: 16.0)),
+
                     InputDecorator(
                     decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(
@@ -101,11 +102,48 @@ Widget _buildContent(BuildContext context) {
 
 }
 
-void onTapped(int index) {
+void onTapped(int index,BuildContext context) {
   print(data[index]["title"] + " poruka !");
-  print(data[index]["title"] + " poruka !");
-
+  showDialog(
+    context: context,
+    builder: (context) => new AlertDialog(
+      title: new Text(data[index]["title"]),
+      content: new Text(data[index]["message"]),
+      actions: <Widget>[
+        new FlatButton(
+          onPressed: () => showtoast(index, 1, context),
+          child: new Text('Obrisati poruku'),
+        ),
+        new FlatButton(
+          onPressed: () => showtoast(index, 2, context),
+          child: new Text('Da'),
+        ),
+      ],
+    ),
+  );
 }
 
+void showtoast(int index, int i, BuildContext context) {
+  String msg = "";
+  DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+  String getCurrentDateTime = dateFormat.format(DateTime.now());
+  if (i == 1) {
+    dbHelper.updateReadStatus(data[index]["id_message"],1);
+    dbHelper.updateDeleted(data[index]["id_message"],getCurrentDateTime);
+    msg = " poruka obrisana!";
+  } else {
+    dbHelper.updateReadStatus(data[index]["id_message"],1);
+    msg = " poruka pročitana!";
+  }
+  Fluttertoast.showToast(
+      msg: data[index]["title"] + msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      // also possible "TOP" and "CENTER"
+      textColor: Colors.white);
+  Navigator.of(context).pop();
+  Navigator.of(context).popAndPushNamed('/messages');
 
+
+}
 

@@ -484,18 +484,15 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
             RaisedButton(
               child: Text("Česta pitanja"),
               onPressed: () {
-                _showNotification();
-                //_launchURL("https://leoclub.polleosport.hr/cesta-pitanja");
+                //_showNotification();
+                _launchURL("https://leoclub.polleosport.hr/cesta-pitanja");
               },
             ),
             RaisedButton(
               child: Text("Poslovnice i kontakti"),
               onPressed: () {
-
-                dbHelperHeadless.deleteAll();
-
-
-                //_launchURL("https://polleosport.hr/poslovnice-i-kontakti");
+                //dbHelperHeadless.deleteAll();
+                _launchURL("https://polleosport.hr/poslovnice-i-kontakti");
               },
             ),
             RaisedButton(
