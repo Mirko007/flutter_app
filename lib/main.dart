@@ -1,7 +1,7 @@
 import 'package:Loyalty_client/MessageActivity.dart';
-import 'package:background_fetch/background_fetch.dart' as prefix0;
+
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix1;
+
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -813,7 +813,6 @@ class _MyHomePageState extends State<MyHomePage> {
       String title = "";
       String message = "";
       if (response.statusCode == 200) {
-        setState(() async {
           List dataMessage = json.decode(response.body);
           int NePostojiPoruka = 0;
 
@@ -865,7 +864,7 @@ class _MyHomePageState extends State<MyHomePage> {
 //            }
 //          _query();
 //          _showNotification(title, message);
-        });
+
       } else {
         // If that call was not successful, throw an error.
         throw Exception('Failed to load post');
