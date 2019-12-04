@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'AppTranslations.dart';
 import 'database_helper.dart';
 import 'global_variable.dart' as globals;
 String token='';
@@ -51,7 +52,7 @@ class MessageActivityState extends State<MessageActivity> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(title: Text('Poruke')),
+      appBar: AppBar(title: Text(AppTranslations.of(context).text("poruke"))),
       body: Container(
         color: Colors.grey,
         child: _buildContent(context),
@@ -81,7 +82,7 @@ Widget _buildContent(BuildContext context) {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     data[index]["read_status"]== 1? Container():
-                    new Text("Nova poruka",
+                    new Text(AppTranslations.of(context).text("nova_poruka"),
                         style: TextStyle(
                             color: Colors.blue, fontSize: 16.0)),
 
@@ -103,7 +104,7 @@ Widget _buildContent(BuildContext context) {
 }
 
 void onTapped(int index,BuildContext context) {
-  print(data[index]["title"] + " poruka !");
+
   showDialog(
     context: context,
     builder: (context) => new AlertDialog(
@@ -112,11 +113,11 @@ void onTapped(int index,BuildContext context) {
       actions: <Widget>[
         new FlatButton(
           onPressed: () => showtoast(index, 1, context),
-          child: new Text('Obrisati poruku'),
+          child: new Text(AppTranslations.of(context).text("delete")),
         ),
         new FlatButton(
           onPressed: () => showtoast(index, 2, context),
-          child: new Text('Da'),
+          child: new Text(AppTranslations.of(context).text("da")),
         ),
       ],
     ),
@@ -132,10 +133,10 @@ void showtoast(int index, int i, BuildContext context) {
   if (i == 1) {
     dbHelper.updateReadStatus(data[index]["id_message"],1);
     dbHelper.updateDeleted(data[index]["id_message"],getCurrentDateTime);
-    msg = " poruka obrisana!";
+    msg = AppTranslations.of(context).text("message_delete");
   } else {
     dbHelper.updateReadStatus(data[index]["id_message"],1);
-    msg = " poruka pročitana!";
+    msg = AppTranslations.of(context).text("message_read");
   }
   Fluttertoast.showToast(
       msg: data[index]["title"] + msg,

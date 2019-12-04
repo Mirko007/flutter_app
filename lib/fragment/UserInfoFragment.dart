@@ -3,6 +3,7 @@ import 'package:barcode_flutter/barcode_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../AppTranslations.dart';
 import '../TransactionDetails.dart';
 String ime_prezime='';
 String current_points='';
@@ -117,20 +118,21 @@ class _UserInfoState extends State<UserInfoFragment> {
     return showDialog(
       context: context,
       builder: (context) => new AlertDialog(
-        title: new Text('Jeste li sigurni?'),
-        content: new Text('Želite li izaći iz aplikacije'),
+        title: new Text(AppTranslations.of(context).text("exit_app")),
+        content: new Text(AppTranslations.of(context).text("click_yes")),
         actions: <Widget>[
           new FlatButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: new Text('Ne'),
+            child: new Text(AppTranslations.of(context).text("ne")),
           ),
           new FlatButton(
-            onPressed: () =>  SystemNavigator.pop(),
-            child: new Text('Da'),
+            onPressed: () => SystemNavigator.pop(),
+            child: new Text(AppTranslations.of(context).text("da")),
           ),
         ],
       ),
-    ) ?? false;
+    ) ??
+        false;
   }
 
 
@@ -166,8 +168,7 @@ Widget buildContent(BuildContext context) {
               ),
               Padding(
                 padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
-                child: Text(
-                  "Ime i prezime",
+                child: Text(AppTranslations.of(context).text("ime_prezime"),
                   style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
               )
@@ -198,8 +199,7 @@ Widget buildContent(BuildContext context) {
               ),
               Padding(
                 padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
-                child: Text(
-                  "Stanje bodova",
+                child: Text(AppTranslations.of(context).text("stanje_bodova"),
                   style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
               )
@@ -231,8 +231,7 @@ Widget buildContent(BuildContext context) {
               ),
               Padding(
                 padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
-                child: Text(
-                  "Moja loyalty kartica",
+                child: Text(AppTranslations.of(context).text("loyalty_kartica"),
                   style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
               )

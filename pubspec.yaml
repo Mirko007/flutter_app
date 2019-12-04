@@ -7,7 +7,7 @@ description: A new Flutter application.
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 1.0.5+18
+version: 1.0.5+19
 
 
 environment:
@@ -34,6 +34,8 @@ dependencies:
   path:
   path_provider:
   webview_flutter: ^0.3.15+1
+  flutter_localizations:
+    sdk: flutter
 
 
 
@@ -66,6 +68,9 @@ flutter:
     - assets/images/kupon_fragment_slika.PNG
     - assets/images/nema_sadrzaja.PNG
     - assets/icon/leoclub_icon_launcher.png
+    - assets/locale/localization_en.json
+    - assets/locale/localization_hr.json
+    - assets/locale/localization_sl.json
 
 
   #images/a_dot_burr.jpeg

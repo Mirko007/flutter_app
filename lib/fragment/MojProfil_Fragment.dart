@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../AppTranslations.dart';
 import '../MessageActivity.dart';
 import '../database_helper.dart';
 import '../global_variable.dart' as globals;
@@ -42,7 +43,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
   TextEditingController _controller_pos_broj;
   TextEditingController _controller_mail;
 
-  List _gender = ["Musko", "Zensko", "Ne želim se izjasniti"];
+  //List _gender = ["Musko", "Zensko", "Ne želim se izjasniti"];
 
   List<DropdownMenuItem<String>> _dropDownMenuItemsGender;
   String _currentGender;
@@ -73,6 +74,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
 
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
     List<DropdownMenuItem<String>> items = new List();
+    List _gender = [AppTranslations.of(context).text("male"), AppTranslations.of(context).text("female"), AppTranslations.of(context).text("other")];
     for (String gender in _gender) {
       items.add(new DropdownMenuItem(value: gender, child: new Text(gender)));
     }
@@ -185,11 +187,11 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
       gdpr_privola_posta = prefs.getBool('gdpr_privola_posta') ?? false;
 
       if (prefs.getString('gender') == "Male") {
-        _currentGender = "Musko";
+        _currentGender = AppTranslations.of(context).text("male");
       } else if (prefs.getString('gender') == "Female") {
-        _currentGender = "Zensko";
+        _currentGender = AppTranslations.of(context).text("female");
       } else {
-        _currentGender = "Ne želim se izjasniti";
+        _currentGender = AppTranslations.of(context).text("other");
       }
       print(_currentGender);
       print("_currentGender");
@@ -211,29 +213,29 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
 
   Future<bool> _onWillPop() {
     return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Jeste li sigurni?'),
-            content: new Text('Želite li izaći iz aplikacije'),
-            actions: <Widget>[
-              new FlatButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: new Text('Ne'),
-              ),
-              new FlatButton(
-                onPressed: () => SystemNavigator.pop(),
-                child: new Text('Da'),
-              ),
-            ],
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text(AppTranslations.of(context).text("exit_app")),
+        content: new Text(AppTranslations.of(context).text("click_yes")),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text(AppTranslations.of(context).text("ne")),
           ),
-        ) ??
+          new FlatButton(
+            onPressed: () => SystemNavigator.pop(),
+            child: new Text(AppTranslations.of(context).text("da")),
+          ),
+        ],
+      ),
+    ) ??
         false;
   }
 
   Widget buildContent(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(
-        title: Text('Moj profil'),
+        title: Text(AppTranslations.of(context).text("moj_profil")),
         automaticallyImplyLeading: false,
         actions: <Widget>[
           IconButton(
@@ -249,7 +251,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
         child: ListView(
           children: <Widget>[
             RaisedButton(
-              child: Text("Osnovni podaci"),
+              child: Text(AppTranslations.of(context).text("osnovni_podaci")),
               onPressed: () {
                 setState(() {
                   pressedOsnovni = !pressedOsnovni;
@@ -261,7 +263,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                     children: <Widget>[
                       TextField(
                         decoration: InputDecoration(
-                            labelText: 'Ime',
+                            labelText: AppTranslations.of(context).text("ime"),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
@@ -274,7 +276,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                            labelText: 'Prezime',
+                            labelText: AppTranslations.of(context).text("prezime"),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
@@ -287,7 +289,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                            labelText: 'Mobitel',
+                            labelText: AppTranslations.of(context).text("mobitel"),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
@@ -300,7 +302,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                            labelText: 'E-mail adresa',
+                            labelText: AppTranslations.of(context).text("email"),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
@@ -314,7 +316,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                            labelText: 'Kućna adresa',
+                            labelText: AppTranslations.of(context).text("kucna_adresa"),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
@@ -327,7 +329,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                            labelText: 'Poštanski broj',
+                            labelText: AppTranslations.of(context).text("postanski_broj"),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
@@ -340,7 +342,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                            labelText: 'Grad',
+                            labelText: AppTranslations.of(context).text("grad"),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
@@ -354,7 +356,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          "Spol",
+                          AppTranslations.of(context).text("spol"),
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
@@ -422,7 +424,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                       CheckboxListTile(
                           value: gdpr_privola_posta,
                           title:
-                              new Text("Želim primati obavijesti putem pošte"),
+                              new Text(AppTranslations.of(context).text("privola_posta")),
                           onChanged: (bool value) {
                             setState(() {
                               gdpr_privola_posta = value;
@@ -431,7 +433,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                       CheckboxListTile(
                           value: gdpr_privola_mob,
                           title: new Text(
-                              "Želim primati obavijesti putem mobitela"),
+                              AppTranslations.of(context).text("privola_mob")),
                           onChanged: (bool value) {
                             setState(() {
                               gdpr_privola_mob = value;
@@ -440,7 +442,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                       CheckboxListTile(
                           value: gdpr_privola_email,
                           title:
-                              new Text("Želim primati obavijesti putem maila"),
+                              new Text(AppTranslations.of(context).text("privola_mail")),
                           onChanged: (bool value) {
                             setState(() {
                               gdpr_privola_email = value;
@@ -459,7 +461,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                               elevation: 7.0,
                               child: Center(
                                 child: Text(
-                                  'POTVRDA',
+                                  AppTranslations.of(context).text("potvrda"),
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -473,7 +475,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                   )
                 : SizedBox(),
             RaisedButton(
-              child: Text("Poruke"),
+              child: Text(AppTranslations.of(context).text("poruke")),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -482,27 +484,27 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
               },
             ),
             RaisedButton(
-              child: Text("Česta pitanja"),
+              child: Text(AppTranslations.of(context).text("cesta_pitanja")),
               onPressed: () {
                 //_showNotification();
                 _launchURL("https://leoclub.polleosport.hr/cesta-pitanja");
               },
             ),
             RaisedButton(
-              child: Text("Poslovnice i kontakti"),
+              child: Text(AppTranslations.of(context).text("poslovnice_kontakti")),
               onPressed: () {
                 //dbHelperHeadless.deleteAll();
                 _launchURL("https://polleosport.hr/poslovnice-i-kontakti");
               },
             ),
             RaisedButton(
-              child: Text("Opći uvjeti korištenja"),
+              child: Text(AppTranslations.of(context).text("opci_uvjeti")),
               onPressed: () {
                 _launchURL("https://leoclub.polleosport.hr/pravila-programa");
               },
             ),
             RaisedButton(
-              child: Text("Zaštita podataka"),
+              child: Text(AppTranslations.of(context).text("zastita_podataka")),
               onPressed: () {
                 _launchURL(
                     "https://leoclub.polleosport.hr/pravila-privatnosti");
@@ -587,9 +589,9 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
     String email = _controller_mail.text;
 
     String spol = "";
-    if (_currentGender == "Musko") {
+    if (_currentGender == AppTranslations.of(context).text("male")) {
       spol = "1";
-    } else if (_currentGender == "Zensko") {
+    } else if (_currentGender == AppTranslations.of(context).text("female")) {
       spol = "2";
     } else {
       spol = "3";
@@ -663,14 +665,14 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
         await prefs.setString(
             'placeOfRegistration', resBody["placeOfRegistration"]);
         Fluttertoast.showToast(
-            msg: "Uspješno ažurirani podatci",
+            msg: AppTranslations.of(context).text("update_success"),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             // also possible "TOP" and "CENTER"
             textColor: Colors.white);
       } else {
         Fluttertoast.showToast(
-            msg: "Neuspješno ažurirani podatci",
+            msg: AppTranslations.of(context).text("update_fail"),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             // also possible "TOP" and "CENTER"
@@ -690,70 +692,5 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
     }
   }
 
-  Future<void> onSelectNotification(String payload) async {
-    Fluttertoast.showToast(
-        msg: "Uspješan dohvat",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        // also possible "TOP" and "CENTER"
-        textColor: Colors.white);
-  }
 
-  Future<void> _showNotification() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String url = globals.base_url_novi + "/api/v1/messages";
-
-    String token = (prefs.getString('token') ?? "");
-
-    http.Response response = await http.get(url, headers: {
-      "Accept": "application/json",
-      "content-type": "application/json",
-      "token": "$token",
-      "req_type": "mob"
-    }).then((http.Response response) async {
-      print("Response status: ${response.statusCode}");
-      print("Response body: ${response.contentLength}");
-      print(response.headers);
-      print(response.request);
-      print(response.statusCode);
-      print(response.body);
-
-      if (response.statusCode == 200) {
-        setState(() {
-          List dataMessage = json.decode(response.body);
-          if (dataMessage.length != null)
-            for (int i = 0; i < dataMessage.length; i++) {
-              Map<String, dynamic> row = {
-                DatabaseHelper.columnIdMessage: dataMessage[i]["id"],
-                DatabaseHelper.columnCreated:
-                    dataMessage[i]["created"].toString(),
-                DatabaseHelper.columnTitle: dataMessage[i]["title"],
-                DatabaseHelper.columnMessage: dataMessage[i]["message"],
-                DatabaseHelper.columnDeleted: DateTime.now().toString(),
-                DatabaseHelper.columnReadStatus: 0,
-              };
-              dbHelper.insert(row);
-            }
-        });
-      } else {
-        // If that call was not successful, throw an error.
-        throw Exception('Failed to load post');
-      }
-    });
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-    var android = new AndroidInitializationSettings('@mipmap/launcher_icon');
-    var iOS = new IOSInitializationSettings();
-    var initSetttings = new InitializationSettings(android, iOS);
-    flutterLocalNotificationsPlugin.initialize(initSetttings,
-        onSelectNotification: onSelectNotification);
-
-    var android1 = new AndroidNotificationDetails(
-        'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
-        priority: Priority.High, importance: Importance.Max);
-    var iOS1 = new IOSNotificationDetails();
-    var platform = new NotificationDetails(android1, iOS1);
-    await flutterLocalNotificationsPlugin
-        .show(0, 'Nova poruka', 'Test tekst', platform, payload: 'Poruka');
-  }
 }

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../AppTranslations.dart';
 import '../global_variable.dart' as globals;
 String token='';
 
@@ -47,20 +48,21 @@ class _TransakcijeState extends State<TransakcijeFragment> {
     return showDialog(
       context: context,
       builder: (context) => new AlertDialog(
-        title: new Text('Jeste li sigurni?'),
-        content: new Text('Želite li izaći iz aplikacije'),
+        title: new Text(AppTranslations.of(context).text("exit_app")),
+        content: new Text(AppTranslations.of(context).text("click_yes")),
         actions: <Widget>[
           new FlatButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: new Text('Ne'),
+            child: new Text(AppTranslations.of(context).text("ne")),
           ),
           new FlatButton(
-            onPressed: () =>  SystemNavigator.pop(),
-            child: new Text('Da'),
+            onPressed: () => SystemNavigator.pop(),
+            child: new Text(AppTranslations.of(context).text("da")),
           ),
         ],
       ),
-    ) ?? false;
+    ) ??
+        false;
   }
 
 
@@ -107,16 +109,16 @@ class ListPage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(title: Text('Transakcije'),
+      appBar: AppBar(title: Text(AppTranslations.of(context).text("transakcije")),
         automaticallyImplyLeading: false,),
       body: Container(
         color: Colors.blueAccent,
-        child: _buildContent(),
+        child: _buildContent(context),
       ),
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(BuildContext context) {
     return ListView.builder(
         itemCount: data == null ? 0 : data.length,
         itemBuilder: (BuildContext content, int index) {
@@ -164,7 +166,7 @@ class ListPage extends StatelessWidget {
                     ),
                     Expanded(
                         child: Column(
-                          children: <Widget>[Text("BODOVI"),
+                          children: <Widget>[Text(AppTranslations.of(context).text("bodovi")),
                             getBodovi(index)
                           ],
                         ))

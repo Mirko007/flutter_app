@@ -1,3 +1,9 @@
+import 'package:Loyalty_client/AppTranslations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'AppTranslationsDelegate.dart';
+import 'Application.dart';
+
 import 'package:Loyalty_client/MessageActivity.dart';
 
 import 'package:flutter/material.dart';
@@ -115,10 +121,9 @@ void backgroundFetchHeadlessTask() async {
         }
       }
 
-      int ReadMessageCount =await dbHelper.queryReadMessageExists();
-      NePostojiPoruka+= ReadMessageCount;
+      int ReadMessageCount = await dbHelper.queryReadMessageExists();
+      NePostojiPoruka += ReadMessageCount;
       if (NePostojiPoruka > 1) {
-
         title = "Imate nove poruke";
         message = NePostojiPoruka.toString() + " novih poruka";
         _showNotification(title, message);
@@ -179,6 +184,32 @@ class MyApp extends StatelessWidget {
         '/messages': (BuildContext context) => new MessageActivity(),
       },
       home: new MyHomePage(),
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        //provides localised strings
+        GlobalMaterialLocalizations.delegate,
+        //provides RTL support
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      localeResolutionCallback: (locale, supportedLocales) {
+        // Check if the current device locale is supported
+
+        for (var supportedLocale in supportedLocales) {
+
+          if (supportedLocale.languageCode == locale.languageCode &&
+              supportedLocale.countryCode == locale.countryCode) {
+            return supportedLocale;
+          }
+        }
+        // If the locale of the device is not supported, use the first one
+        // from the list (English, in this case).
+        return supportedLocales.first;
+      },
+      supportedLocales: [
+        Locale('en', 'EN'),
+        Locale('hr', 'HR'),
+        Locale('sl', 'SI'),
+      ],
     );
   }
 }
@@ -191,6 +222,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  AppTranslationsDelegate _newLocaleDelegate;
   List<String> _events = [];
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   final dbHelper = DatabaseHelper.instance;
@@ -250,7 +282,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               //Navigator.of(context).pushNamed('/main');
                             },
                             child: Text(
-                              'LOGIN',
+                              AppTranslations.of(context).text("enter"),
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -265,7 +297,8 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'Nisi član LeoCluba?',
+                  // 'Nisi član LeoCluba?',
+                  AppTranslations.of(context).text("registriraj_se_member"),
                   style: TextStyle(fontFamily: 'Montserrat'),
                 ),
                 SizedBox(width: 5.0),
@@ -274,7 +307,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Navigator.of(context).pushNamed('/signup');
                   },
                   child: Text(
-                    'Registriraj se ovdje.',
+                    AppTranslations.of(context).text("registriraj_se"),
                     style: TextStyle(
                         color: Colors.blue,
                         fontFamily: 'Montserrat',
@@ -294,36 +327,19 @@ class _MyHomePageState extends State<MyHomePage> {
             )
           ],
         ));
-//        body: (data == null)
-//            ? EMPTY_TEXT
-//            : Container(
-//                child: new ListView.builder(
-//                    itemCount: data == null ? 0 : data.length,
-//                    itemBuilder: (BuildContext context, int index) {
-//                      String timestamp = data[index]["message"];
-//                      return GestureDetector(
-//                        onTap: () => onTapped(index),
-////                            Scaffold
-////                            .of(context)
-////                            .showSnackBar(SnackBar(content: Text(data[index]["title"]))),
-//                        child: InputDecorator(
-//                            decoration: InputDecoration(
-//                                contentPadding: EdgeInsets.only(
-//                                    left: 5.0, top: 5.0, bottom: 5.0),
-//                                labelStyle: TextStyle(
-//                                    color: Colors.blue, fontSize: 20.0),
-//                                labelText: data[index]["title"]),
-//                            child: new Text(timestamp,
-//                                style: TextStyle(
-//                                    color: Colors.black, fontSize: 16.0))),
-//                      );
-//                    }),
-//              ));
+  }
+
+  void onLocaleChange(Locale locale) {
+//    setState(() {
+//      _newLocaleDelegate = AppTranslationsDelegate(newLocale: locale);
+//    });
   }
 
   @override
   void initState() {
     super.initState();
+    // _newLocaleDelegate = AppTranslationsDelegate(newLocale: null);
+    application.onLocaleChanged = onLocaleChange;
     flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
     var android = new AndroidInitializationSettings('@mipmap/launcher_icon');
     var iOS = new IOSInitializationSettings();
@@ -416,7 +432,8 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-              'Na mail smo vam poslali kod koji je potrebno ovdje unijeti'),
+            AppTranslations.of(context).text("activation_code_token"),
+          ),
           content: new Row(
             children: <Widget>[
               new Expanded(
@@ -432,7 +449,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           actions: <Widget>[
             FlatButton(
-              child: Text('Ok'),
+              child: Text(AppTranslations.of(context).text("ok")),
               onPressed: () {
                 Navigator.pop(context);
                 fvoidServisEmailOTP(dialogOTP, EmailText);
@@ -541,7 +558,7 @@ class _MyHomePageState extends State<MyHomePage> {
         Navigator.of(context).pushNamed('/main');
       } else {
         Fluttertoast.showToast(
-            msg: "Neuspješan dohvat podataka",
+            msg: AppTranslations.of(context).text("error_register"),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             // also possible "TOP" and "CENTER"
@@ -813,40 +830,41 @@ class _MyHomePageState extends State<MyHomePage> {
       String title = "";
       String message = "";
       if (response.statusCode == 200) {
-          List dataMessage = json.decode(response.body);
-          int NePostojiPoruka = 0;
+        List dataMessage = json.decode(response.body);
+        int NePostojiPoruka = 0;
 
-          if (dataMessage.length != null) {
-            for (int i = 0; i < dataMessage.length; i++) {
-              int querycount =
-                  await dbHelper.queryMessageExists(dataMessage[i]["id"]);
-              if (querycount < 1) {
-                NePostojiPoruka++;
-                Map<String, dynamic> row = {
-                  DatabaseHelper.columnIdMessage: dataMessage[i]["id"],
-                  DatabaseHelper.columnCreated:
-                  dataMessage[i]["created"].toString(),
-                  DatabaseHelper.columnTitle: dataMessage[i]["title"],
-                  DatabaseHelper.columnMessage: dataMessage[i]["message"],
-                  DatabaseHelper.columnDeleted: "",
-                  DatabaseHelper.columnReadStatus: 0,
-                };
-                dbHelper.insert(row);
-              }
-
-              title = dataMessage[i]["title"];
-              message = dataMessage[i]["message"];
+        if (dataMessage.length != null) {
+          for (int i = 0; i < dataMessage.length; i++) {
+            int querycount =
+                await dbHelper.queryMessageExists(dataMessage[i]["id"]);
+            if (querycount < 1) {
+              NePostojiPoruka++;
+              Map<String, dynamic> row = {
+                DatabaseHelper.columnIdMessage: dataMessage[i]["id"],
+                DatabaseHelper.columnCreated:
+                    dataMessage[i]["created"].toString(),
+                DatabaseHelper.columnTitle: dataMessage[i]["title"],
+                DatabaseHelper.columnMessage: dataMessage[i]["message"],
+                DatabaseHelper.columnDeleted: "",
+                DatabaseHelper.columnReadStatus: 0,
+              };
+              dbHelper.insert(row);
             }
+
+            title = dataMessage[i]["title"];
+            message = dataMessage[i]["message"];
           }
-          int ReadMessageCount =await dbHelper.queryReadMessageExists();
-          NePostojiPoruka+= ReadMessageCount;
-          if (NePostojiPoruka > 1) {
-            title = "Imate nove poruke";
-            message = NePostojiPoruka.toString() + " novih poruka";
-            _showNotification(title, message);
-          } else if (NePostojiPoruka > 0) {
-            _showNotification(title, message);
-          }
+        }
+        int ReadMessageCount = await dbHelper.queryReadMessageExists();
+        NePostojiPoruka += ReadMessageCount;
+        if (NePostojiPoruka > 1) {
+          title = AppTranslations.of(context).text("imate_nove_poruke");
+          message = NePostojiPoruka.toString() +
+              AppTranslations.of(context).text("poruka");
+          _showNotification(title, message);
+        } else if (NePostojiPoruka > 0) {
+          _showNotification(title, message);
+        }
 //          if (dataMessage.length != null)
 //            for (int i = 0; i < dataMessage.length; i++) {
 //              Map<String, dynamic> row = {
@@ -918,11 +936,11 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: <Widget>[
           new FlatButton(
             onPressed: () => showtoast(index, 1, context),
-            child: new Text('Obrisati poruku'),
+            child: new Text(AppTranslations.of(context).text("delete")),
           ),
           new FlatButton(
             onPressed: () => showtoast(index, 2, context),
-            child: new Text('Da'),
+            child: new Text(AppTranslations.of(context).text("da")),
           ),
         ],
       ),
@@ -933,9 +951,9 @@ class _MyHomePageState extends State<MyHomePage> {
 void showtoast(int index, int i, BuildContext context) {
   String msg = "";
   if (i == 1) {
-    msg = " poruka obrisana!";
+    msg = AppTranslations.of(context).text("message_delete");
   } else {
-    msg = " poruka pročitana!";
+    msg = AppTranslations.of(context).text("message_read");
   }
   Fluttertoast.showToast(
       msg: data[index]["title"] + msg,

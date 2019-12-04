@@ -1,3 +1,4 @@
+import 'package:Loyalty_client/AppTranslations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -74,7 +75,7 @@ class TransactionDetailsState extends State<TransactionDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Transakcije detalji')),
+      appBar: AppBar(title: Text(AppTranslations.of(context).text("transakcije_detalji"))),
       body: Container(
         color: Colors.grey,
         child: _buildContent(context),
@@ -99,7 +100,7 @@ Widget _buildContent(BuildContext context) {
                 Column(
                   children: <Widget>[
                     Text(
-                      "Poslovnica",
+                      AppTranslations.of(context).text("poslovnica"),
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                       textAlign: TextAlign.left,
                     ),
@@ -118,7 +119,7 @@ Widget _buildContent(BuildContext context) {
                     child: Column(
                   children: <Widget>[
                     Text(
-                      "Datum",
+                      AppTranslations.of(context).text("datum"),
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                       textAlign: TextAlign.right,
                     ),
@@ -149,19 +150,19 @@ Widget _buildContent(BuildContext context) {
               child: Row(children: <Widget>[
                 Expanded(
                   child: Text(
-                    "Naziv artikla",
+                    AppTranslations.of(context).text("naziv_artikla"),
                     style: TextStyle(fontSize: 15, color: Colors.grey),
                   ),
                 ),
                 Padding(
                     padding: EdgeInsets.fromLTRB(20, 0, 40, 0),
                     child: Text(
-                      "Količina",
+                      AppTranslations.of(context).text("kolicina"),
                       style: TextStyle(fontSize: 15, color: Colors.grey),
                     )),
                 Padding(
                     padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                    child: Text("Cijena",
+                    child: Text(AppTranslations.of(context).text("cijena"),
                         style: TextStyle(fontSize: 15, color: Colors.grey))),
               ])),
           Container(
@@ -184,7 +185,7 @@ Widget _buildContent(BuildContext context) {
                         child: Padding(
                       padding: EdgeInsets.all(5),
                       child: Text(
-                        "Račun ukupno:",
+                        AppTranslations.of(context).text("racun_ukupno"),
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
@@ -207,12 +208,12 @@ Widget _buildContent(BuildContext context) {
           Padding(
             padding: EdgeInsets.all(5),
             child: data["void"] == null ? Container() :
-            Text("STORNO : " + data["void"],
+            Text(AppTranslations.of(context).text("storno")+" : " + data["void"],
                 style: TextStyle(
                     fontSize: 20, fontWeight: FontWeight.bold,color: Colors.red)),
           ),
           Row(
-            children: <Widget>[Icon(Icons.message), Text("Bodovi")],
+            children: <Widget>[Icon(Icons.message), Text(AppTranslations.of(context).text("bodovi"))],
           ),
           Center(
             child: getPointsDifference(),

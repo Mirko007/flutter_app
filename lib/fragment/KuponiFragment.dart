@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:Loyalty_client/AppTranslations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:Loyalty_client/KuponiDetails.dart';
@@ -116,7 +117,7 @@ class _KuponiState extends State<KuponiFragment> {
         child: new Scaffold(
             appBar: new AppBar(
               automaticallyImplyLeading: false,
-              title: new Text("Kuponi"),
+              title: new Text(AppTranslations.of(context).text("kuponi")),
             ),
             //body: _buildContent(context)
             body:
@@ -166,7 +167,7 @@ class _KuponiState extends State<KuponiFragment> {
                           padding: const EdgeInsets.all(5.0),
                           child: Center(
                               child: Text(
-                                "PONUDA",
+                                AppTranslations.of(context).text("ponuda"),
                                 style: TextStyle(
                                     fontSize: 25, color: Colors.white),
                               )),
@@ -205,7 +206,7 @@ class _KuponiState extends State<KuponiFragment> {
                           padding: const EdgeInsets.all(5.0),
                           child: Center(
                               child: Text(
-                                "OSOBNI",
+                                AppTranslations.of(context).text("osobni"),
                                 style: TextStyle(
                                     fontSize: 25, color: Colors.white),
                               )),
@@ -225,18 +226,17 @@ class _KuponiState extends State<KuponiFragment> {
   Future<bool> _onWillPop() {
     return showDialog(
       context: context,
-      builder: (context) =>
-      new AlertDialog(
-        title: new Text('Jeste li sigurni?'),
-        content: new Text('Želite li izaći iz aplikacije'),
+      builder: (context) => new AlertDialog(
+        title: new Text(AppTranslations.of(context).text("exit_app")),
+        content: new Text(AppTranslations.of(context).text("click_yes")),
         actions: <Widget>[
           new FlatButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: new Text('Ne'),
+            child: new Text(AppTranslations.of(context).text("ne")),
           ),
           new FlatButton(
             onPressed: () => SystemNavigator.pop(),
-            child: new Text('Da'),
+            child: new Text(AppTranslations.of(context).text("da")),
           ),
         ],
       ),
@@ -280,7 +280,7 @@ getGridView(BuildContext context) {
                           child: Text(
                             getCustomerRequiredpoints(index) +
                                 // allCoupons[index]["voucherType"]["customerPointsRequired"].toString() +
-                                " bodova",
+                                AppTranslations.of(context).text("bodova"),
                             style: TextStyle(fontSize: 25, color: Colors.white),
                           )),
                     ),
@@ -312,7 +312,7 @@ getGridView(BuildContext context) {
                     ),
                     Padding(
                         padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                        child: Text("Vrijedi do " + getValidto(index)))
+                        child: Text(AppTranslations.of(context).text("vrijedi_do") + getValidto(index)))
                   ],
                 ),
               ),

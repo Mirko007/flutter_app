@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui' as prefix0;
 
+import 'package:Loyalty_client/AppTranslations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ class _AkcijeState extends State<AkcijeFragment> {
 //            ))
           Scaffold(
         appBar: AppBar(
-          title: Text('Akcije'),
+          title: Text(AppTranslations.of(context).text("akcije")),
           automaticallyImplyLeading: false,
         ),
         backgroundColor: Colors.white,
@@ -77,16 +78,16 @@ class _AkcijeState extends State<AkcijeFragment> {
     return showDialog(
           context: context,
           builder: (context) => new AlertDialog(
-            title: new Text('Jeste li sigurni?'),
-            content: new Text('Želite li izaći iz aplikacije'),
+            title: new Text(AppTranslations.of(context).text("exit_app")),
+            content: new Text(AppTranslations.of(context).text("click_yes")),
             actions: <Widget>[
               new FlatButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: new Text('Ne'),
+                child: new Text(AppTranslations.of(context).text("ne")),
               ),
               new FlatButton(
                 onPressed: () => SystemNavigator.pop(),
-                child: new Text('Da'),
+                child: new Text(AppTranslations.of(context).text("da")),
               ),
             ],
           ),

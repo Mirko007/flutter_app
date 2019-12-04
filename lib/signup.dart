@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'AppTranslations.dart';
 import 'fragment/main_fragment.dart';
 import 'global_variable.dart' as globals;
 
@@ -20,7 +21,7 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   bool spol = true; //1-muško,0 žensko
-  final formats = {
+  var formats = {
     InputType.date: DateFormat('dd/MM/yyyy'),
   };
 
@@ -28,19 +29,19 @@ class _SignupPageState extends State<SignupPage> {
   bool editable = true;
   DateTime date;
 
-  final EmailText = TextEditingController();
-  final ImeText = TextEditingController();
-  final PrezimeText = TextEditingController();
-  final MobitelText = TextEditingController();
-  final KucnaAdresaText = TextEditingController();
-  final PostanskiBrojText = TextEditingController();
-  final GradText = TextEditingController();
-  final datumRodenja = TextEditingController();
+  TextEditingController EmailText = TextEditingController();
+  TextEditingController ImeText = TextEditingController();
+  TextEditingController PrezimeText = TextEditingController();
+  TextEditingController MobitelText = TextEditingController();
+  TextEditingController KucnaAdresaText = TextEditingController();
+  TextEditingController PostanskiBrojText = TextEditingController();
+  TextEditingController GradText = TextEditingController();
+  TextEditingController datumRodenja = TextEditingController();
 
   bool gdpr_privola = false;
   bool terms_of_use = false;
 
-  List _gender = ["Musko", "Zensko", "Ne želim se izjasniti"];
+
 
   List<DropdownMenuItem<String>> _dropDownMenuItemsGender;
   String _currentGender;
@@ -121,7 +122,7 @@ class _SignupPageState extends State<SignupPage> {
                   child: Column(
                     children: <Widget>[
                       Text(
-                        "Dobro došao u LeoClub program nagrađivanja!",
+                        AppTranslations.of(context).text("wellcome_club"),
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.bold),
                       ),
@@ -129,7 +130,8 @@ class _SignupPageState extends State<SignupPage> {
                         height: 10,
                       ),
                       Text(
-                        "Upiši u svoje podatke, registriraj se i koristi članske pogodnosti već danas.",
+                        AppTranslations.of(context).text("upisi_podatke")
+
                       ),
                       SizedBox(
                         height: 10,
@@ -137,12 +139,12 @@ class _SignupPageState extends State<SignupPage> {
                       Row(
                         children: <Widget>[
                           Text(
-                            "Već imaš račun?",
+                            AppTranslations.of(context).text("racun"),
                             style: TextStyle(fontSize: 16),
                           ),
                           InkWell(
                             child: new Text(
-                              "Prijavi se",
+                              AppTranslations.of(context).text("prijavi_se"),
                               style: TextStyle(
                                   color: Colors.blue,
                                   decoration: TextDecoration.underline,
@@ -159,7 +161,7 @@ class _SignupPageState extends State<SignupPage> {
                         padding: const EdgeInsets.only(top: 5, bottom: 5),
                         child: TextField(
                           decoration: InputDecoration(
-                              labelText: 'Ime',
+                              labelText: AppTranslations.of(context).text("ime"),
                               labelStyle: TextStyle(
                                   fontFamily: 'Montserrat',
                                   fontWeight: FontWeight.bold,
@@ -173,7 +175,7 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                            labelText: 'Prezime',
+                            labelText:  AppTranslations.of(context).text("prezime"),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
@@ -186,7 +188,7 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                            labelText: 'Mobitel (Opcionalno)',
+                            labelText:  AppTranslations.of(context).text("mobitel"),
                             hintText: "+385911234567",
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
@@ -200,7 +202,7 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                            labelText: 'E-mail adresa',
+                            labelText: AppTranslations.of(context).text("email"),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
@@ -213,7 +215,7 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                            labelText: 'Kućna adresa (Opcionalno)',
+                            labelText: AppTranslations.of(context).text("kucna_adresa"),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
@@ -226,7 +228,7 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                            labelText: 'Poštanski broj (Opcionalno)',
+                            labelText: AppTranslations.of(context).text("postanski_broj"),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
@@ -239,7 +241,7 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                            labelText: 'Grad (Opcionalno)',
+                            labelText: AppTranslations.of(context).text("grad"),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
@@ -265,8 +267,7 @@ class _SignupPageState extends State<SignupPage> {
                           Duration(days: 5841),
                         ),
                         decoration: InputDecoration(
-                            hintText: "Datum rođenja",
-                            labelText: 'Datum rođenja (Opcionalno)',
+                            labelText:  AppTranslations.of(context).text("datum_rodjenja"),
                             hasFloatingPlaceholder: false,
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
@@ -347,7 +348,7 @@ class _SignupPageState extends State<SignupPage> {
                       CheckboxListTile(
                           value: terms_of_use,
                           title: new Text(
-                              "Prihvaćam i slažem se s Uvjetima korištenja"),
+                              AppTranslations.of(context).text("uvjeti")),
                           onChanged: (bool value) {
                             setState(() {
                               terms_of_use = value;
@@ -356,12 +357,12 @@ class _SignupPageState extends State<SignupPage> {
                       RaisedButton(
                         onPressed: _launchURL,
                         padding: EdgeInsets.all(5),
-                        child: new Text("Uvjeti korištenja"),
+                        child: new Text(AppTranslations.of(context).text("uvjeti_koristenja")),
                       ),
                       CheckboxListTile(
                           value: gdpr_privola,
                           title: new Text(
-                              "Dajem suglasnost da mi Polleo Adria d.o.o šalje obavijesti o Programu te ponude i pogodnosti putem mobitela, elektroničke pošte i pošte"),
+                          AppTranslations.of(context).text("privola_mail_posta_mob")),
                           onChanged: (bool value) {
                             setState(() {
                               gdpr_privola = value;
@@ -383,7 +384,7 @@ class _SignupPageState extends State<SignupPage> {
                                 "gdpr_privola" + gdpr_privola.toString());
                             Fluttertoast.showToast(
                                 msg:
-                                "Molimo unesite sve obavezne podatke i omogućite privolu",
+                                AppTranslations.of(context).text("unesite_sve_podatke"),
                                 toastLength: Toast.LENGTH_SHORT,
                                 gravity: ToastGravity.BOTTOM,
                                 // also possible "TOP" and "CENTER"
@@ -399,7 +400,7 @@ class _SignupPageState extends State<SignupPage> {
                               elevation: 7.0,
                               child: Center(
                                   child: Text(
-                                    'Registriraj se',
+                                      AppTranslations.of(context).text("registriraj"),
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -421,18 +422,26 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   void initState() {
-    _dropDownMenuItemsGender = getDropDownMenuItems();
-    _currentGender = _dropDownMenuItemsGender[2].value;
+//    _dropDownMenuItemsGender = getDropDownMenuItems();
+//    _currentGender = _dropDownMenuItemsGender[2].value;
     this.getPrefTypeData();
     super.initState();
   }
 
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
+    List _gender = [AppTranslations.of(context).text("male"), AppTranslations.of(context).text("female"), AppTranslations.of(context).text("other")];
     List<DropdownMenuItem<String>> items = new List();
     for (String gender in _gender) {
       items.add(new DropdownMenuItem(value: gender, child: new Text(gender)));
     }
     return items;
+  }
+
+  @override
+  void didChangeDependencies() {
+    _dropDownMenuItemsGender = getDropDownMenuItems();
+    _currentGender = _dropDownMenuItemsGender[0].value;
+    super.didChangeDependencies();
   }
 
   List<DropdownMenuItem<String>> getDropDownMenuItemsFitnessType() {
@@ -542,7 +551,7 @@ class _SignupPageState extends State<SignupPage> {
         _asyncInputDialog(context, text);
       } else {
         Fluttertoast.showToast(
-            msg: "Neuspješna registracija, email se već koristi",
+            msg: AppTranslations.of(context).text("fail_customer"),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             // also possible "TOP" and "CENTER"
@@ -562,7 +571,7 @@ class _SignupPageState extends State<SignupPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-              'Na mail smo vam poslali kod koji je potrebno ovdje unijeti'),
+              AppTranslations.of(context).text("activation_code_token")),
           content: new Row(
             children: <Widget>[
               new Expanded(
@@ -578,7 +587,7 @@ class _SignupPageState extends State<SignupPage> {
           ),
           actions: <Widget>[
             FlatButton(
-              child: Text('Ok'),
+              child: Text('OK'),
               onPressed: () {
                 Navigator.pop(context);
                 fvoidServisEmailOTP(dialogOTP, EmailText);
@@ -617,7 +626,7 @@ class _SignupPageState extends State<SignupPage> {
         fvoidCreateCustomer(resBody["token"], EmailTextConfirm);
       } else {
         Fluttertoast.showToast(
-            msg: "Neuspješna registracija, kriva jednokratna lozinka",
+            msg: AppTranslations.of(context).text("wrong_one_time_pass"),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             // also possible "TOP" and "CENTER"
@@ -656,9 +665,9 @@ class _SignupPageState extends State<SignupPage> {
     String email = EmailText.text;
 
     String spol = "";
-    if (_currentGender == "Musko") {
+    if (_currentGender == AppTranslations.of(context).text("male")) {
       spol = "1";
-    } else if (_currentGender == "Zensko") {
+    } else if (_currentGender == AppTranslations.of(context).text("female")) {
       spol = "2";
     } else {
       spol = "3";
@@ -734,16 +743,10 @@ class _SignupPageState extends State<SignupPage> {
         await prefs.setString('sportName', resBody["sportName"]);
         await prefs.setString(
             'placeOfRegistration', resBody["placeOfRegistration"]);
-        Fluttertoast.showToast(
-            msg: "Uspješna registracija",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            // also possible "TOP" and "CENTER"
-            textColor: Colors.white);
         Navigator.of(context).pushNamed('/main');
       } else {
         Fluttertoast.showToast(
-            msg: "Neuspješna registracija",
+            msg: AppTranslations.of(context).text("fail_customer"),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             // also possible "TOP" and "CENTER"

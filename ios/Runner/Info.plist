@@ -41,6 +41,12 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
     <string>YES</string>
+    <key>CFBundleLocalizations</key>
+        <array>
+            <string>hr</string>
+            <string>en</string>
+            <string>sl</string>
+        </array>
 
 </dict>
 </plist>

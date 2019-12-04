@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:Loyalty_client/AppTranslations.dart';
 import 'package:Loyalty_client/fragment/main_fragment.dart';
 import 'package:barcode_flutter/barcode_flutter.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class KuponiDetails extends StatelessWidget {
     // Use the Todo to create our UI
     return Scaffold(
       appBar: AppBar(
-        title: Text('Kuponi detalji'),
+        title: Text(AppTranslations.of(context).text("kuponi_detalji")),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -83,7 +84,7 @@ Widget _buildContent(BuildContext context, Coupon _coupon) {
               color: Colors.blue,
               child: Center(
                   child: Text(
-                _coupon.customerPointsRequired + " bodova",
+                _coupon.customerPointsRequired + AppTranslations.of(context).text("bodova"),
                 style: TextStyle(fontSize: 30, color: Colors.white),
               )),
             ),
@@ -108,7 +109,7 @@ Widget _buildContent(BuildContext context, Coupon _coupon) {
 
             Padding(
                 padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                child: Text("Vrijedi do " + _coupon.validTo)),
+                child: Text(AppTranslations.of(context).text("vrijedi_do") + _coupon.validTo)),
             !_coupon.voucherOwner
                 ?RaisedButton(
               child: Container(
@@ -120,7 +121,7 @@ Widget _buildContent(BuildContext context, Coupon _coupon) {
                     elevation: 7.0,
                     child: Center(
                       child: Text(
-                        'KUPI',
+                        AppTranslations.of(context).text("kupi"),
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -165,20 +166,19 @@ Widget _buildContent(BuildContext context, Coupon _coupon) {
 
 
 _dialogBuyVoucher(Coupon coupon,BuildContext context) {
-  print("ASdadsadasdsafd");
   showDialog(
       context: context,
       builder: (context) => new AlertDialog(
-    title: new Text('Jeste li sigurni?'),
-    content: new Text('Želite li kupiti kupon: '+coupon.voucherName),
+    title: new Text(''),
+    content: new Text(AppTranslations.of(context).text("buy_coupon")+coupon.voucherName),
     actions: <Widget>[
       new FlatButton(
         onPressed: () => Navigator.of(context).pop(false),
-        child: new Text('Ne'),
+        child: new Text(AppTranslations.of(context).text("ne")),
       ),
       new FlatButton(
         onPressed: () => _buyVoucher(coupon,context),
-        child: new Text('Da'),
+        child: new Text(AppTranslations.of(context).text("da")),
       ),
     ],
   ));
@@ -209,13 +209,13 @@ _buyVoucher(Coupon coupon,BuildContext context) async {
     print(response.body);
 
     if (response.statusCode == 200) {
-      Fluttertoast.showToast(
-          msg: "Uspješno kupljen kupon",
-          toastLength: Toast.LENGTH_SHORT,
-          backgroundColor: Colors.blue,
-          gravity: ToastGravity.CENTER,
-          // also possible "TOP" and "CENTER"
-          textColor: Colors.white);
+//      Fluttertoast.showToast(
+//          msg: "Uspješno kupljen kupon",
+//          toastLength: Toast.LENGTH_SHORT,
+//          backgroundColor: Colors.blue,
+//          gravity: ToastGravity.CENTER,
+//          // also possible "TOP" and "CENTER"
+//          textColor: Colors.white);
 //      Navigator.push(
 //        context,
 //        MaterialPageRoute(
@@ -225,7 +225,7 @@ _buyVoucher(Coupon coupon,BuildContext context) async {
       Navigator.of(context).pop();
     } else {
       Fluttertoast.showToast(
-          msg: "Neuspješna kupovina kupona",
+          msg: AppTranslations.of(context).text("fail_buying_voucher"),
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           backgroundColor: Colors.blue,
