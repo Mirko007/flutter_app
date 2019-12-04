@@ -139,7 +139,7 @@ void showtoast(int index, int i, BuildContext context) {
     msg = AppTranslations.of(context).text("message_read");
   }
   Fluttertoast.showToast(
-      msg: data[index]["title"] + msg,
+      msg: data[index]["title"]+ " " + msg,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       // also possible "TOP" and "CENTER"
