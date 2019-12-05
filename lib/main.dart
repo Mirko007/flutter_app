@@ -157,7 +157,7 @@ void backgroundFetchHeadlessTask() async {
 }
 
 void main() {
-  _firebaseMessaging.requestNotificationPermissions();
+  //_firebaseMessaging.requestNotificationPermissions();
   _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) async {
     print("onMessage: $message");
     String title = message['notification']['title'];
