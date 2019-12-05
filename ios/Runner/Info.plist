@@ -25,6 +25,7 @@
 	<key>UIBackgroundModes</key>
     <array>
     	<string>fetch</string>
+    	<string>remote-notification</string>
     	<string>location</string>
     </array>
 	<key>UILaunchStoryboardName</key>
@@ -45,7 +46,7 @@
         <array>
             <string>hr</string>
             <string>en</string>
-            <string>si</string>
+            <string>sl</string>
         </array>
 </dict>
 </plist>

@@ -1,6 +1,7 @@
 package com.example.flutterapp;
 
 import com.transistorsoft.flutter.backgroundfetch.BackgroundFetchPlugin;
+import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService;
 
 import io.flutter.app.FlutterApplication;
 import io.flutter.plugin.common.PluginRegistry;
@@ -11,6 +12,7 @@ public class Application extends FlutterApplication implements PluginRegistry.Pl
     public void onCreate() {
         super.onCreate();
         BackgroundFetchPlugin.setPluginRegistrant(this);
+        FlutterFirebaseMessagingService.setPluginRegistrant(this);
     }
 
     @Override

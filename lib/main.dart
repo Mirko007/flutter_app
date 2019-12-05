@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:Loyalty_client/AppTranslations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -17,6 +19,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'database_helper.dart';
+import 'firebase_messaging.dart';
 import 'fragment/main_fragment.dart';
 import 'global_variable.dart' as globals;
 import 'signup.dart';
@@ -32,6 +35,8 @@ const EVENTS_KEY = "fetch_events";
 List data;
 final dbHelperHeadless = DatabaseHelper.instance;
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
+
+final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
 /// This "Headless Task" is run when app is terminated.
 void backgroundFetchHeadlessTask() async {
@@ -101,11 +106,11 @@ void backgroundFetchHeadlessTask() async {
       if (dataMessage.length != null) {
         for (int i = 0; i < dataMessage.length; i++) {
           int querycount =
-              await dbHelper.queryMessageExists(dataMessage[i]["id"]);
+              await dbHelper.queryMessageExists(dataMessage[i]["id"].toString());
           if (querycount < 1) {
             NePostojiPoruka++;
             Map<String, dynamic> row = {
-              DatabaseHelper.columnIdMessage: dataMessage[i]["id"],
+              DatabaseHelper.columnIdMessage: dataMessage[i]["id"].toString(),
               DatabaseHelper.columnCreated:
                   dataMessage[i]["created"].toString(),
               DatabaseHelper.columnTitle: dataMessage[i]["title"],
@@ -152,6 +157,32 @@ void backgroundFetchHeadlessTask() async {
 }
 
 void main() {
+  _firebaseMessaging.requestNotificationPermissions();
+  _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) async {
+    print("onMessage: $message");
+    String title = message['notification']['title'];
+    String tekst = message['notification']['body'];
+
+    _showNotification(title, tekst);
+    //_showItemDialog(message);
+  },
+    onBackgroundMessage: myBackgroundMessageHandler,
+    onLaunch: (Map<String, dynamic> message) async {
+      print("onLaunch: $message");
+      String title = message['notification']['title'];
+      String tekst = message['notification']['body'];
+
+      _showNotification(title, tekst);
+     // _navigateToItemDetail(message);
+    },
+    onResume: (Map<String, dynamic> message) async {
+      print("onResume: $message");
+      String title = message['notification']['title'];
+      String tekst = message['notification']['body'];
+
+      _showNotification(title, tekst);
+      //_navigateToItemDetail(message);
+    },);
   debugPaintSizeEnabled = false;
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.blue, // navigation bar color
@@ -230,6 +261,8 @@ class _MyHomePageState extends State<MyHomePage> {
   List<String> _events = [];
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   final dbHelper = DatabaseHelper.instance;
+
+
 
   final EmailText = TextEditingController();
   static const EMPTY_TEXT = Center(child: Text('Waiting for fetch events.'));
@@ -840,11 +873,11 @@ class _MyHomePageState extends State<MyHomePage> {
         if (dataMessage.length != null) {
           for (int i = 0; i < dataMessage.length; i++) {
             int querycount =
-                await dbHelper.queryMessageExists(dataMessage[i]["id"]);
+                await dbHelper.queryMessageExists(dataMessage[i]["id"].toString());
             if (querycount < 1) {
               NePostojiPoruka++;
               Map<String, dynamic> row = {
-                DatabaseHelper.columnIdMessage: dataMessage[i]["id"],
+                DatabaseHelper.columnIdMessage: dataMessage[i]["id"].toString(),
                 DatabaseHelper.columnCreated:
                     dataMessage[i]["created"].toString(),
                 DatabaseHelper.columnTitle: dataMessage[i]["title"],
@@ -989,4 +1022,21 @@ Future<void> _showNotification(String title, String message) async {
 Future<void> onSelectNotification(String payload) async {
   //Postaviti na poruke
   navigatorKey.currentState.pushNamed('/messages');
+}
+
+Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
+  if (message.containsKey('data')) {
+    print(message.containsKey('data'));
+    final dynamic data = message['data'];
+    print("data:"+ data);
+  }
+
+  if (message.containsKey('notification')) {
+
+    // Handle notification message
+    final dynamic notification = message['notification'];
+    print("notification:"+ notification);
+  }
+
+  // Or do other work.
 }
