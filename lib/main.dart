@@ -157,32 +157,32 @@ void backgroundFetchHeadlessTask() async {
 }
 
 void main() {
-//  _firebaseMessaging.requestNotificationPermissions();
-//  _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) async {
-//    print("onMessage: $message");
-//    String title = message['notification']['title'];
-//    String tekst = message['notification']['body'];
-//
-//    _showNotification(title, tekst);
-//    //_showItemDialog(message);
-//  },
-//    onBackgroundMessage: myBackgroundMessageHandler,
-//    onLaunch: (Map<String, dynamic> message) async {
-//      print("onLaunch: $message");
-//      String title = message['notification']['title'];
-//      String tekst = message['notification']['body'];
-//
-//      _showNotification(title, tekst);
-//     // _navigateToItemDetail(message);
-//    },
-//    onResume: (Map<String, dynamic> message) async {
-//      print("onResume: $message");
-//      String title = message['notification']['title'];
-//      String tekst = message['notification']['body'];
-//
-//      _showNotification(title, tekst);
-//      //_navigateToItemDetail(message);
-//    },);
+  _firebaseMessaging.requestNotificationPermissions();
+  _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) async {
+    print("onMessage: $message");
+    String title = message['notification']['title'];
+    String tekst = message['notification']['body'];
+
+    _showNotification(title, tekst);
+    //_showItemDialog(message);
+  },
+    onBackgroundMessage: myBackgroundMessageHandler,
+    onLaunch: (Map<String, dynamic> message) async {
+      print("onLaunch: $message");
+      String title = message['notification']['title'];
+      String tekst = message['notification']['body'];
+
+      _showNotification(title, tekst);
+     // _navigateToItemDetail(message);
+    },
+    onResume: (Map<String, dynamic> message) async {
+      print("onResume: $message");
+      String title = message['notification']['title'];
+      String tekst = message['notification']['body'];
+
+      _showNotification(title, tekst);
+      //_navigateToItemDetail(message);
+    },);
   debugPaintSizeEnabled = false;
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.blue, // navigation bar color
