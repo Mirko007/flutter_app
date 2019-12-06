@@ -10,16 +10,19 @@ class Application {
 
   Application._internal();
 
+
+  //todo dvije verzija aplikacije, ako je hrvatska verzija aplikacije onda hr i en, hr default (hr_hr)
+  //- SLOVENSKA verzija - default je sl nekako, eng radi ,slovenija sl_SI
+  // Za slovensku verziju HR json prebaciti na slovenski
   final List<String> supportedLanguages = [
-    "en",
     "hr",
-    "sl",
+    "en",
   ];
 
   final List<String> supportedLanguagesCodes = [
-    "en",
     "hr",
-    "si",
+    "US",
+    "UK",
   ];
 
   //returns the list of supported Locales

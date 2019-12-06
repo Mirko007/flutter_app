@@ -157,32 +157,32 @@ void backgroundFetchHeadlessTask() async {
 }
 
 void main() {
-  //_firebaseMessaging.requestNotificationPermissions();
-  _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) async {
-    print("onMessage: $message");
-    String title = message['notification']['title'];
-    String tekst = message['notification']['body'];
-
-    _showNotification(title, tekst);
-    //_showItemDialog(message);
-  },
-    onBackgroundMessage: myBackgroundMessageHandler,
-    onLaunch: (Map<String, dynamic> message) async {
-      print("onLaunch: $message");
-      String title = message['notification']['title'];
-      String tekst = message['notification']['body'];
-
-      _showNotification(title, tekst);
-     // _navigateToItemDetail(message);
-    },
-    onResume: (Map<String, dynamic> message) async {
-      print("onResume: $message");
-      String title = message['notification']['title'];
-      String tekst = message['notification']['body'];
-
-      _showNotification(title, tekst);
-      //_navigateToItemDetail(message);
-    },);
+//  _firebaseMessaging.requestNotificationPermissions();
+//  _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) async {
+//    print("onMessage: $message");
+//    String title = message['notification']['title'];
+//    String tekst = message['notification']['body'];
+//
+//    _showNotification(title, tekst);
+//    //_showItemDialog(message);
+//  },
+//    onBackgroundMessage: myBackgroundMessageHandler,
+//    onLaunch: (Map<String, dynamic> message) async {
+//      print("onLaunch: $message");
+//      String title = message['notification']['title'];
+//      String tekst = message['notification']['body'];
+//
+//      _showNotification(title, tekst);
+//     // _navigateToItemDetail(message);
+//    },
+//    onResume: (Map<String, dynamic> message) async {
+//      print("onResume: $message");
+//      String title = message['notification']['title'];
+//      String tekst = message['notification']['body'];
+//
+//      _showNotification(title, tekst);
+//      //_navigateToItemDetail(message);
+//    },);
   debugPaintSizeEnabled = false;
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.blue, // navigation bar color
@@ -225,11 +225,17 @@ class MyApp extends StatelessWidget {
       localeResolutionCallback: (locale, supportedLocales) {
         // Check if the current device locale is supported
         if (locale == null) {
-          debugPrint("*language locale is null!!!");
+          debugPrint("supportedLocale*language locale is null!!!");
           return supportedLocales.first;
         }
 
         for (var supportedLocale in supportedLocales) {
+          print("supportedLocale"+supportedLocale.toString());
+          print("supportedLocalelanguageCode"+supportedLocale.languageCode);
+          print("supportedLocalecountryCode"+supportedLocale.countryCode);
+          print("locale_countryCode"+locale.languageCode);
+          print("locale_countryCode"+locale.countryCode);
+
 
           if (supportedLocale.languageCode == locale.languageCode &&
               supportedLocale.countryCode == locale.countryCode) {
@@ -238,12 +244,13 @@ class MyApp extends StatelessWidget {
         }
         // If the locale of the device is not supported, use the first one
         // from the list (English, in this case).
+        // Locale('sl', 'SL'),
         return supportedLocales.first;
       },
       supportedLocales: [
-        Locale('en', 'EN'),
         Locale('hr', 'HR'),
-        Locale('sl', 'SI'),
+        Locale('en', 'US'),
+        Locale('en', 'UK'),
       ],
     );
   }
