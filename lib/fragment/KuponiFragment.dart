@@ -150,7 +150,7 @@ class _KuponiState extends State<KuponiFragment> {
                         10.0,
                       ),
                       child: RaisedButton(
-                        color: pressed ? Colors.red : Colors.blue,
+                        color: pressed ? Colors.black12 : Colors.blue,
                         shape: OutlineInputBorder(
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(15.0),
@@ -189,7 +189,7 @@ class _KuponiState extends State<KuponiFragment> {
                         10.0,
                       ),
                       child: RaisedButton(
-                        color: pressed ? Colors.blue : Colors.red,
+                        color: pressed ? Colors.blue : Colors.black12,
                         shape: OutlineInputBorder(
                             borderRadius: BorderRadius.only(
                                 topRight: Radius.circular(15.0),

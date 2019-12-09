@@ -11,8 +11,11 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../global_variable.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:intl/intl.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+
 final Set<Factory> gestureRecognizers = [
   Factory(() => EagerGestureRecognizer()),
 ].toSet();
@@ -195,11 +198,25 @@ class _AkcijeState extends State<AkcijeFragment> {
             if (data[i]["catalogList"] != "") {
               List dataKatalog = data[i]["catalogList"];
               List<MyTile> listMiniKatalog = List<MyTile>();
+              int vint_validan_katalog = 0;
               for (int j = 0; j < dataKatalog.length; j++) {
-                listMiniKatalog.add(new MyTile(dataKatalog[j]["name"],
-                    <MyTile>[new MyTile(dataKatalog[j]["link"])]));
+                DateFormat dateFormat = DateFormat('dd/MM/yyyy hh:mm');
+                String now = dateFormat.format(DateTime.now());
+                DateTime now_dateTime = dateFormat.parse(now);
+
+                DateTime date_katalog_datetime = dateFormat.parse(dataKatalog[j]["validTo"]);
+
+                print("validan");
+                print(now_dateTime.isBefore(date_katalog_datetime));
+                print(dataKatalog[j]["name"]);
+                if (now_dateTime.isBefore(date_katalog_datetime)) {
+                  listMiniKatalog.add(new MyTile(dataKatalog[j]["name"],
+                      <MyTile>[new MyTile(dataKatalog[j]["link"])]));
+                  vint_validan_katalog++;
+                }
               }
-              listOfTiles.add(new MyTile(data[i]["name"], listMiniKatalog));
+              if (vint_validan_katalog > 0)
+                listOfTiles.add(new MyTile(data[i]["name"], listMiniKatalog));
             }
           }
         });
@@ -211,8 +228,7 @@ class _AkcijeState extends State<AkcijeFragment> {
 class StuffInTiles extends StatelessWidget {
   final MyTile myTile;
 
-  Completer<WebViewController> _controller =
-      Completer<WebViewController>();
+  Completer<WebViewController> _controller = Completer<WebViewController>();
 
   StuffInTiles(this.myTile);
 
@@ -226,7 +242,7 @@ class StuffInTiles extends StatelessWidget {
       return SizedBox(
         height: 500,
 //        width: MediaQuery.of(context).size.width,
-      width: 400,
+        width: 400,
         child: new WebView(
           gestureRecognizers: gestureRecognizers,
           initialUrl: t.title,
@@ -236,7 +252,6 @@ class StuffInTiles extends StatelessWidget {
           },
         ),
       );
-
 
 //      ListTile(
 //          dense: true,
@@ -248,7 +263,7 @@ class StuffInTiles extends StatelessWidget {
 //          title: new Text(t.title));
     else
       return new ExpansionTile(
-        key: new PageStorageKey<int>(3),
+       // key: new PageStorageKey<int>(4),
         title: new Text(t.title),
         children: t.children.map(_buildTiles).toList(),
       );
