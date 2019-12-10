@@ -183,6 +183,7 @@ void main() {
       _showNotification(title, tekst);
       //_navigateToItemDetail(message);
     },);
+  _firebaseMessaging.subscribeToTopic("news");
   debugPaintSizeEnabled = false;
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.blue, // navigation bar color
@@ -1039,11 +1040,10 @@ Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
   }
 
   if (message.containsKey('notification')) {
-
+    _showNotification(message['notification']['title']+"background", message['notification']['body']+"background");
     // Handle notification message
     final dynamic notification = message['notification'];
     print("notification:"+ notification);
   }
 
-  // Or do other work.
 }
