@@ -12,6 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../AppTranslations.dart';
 import '../MessageActivity.dart';
 import '../database_helper.dart';
+import '../firebase_messaging.dart';
 import '../global_variable.dart' as globals;
 import '../main.dart';
 
@@ -63,6 +64,8 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
   List data_fitnessType;
   List data_sportType;
   List data_categoryType;
+
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   @override
   void initState() {
@@ -241,6 +244,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
           IconButton(
             icon: Icon(Icons.exit_to_app),
             onPressed: () {
+              _firebaseMessaging.unsubscribeFromTopic("news");
               Navigator.of(context).pop();
             },
           ),
@@ -486,28 +490,41 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
             RaisedButton(
               child: Text(AppTranslations.of(context).text("cesta_pitanja")),
               onPressed: () {
-                //_showNotification();
+                //todo
+                //hr
                 _launchURL("https://leoclub.polleosport.hr/cesta-pitanja");
+                //slo
+                //_launchURL("https://leoclub.polleosport.si/pogosta-vprasanja/");
               },
             ),
             RaisedButton(
               child: Text(AppTranslations.of(context).text("poslovnice_kontakti")),
               onPressed: () {
-                //dbHelperHeadless.deleteAll();
+                //todo
+                //hr
                 _launchURL("https://polleosport.hr/poslovnice-i-kontakti");
+                //slo
+                //_launchURL("https://polleosport.si/poslovalnice-in-kontakti");
               },
             ),
             RaisedButton(
               child: Text(AppTranslations.of(context).text("opci_uvjeti")),
               onPressed: () {
+                //todo
+                //hr
                 _launchURL("https://leoclub.polleosport.hr/pravila-programa");
+                //
+               // _launchURL("https://leoclub.polleosport.si/pravila-programa");
               },
             ),
             RaisedButton(
               child: Text(AppTranslations.of(context).text("zastita_podataka")),
               onPressed: () {
-                _launchURL(
-                    "https://leoclub.polleosport.hr/pravila-privatnosti");
+                //todo
+                //hr
+                _launchURL("https://leoclub.polleosport.hr/pravila-privatnosti");
+                //slo
+                _launchURL("https://leoclub.polleosport.si/pravila-zasebnosti");
               },
             ),
           ],

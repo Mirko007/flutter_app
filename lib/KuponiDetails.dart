@@ -21,7 +21,7 @@ class KuponiDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Use the Todo to create our UI
+
     return Scaffold(
       appBar: AppBar(
         title: Text(AppTranslations.of(context).text("kuponi_detalji")),

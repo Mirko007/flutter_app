@@ -8,15 +8,19 @@ import 'package:flutter/services.dart';
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
+import '../firebase_messaging.dart';
+
 
 class Main_Fragment extends StatefulWidget {
  int tab;
+
   Main_Fragment({this.tab});
   @override
   _Main_FragmentState createState() => _Main_FragmentState(selectedTab : tab);
 }
 
 class _Main_FragmentState extends State<Main_Fragment> {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   int selectedTab;
 
   _Main_FragmentState({this.selectedTab});
@@ -42,7 +46,7 @@ class _Main_FragmentState extends State<Main_Fragment> {
 
   @override
   Widget build(BuildContext context) {
-
+    _firebaseMessaging.subscribeToTopic("news");
     return Scaffold(
             bottomNavigationBar: CurvedNavigationBar(
               index: 2,

@@ -758,7 +758,11 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   _launchURL() async {
+    //todo
+    //hr
     const url = "https://leoclub.polleosport.hr/pravila-programa";
+    //slo
+    //const url = "https://leoclub.polleosport.si/pravila-programa";
     print(url);
     if (await canLaunch(url)) {
       launch(url);

@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 class DatabaseHelper {
 
   static final _databaseName = "LoyaltyDatabase.db";
-  static final _databaseVersion = 1;
+  static final _databaseVersion = 2;
 
   static final table = 'messages';
 
@@ -55,6 +55,18 @@ class DatabaseHelper {
           )
           ''');
   }
+  // SQL code to create the database table
+//  Future _onCreate(Database db, int version) async {
+//    await db.execute('''
+//          CREATE TABLE $table (
+//            $columnId INTEGER PRIMARY KEY,
+//            $columnCreated TEXT NOT NULL,
+//            $columnTitle TEXT NOT NULL,
+//            $columnMessage TEXT NOT NULL,
+//            $columnReadStatus INTEGER NOT NULL
+//          )
+//          ''');
+//  }
 
   // Helper methods
 
@@ -74,45 +86,45 @@ class DatabaseHelper {
   }
 
 
-  Future<List<Map<String, dynamic>>> queryAllRowsWhereNotDeleted(String deleted) async {
-    Database db = await instance.database;
-
-    return await db.rawQuery('SELECT * FROM `messages` WHERE deleted =? ORDER BY id_message DESC', [''] );
-
-  }
+//  Future<List<Map<String, dynamic>>> queryAllRowsDesc(String deleted) async {
+//    Database db = await instance.database;
+//
+//    return await db.rawQuery('SELECT * FROM `messages` ORDER BY id_message DESC', [''] );
+//
+//  }
 
   // All of the methods (insert, query, update, delete) can also be done using
   // raw SQL commands. This method uses a raw query to give the row count.
-  Future<int> queryRowCount() async {
+  Future<int> queryRowCountRead() async {
     Database db = await instance.database;
-    return Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM $table'));
+    return Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM $table WHERE read_status = 0'));
   }
 
-  Future<List<Map<String, dynamic>>> queryAllRowsWhereDeleted(String deleted) async {
+//  Future<List<Map<String, dynamic>>> queryAllRowsWhereDeleted(String deleted) async {
+//    Database db = await instance.database;
+//    return await db.rawQuery('SELECT * FROM `messages` WHERE NOT deleted =? ORDER BY id_message DESC', [''] );
+//  }
+
+  Future<List<Map<String, dynamic>>> updateReadStatus(int _id,int read_status) async {
     Database db = await instance.database;
-    return await db.rawQuery('SELECT * FROM `messages` WHERE NOT deleted =? ORDER BY id_message DESC', [''] );
+    return await db.rawQuery("UPDATE `messages` SET read_status=$read_status WHERE _id = $_id");
   }
 
-  Future<List<Map<String, dynamic>>> updateReadStatus(String id_message,int read_status) async {
-    Database db = await instance.database;
-    return await db.rawQuery("UPDATE `messages` SET read_status=$read_status WHERE id_message = $id_message");
-  }
+//  Future<List<Map<String, dynamic>>> updateDeleted(String id_message,String deleted) async {
+//    Database db = await instance.database;
+//    return await db.rawQuery(
+//        "UPDATE `messages` SET deleted=$deleted WHERE id_message = $id_message");
+//  }
 
-  Future<List<Map<String, dynamic>>> updateDeleted(String id_message,String deleted) async {
-    Database db = await instance.database;
-    return await db.rawQuery(
-        "UPDATE `messages` SET deleted=$deleted WHERE id_message = $id_message");
-  }
+//  Future<int> queryMessageExists(String id_message) async {
+//    Database db = await instance.database;
+//    return Sqflite.firstIntValue(await db.rawQuery("SELECT COUNT(id_message) FROM `messages` WHERE id_message = $id_message"));
+//  }
 
-  Future<int> queryMessageExists(String id_message) async {
-    Database db = await instance.database;
-    return Sqflite.firstIntValue(await db.rawQuery("SELECT COUNT(id_message) FROM `messages` WHERE id_message = $id_message"));
-  }
-
-  Future<int> queryReadMessageExists() async {
-    Database db = await instance.database;
-    return Sqflite.firstIntValue(await db.rawQuery("SELECT COUNT(id_message) FROM `messages` WHERE read_status < 1"));
-  }
+//  Future<int> queryReadMessageExists() async {
+//    Database db = await instance.database;
+//    return Sqflite.firstIntValue(await db.rawQuery("SELECT COUNT(id_message) FROM `messages` WHERE read_status < 1"));
+//  }
   // We are assuming here that the id column in the map is set. The other
   // column values will be used to update the row.
   Future<int> update(Map<String, dynamic> row) async {
@@ -125,7 +137,7 @@ class DatabaseHelper {
   // returned. This should be 1 as long as the row exists.
   Future<int> delete(int id) async {
     Database db = await instance.database;
-    return await db.delete(table, where: '$columnIdMessage = ?', whereArgs: [id]);
+    return await db.delete(table, where: '$columnId = ?', whereArgs: [id]);
   }
 
   Future<int> deleteAll() async {

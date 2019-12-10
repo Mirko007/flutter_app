@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:Loyalty_client/AppTranslations.dart';
+
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'AppTranslationsDelegate.dart';
@@ -24,148 +25,27 @@ import 'fragment/main_fragment.dart';
 import 'global_variable.dart' as globals;
 import 'signup.dart';
 
-import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:path/path.dart' as Path;
 import 'package:sqflite/sqflite.dart';
 
-const EVENTS_KEY = "fetch_events";
-
-List data;
 final dbHelperHeadless = DatabaseHelper.instance;
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-/// This "Headless Task" is run when app is terminated.
-void backgroundFetchHeadlessTask() async {
-  print('[BackgroundFetch] Headless event received.');
-
-  try {
-    List allRows = await dbHelper.queryAllRowsWhereDeleted("");
-    for (int i = 0; i < allRows.length; i++) {
-      //todo VANJA mijenjati prilikom izbacivanja verzije
-//      Calendar c = Calendar.getInstance();
-//      c.add(Calendar.HOUR, -150);
-
-      // c.add(Calendar.MINUTE, -1);
-      //c.add(Calendar.SECOND, -20);
-      DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
-      String getCurrentDateTime = dateFormat.format(DateTime.now());
-      DateTime currentDatetime = dateFormat.parse(getCurrentDateTime);
-
-      DateTime databaseDateTime = dateFormat.parse(allRows[i]["deleted"]);
-
-      final difference = currentDatetime.difference(databaseDateTime).inHours;
-      if (difference < -150 || difference > 150) {
-        dbHelper.delete(allRows[i]["id"]);
-      }
-    }
-  } catch (error) {}
-
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  // Read fetch_events from SharedPreferences
-//  List<String> events = [];
-//  String jsons = prefs.getString(EVENTS_KEY);
-//  if (jsons != null) {
-//    events = jsonDecode(jsons).cast<String>();
-//  }
-//  // Add new event.
-//  events.insert(0, new DateTime.now().toString() + ' [Headless]');
-//
-//  print('[Vanja] Headless event received.' + events[0]);
-//  // Persist fetch events in SharedPreferences
-//  prefs.setString(EVENTS_KEY, jsonEncode(events));
-
-  String url = globals.base_url_novi + "/api/v1/messages";
-
-  String token = (prefs.getString('token') ?? "");
-
-  http.Response response = await http.get(url, headers: {
-    "Accept": "application/json",
-    "content-type": "application/json",
-    "token": "$token",
-    "req_type": "mob"
-  }).then((http.Response response) async {
-    print("Response status: ${response.statusCode}");
-    print("Response body: ${response.contentLength}");
-    print(response.headers);
-    print(response.request);
-    print(response.statusCode);
-    print(response.body);
-    String title = "";
-    String message = "";
-    if (response.statusCode == 200) {
-      // ignore: missing_return
-      List dataMessage = json.decode(response.body);
-
-      int NePostojiPoruka = 0;
-
-      if (dataMessage.length != null) {
-        for (int i = 0; i < dataMessage.length; i++) {
-          int querycount =
-              await dbHelper.queryMessageExists(dataMessage[i]["id"].toString());
-          if (querycount < 1) {
-            NePostojiPoruka++;
-            Map<String, dynamic> row = {
-              DatabaseHelper.columnIdMessage: dataMessage[i]["id"].toString(),
-              DatabaseHelper.columnCreated:
-                  dataMessage[i]["created"].toString(),
-              DatabaseHelper.columnTitle: dataMessage[i]["title"],
-              DatabaseHelper.columnMessage: dataMessage[i]["message"],
-              DatabaseHelper.columnDeleted: "",
-              DatabaseHelper.columnReadStatus: 0,
-            };
-            dbHelper.insert(row);
-          }
-
-          title = dataMessage[i]["title"];
-          message = dataMessage[i]["message"];
-        }
-      }
-
-      int ReadMessageCount = await dbHelper.queryReadMessageExists();
-      NePostojiPoruka += ReadMessageCount;
-      if (NePostojiPoruka > 1) {
-        title = "Imate nove poruke";
-        message = NePostojiPoruka.toString() + " novih poruka";
-        _showNotification(title, message);
-      } else if (NePostojiPoruka > 0) {
-        _showNotification(title, message);
-      }
-    } else {
-      // If that call was not successful, throw an error.
-      throw Exception('Failed to load post');
-    }
-  });
-//  Map<String, dynamic> row = {
-//    DatabaseHelper.columnIdMessage: "36",
-//    DatabaseHelper.columnCreated: "Vrijeme",
-//    DatabaseHelper.columnTitle: "Vanja",
-//    DatabaseHelper.columnMessage: "uspjeh Headless servis",
-//    DatabaseHelper.columnDeleted: DateTime.now().toString(),
-//    DatabaseHelper.columnReadStatus: 0,
-//  };
-//   dbHelperHeadless.insert(row);
-//  print('updated $rowsAffected row(s)');
-  //dbHelperHeadless.delete(36);
-  //dbHelperHeadless.delete(34);
-
-  BackgroundFetch.finish();
-}
-
 void main() {
   _firebaseMessaging.requestNotificationPermissions();
-  _firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) async {
-    print("onMessage: $message");
-    String title = message['notification']['title'];
-    String tekst = message['notification']['body'];
+  _firebaseMessaging.configure(
+    onMessage: (Map<String, dynamic> message) async {
+      print("onMessage: $message");
+      String title = message['notification']['title'];
+      String tekst = message['notification']['body'];
 
-    _showNotification(title, tekst);
-    //_showItemDialog(message);
-  },
+      _showNotification(title, tekst);
+      //_showItemDialog(message);
+    },
     onBackgroundMessage: myBackgroundMessageHandler,
     onLaunch: (Map<String, dynamic> message) async {
       print("onLaunch: $message");
@@ -173,7 +53,7 @@ void main() {
       String tekst = message['notification']['body'];
 
       _showNotification(title, tekst);
-     // _navigateToItemDetail(message);
+      // _navigateToItemDetail(message);
     },
     onResume: (Map<String, dynamic> message) async {
       print("onResume: $message");
@@ -182,18 +62,15 @@ void main() {
 
       _showNotification(title, tekst);
       //_navigateToItemDetail(message);
-    },);
-  _firebaseMessaging.subscribeToTopic("news");
+    },
+  );
+  //_firebaseMessaging.subscribeToTopic("news");
   debugPaintSizeEnabled = false;
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.blue, // navigation bar color
     statusBarColor: Colors.blue, // status bar color
   ));
   runApp(new MyApp());
-
-  // Register to receive BackgroundFetch events after app is terminated.
-  // Requires {stopOnTerminate: false, enableHeadless: true}
-  BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 }
 
 class MyApp extends StatelessWidget {
@@ -231,12 +108,11 @@ class MyApp extends StatelessWidget {
         }
 
         for (var supportedLocale in supportedLocales) {
-          print("supportedLocale"+supportedLocale.toString());
-          print("supportedLocalelanguageCode"+supportedLocale.languageCode);
-          print("supportedLocalecountryCode"+supportedLocale.countryCode);
-          print("locale_countryCode"+locale.languageCode);
-          print("locale_countryCode"+locale.countryCode);
-
+          print("supportedLocale" + supportedLocale.toString());
+          print("supportedLocalelanguageCode" + supportedLocale.languageCode);
+          print("supportedLocalecountryCode" + supportedLocale.countryCode);
+          print("locale_countryCode" + locale.languageCode);
+          print("locale_countryCode" + locale.countryCode);
 
           if (supportedLocale.languageCode == locale.languageCode &&
               supportedLocale.countryCode == locale.countryCode) {
@@ -266,11 +142,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   AppTranslationsDelegate _newLocaleDelegate;
-  List<String> _events = [];
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   final dbHelper = DatabaseHelper.instance;
-
-
 
   final EmailText = TextEditingController();
   static const EMPTY_TEXT = Center(child: Text('Waiting for fetch events.'));
@@ -385,14 +258,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     // _newLocaleDelegate = AppTranslationsDelegate(newLocale: null);
     application.onLocaleChanged = onLocaleChange;
-    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-    var android = new AndroidInitializationSettings('@mipmap/launcher_icon');
-    var iOS = new IOSInitializationSettings();
-    var initSetttings = new InitializationSettings(android, iOS);
-    flutterLocalNotificationsPlugin.initialize(initSetttings,
-        onSelectNotification: onSelectNotification);
-    _query();
-    initPlatformState();
+
     _getPref();
   }
 
@@ -415,15 +281,7 @@ class _MyHomePageState extends State<MyHomePage> {
       if (response.statusCode == 200) {
         _asyncInputDialog(context, EmailText);
       } else {
-//        Fluttertoast.showToast(
-//            msg: "Neuspješan dohvat podataka",
-//            toastLength: Toast.LENGTH_SHORT,
-//            gravity: ToastGravity.BOTTOM,
-//            // also possible "TOP" and "CENTER"
-//            textColor: Colors.white);
-//        // If that call was not successful, throw an error.
-//        throw Exception('Failed to load post');
-        //todo http, https
+
         /************************************************/
         /************************************************/
         /************************************************/
@@ -454,7 +312,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 textColor: Colors.white);
             // If that call was not successful, throw an error.
             throw Exception('Failed to load post');
-            //todo http, https
+
 
           }
         });
@@ -686,7 +544,7 @@ class _MyHomePageState extends State<MyHomePage> {
             'placeOfRegistration', resBody["placeOfRegistration"]);
         Navigator.of(context).pushNamed('/main');
       } else {
-        //todo ako nije http probaj https
+
         /***************************************************************************/
         /***************************************************************************/
         /***************************************************************************/
@@ -753,8 +611,10 @@ class _MyHomePageState extends State<MyHomePage> {
             await prefs.setString('sportName', resBody["sportName"]);
             await prefs.setString(
                 'placeOfRegistration', resBody["placeOfRegistration"]);
+            _firebaseMessaging.subscribeToTopic("news");
             Navigator.of(context).pushNamed('/main');
           } else {
+            _firebaseMessaging.unsubscribeFromTopic("news");
             // If that call was not successful, throw an error.
             throw Exception('Failed to load post');
           }
@@ -769,247 +629,20 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     });
   }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    // Load persisted fetch events from SharedPreferences
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String json = prefs.getString(EVENTS_KEY);
-    if (json != null) {
-      setState(() {
-        _events = jsonDecode(json).cast<String>();
-      });
-    }
-    // Configure BackgroundFetch.
-    BackgroundFetch.configure(
-            BackgroundFetchConfig(
-              minimumFetchInterval: 15,
-              stopOnTerminate: false,
-              startOnBoot: true,
-              enableHeadless: true,
-            ),
-            _onBackgroundFetch)
-        .then((int status) {
-      print('[BackgroundFetch] configure success: $status');
-      setState(() {
-        // _status = status;
-      });
-    }).catchError((e) {
-      print('[BackgroundFetch] configure ERROR: $e');
-      setState(() {
-        //_status = e;
-      });
-    });
-
-    // Optionally query the current BackgroundFetch status.
-    int status = await BackgroundFetch.status;
-    setState(() {
-      // _status = status;
-    });
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-  }
-
-  void _onBackgroundFetch() async {
-    try {
-      List allRows = await dbHelper.queryAllRowsWhereDeleted("");
-      for (int i = 0; i < allRows.length; i++) {
-        //todo VANJA mijenjati prilikom izbacivanja verzije
-//      Calendar c = Calendar.getInstance();
-//      c.add(Calendar.HOUR, -150);
-
-        // c.add(Calendar.MINUTE, -1);
-        //c.add(Calendar.SECOND, -20);
-        DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
-        String getCurrentDateTime = dateFormat.format(DateTime.now());
-        DateTime currentDatetime = dateFormat.parse(getCurrentDateTime);
-
-        DateTime databaseDateTime = dateFormat.parse(allRows[i]["deleted"]);
-
-        final difference = currentDatetime.difference(databaseDateTime).inHours;
-        if (difference < -150 || difference > 150) {
-          dbHelper.delete(allRows[i]["id"]);
-        }
-      }
-    } catch (error) {}
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-//    // This is the fetch-event callback.
-//    print('[BackgroundFetch] Event received');
-//    setState(() {
-//      _events.insert(0, new DateTime.now().toString());
-//    });
-//
-//    Map<String, dynamic> row = {
-//      DatabaseHelper.columnIdMessage: "36",
-//      DatabaseHelper.columnCreated: "Vrijeme",
-//      DatabaseHelper.columnTitle: "Vanja",
-//      DatabaseHelper.columnMessage: "uspjeh servis",
-//      DatabaseHelper.columnDeleted: DateTime.now().toString(),
-//      DatabaseHelper.columnReadStatus: 0,
-//    };
-//    await dbHelperHeadless.insert(row);
-//    // Persist fetch events in SharedPreferences
-//    prefs.setString(EVENTS_KEY, jsonEncode(_events));
-
-    String url = globals.base_url_novi + "/api/v1/messages";
-
-    String token = (prefs.getString('token') ?? "");
-
-    await http.get(url, headers: {
-      "Accept": "application/json",
-      "content-type": "application/json",
-      "token": "$token",
-      "req_type": "mob"
-    }).then((http.Response response) async {
-      print("Response status: ${response.statusCode}");
-      print("Response body: ${response.contentLength}");
-      print(response.headers);
-      print(response.request);
-      print(response.statusCode);
-      print(response.body);
-
-      String title = "";
-      String message = "";
-      if (response.statusCode == 200) {
-        List dataMessage = json.decode(response.body);
-        int NePostojiPoruka = 0;
-
-        if (dataMessage.length != null) {
-          for (int i = 0; i < dataMessage.length; i++) {
-            int querycount =
-                await dbHelper.queryMessageExists(dataMessage[i]["id"].toString());
-            if (querycount < 1) {
-              NePostojiPoruka++;
-              Map<String, dynamic> row = {
-                DatabaseHelper.columnIdMessage: dataMessage[i]["id"].toString(),
-                DatabaseHelper.columnCreated:
-                    dataMessage[i]["created"].toString(),
-                DatabaseHelper.columnTitle: dataMessage[i]["title"],
-                DatabaseHelper.columnMessage: dataMessage[i]["message"],
-                DatabaseHelper.columnDeleted: "",
-                DatabaseHelper.columnReadStatus: 0,
-              };
-              dbHelper.insert(row);
-            }
-
-            title = dataMessage[i]["title"];
-            message = dataMessage[i]["message"];
-          }
-        }
-        int ReadMessageCount = await dbHelper.queryReadMessageExists();
-        NePostojiPoruka += ReadMessageCount;
-        if (NePostojiPoruka > 1) {
-          title = AppTranslations.of(context).text("imate_nove_poruke");
-          message = NePostojiPoruka.toString() +
-              AppTranslations.of(context).text("poruka");
-          _showNotification(title, message);
-        } else if (NePostojiPoruka > 0) {
-          _showNotification(title, message);
-        }
-//          if (dataMessage.length != null)
-//            for (int i = 0; i < dataMessage.length; i++) {
-//              Map<String, dynamic> row = {
-//                DatabaseHelper.columnIdMessage: dataMessage[i]["id"],
-//                DatabaseHelper.columnCreated:
-//                    dataMessage[i]["created"].toString(),
-//                DatabaseHelper.columnTitle: dataMessage[i]["title"],
-//                DatabaseHelper.columnMessage: dataMessage[i]["message"],
-//                DatabaseHelper.columnDeleted: DateTime.now().toString(),
-//                DatabaseHelper.columnReadStatus: 0,
-//              };
-//              title = dataMessage[i]["title"];
-//              message = dataMessage[i]["message"];
-//              dbHelper.insert(row);
-//            }
-//          _query();
-//          _showNotification(title, message);
-
-      } else {
-        // If that call was not successful, throw an error.
-        throw Exception('Failed to load post');
-      }
-    });
-
-    // IMPORTANT:  You must signal completion of your fetch task or the OS can punish your app
-    // for taking too long in the background.
-    BackgroundFetch.finish();
-  }
-
-  Future<void> _showNotification(String title, String message) async {
-    var android = new AndroidNotificationDetails(
-        'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
-        priority: Priority.High, importance: Importance.Max);
-    var iOS = new IOSNotificationDetails();
-    var platform = new NotificationDetails(android, iOS);
-    await flutterLocalNotificationsPlugin.show(0, title, message, platform,
-        payload: 'Poruka');
-  }
-
-  Future<void> onSelectNotification(String payload) async {
-    if (payload != null) {
-      debugPrint('notification payload: ' + payload);
-    }
-    navigatorKey.currentState.pushNamed('/messages');
-    //Postaviti na poruke
-//    await Navigator.push(
-//      context,
-//      MaterialPageRoute(builder: (context) => SecondScreen(payload)),
-//    );
-  }
-
-  void _query() async {
-    final allRows = await dbHelper.queryAllRows();
-    print('query all rows:');
-
-    setState(() {
-      data = allRows;
-    });
-    allRows.forEach((row) => print(row));
-  }
-
-  void onTapped(int index) {
-    print(data[index]["title"] + " poruka !");
-    showDialog(
-      context: context,
-      builder: (context) => new AlertDialog(
-        title: new Text(data[index]["title"]),
-        content: new Text(data[index]["message"]),
-        actions: <Widget>[
-          new FlatButton(
-            onPressed: () => showtoast(index, 1, context),
-            child: new Text(AppTranslations.of(context).text("delete")),
-          ),
-          new FlatButton(
-            onPressed: () => showtoast(index, 2, context),
-            child: new Text(AppTranslations.of(context).text("da")),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-void showtoast(int index, int i, BuildContext context) {
-  String msg = "";
-  if (i == 1) {
-    msg = AppTranslations.of(context).text("message_delete");
-  } else {
-    msg = AppTranslations.of(context).text("message_read");
-  }
-  Fluttertoast.showToast(
-      msg: data[index]["title"] + msg,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      // also possible "TOP" and "CENTER"
-      textColor: Colors.white);
-  Navigator.of(context).pop();
 }
 
 Future<void> _showNotification(String title, String message) async {
+  int broj_novih_poruka = await dbHelper.queryRowCountRead();
+  Map<String, dynamic> row = {
+    DatabaseHelper.columnIdMessage: "22",
+    DatabaseHelper.columnCreated: "",
+    DatabaseHelper.columnTitle: title,
+    DatabaseHelper.columnMessage: message,
+    DatabaseHelper.columnReadStatus: 0,
+    DatabaseHelper.columnDeleted: "",
+  };
+  dbHelper.insert(row);
+
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
   var android = new AndroidInitializationSettings('@mipmap/launcher_icon');
@@ -1023,12 +656,26 @@ Future<void> _showNotification(String title, String message) async {
       priority: Priority.High, importance: Importance.Max);
   var iOS1 = new IOSNotificationDetails();
   var platform = new NotificationDetails(android1, iOS1);
-  await flutterLocalNotificationsPlugin.show(0, title, message, platform,
-      payload: 'Poruka');
+  if (broj_novih_poruka > 0) {
+    ++broj_novih_poruka;
+    await flutterLocalNotificationsPlugin.show(
+        0,
+        AppTranslations.of(navigatorKey.currentContext)
+            .text("imate_nove_poruke"),
+        broj_novih_poruka.toString() +
+            AppTranslations.of(navigatorKey.currentContext)
+                .text("novih_poruka"),
+        platform,
+        payload: 'Poruka');
+  } else {
+    await flutterLocalNotificationsPlugin.show(0, title, message, platform,
+        payload: 'Poruka');
+  }
 }
 
 Future<void> onSelectNotification(String payload) async {
   //Postaviti na poruke
+  print("Test ulaz");
   navigatorKey.currentState.pushNamed('/messages');
 }
 
@@ -1036,14 +683,14 @@ Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
   if (message.containsKey('data')) {
     print(message.containsKey('data'));
     final dynamic data = message['data'];
-    print("data:"+ data);
+    print("data:" + data);
   }
 
   if (message.containsKey('notification')) {
-    _showNotification(message['notification']['title']+"background", message['notification']['body']+"background");
+    _showNotification(
+        message['notification']['title'], message['notification']['body']);
     // Handle notification message
     final dynamic notification = message['notification'];
-    print("notification:"+ notification);
+    print("notification:" + notification);
   }
-
 }

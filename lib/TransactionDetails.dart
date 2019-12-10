@@ -190,7 +190,7 @@ Widget _buildContent(BuildContext context) {
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     )),
-                    //todo kn fali
+
                     Padding(
                       padding: EdgeInsets.all(5),
                       child: Text(getRacunUkupno(),
