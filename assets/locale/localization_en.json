@@ -93,6 +93,7 @@
   "racun_ukupno": "Total bill:",
   "storno": "STORNO",
   "osnovni_podaci": "Basic information",
-  "potvrda": "Confirm"
+  "potvrda": "Confirm",
+  "provjera_korisnika": "User verification..."
 
 }

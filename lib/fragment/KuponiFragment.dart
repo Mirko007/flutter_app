@@ -240,8 +240,7 @@ class _KuponiState extends State<KuponiFragment> {
           ),
         ],
       ),
-    ) ??
-        false;
+    ) ?? false;
   }
 }
 

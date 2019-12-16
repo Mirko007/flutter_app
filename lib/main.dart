@@ -27,15 +27,19 @@ import 'signup.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import 'package:progress_dialog/progress_dialog.dart';
+
 import 'package:path/path.dart' as Path;
 import 'package:sqflite/sqflite.dart';
 
 final dbHelperHeadless = DatabaseHelper.instance;
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
+
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-void main() {
+void main(){
+  WidgetsFlutterBinding.ensureInitialized();
   _firebaseMessaging.requestNotificationPermissions();
   _firebaseMessaging.configure(
     onMessage: (Map<String, dynamic> message) async {
@@ -66,10 +70,12 @@ void main() {
   );
   //_firebaseMessaging.subscribeToTopic("news");
   debugPaintSizeEnabled = false;
+
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.blue, // navigation bar color
     statusBarColor: Colors.blue, // status bar color
   ));
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(new MyApp());
 }
 
@@ -158,7 +164,11 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(
               height: 300.0,
               child: Image.asset(
+                //todo
+                //hr
                 "assets/images/prijava_logo.png",
+                //slo
+                //"assets/images/prijava_logo_slo.png",
                 fit: BoxFit.fill,
               ),
               width: MediaQuery.of(context).size.width,
@@ -239,7 +249,11 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Align(
                 alignment: FractionalOffset.bottomCenter,
                 child: Image.asset(
+                  //todo
+                  //hr
                   "assets/images/prijava_logo_polleo.png",
+                  //slo
+                  //"assets/images/prijava_logo_polleo_slo.png",
                 ),
               ),
             )
@@ -481,9 +495,27 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _checkUser(String token) async {
+    ProgressDialog pr  = new ProgressDialog(context);
+    pr = new ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: false);
+    pr.style(
+        message: AppTranslations.of(context).text("provjera_korisnika"),
+        borderRadius: 10.0,
+        backgroundColor: Colors.white,
+        progressWidget: CircularProgressIndicator(),
+        elevation: 10.0,
+        insetAnimCurve: Curves.easeInOut,
+        progress: 0.0,
+        maxProgress: 100.0,
+        progressTextStyle: TextStyle(
+            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+        messageTextStyle: TextStyle(
+            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600)
+    );
+    pr.show();
+    
     String url = globals.base_url_novi + "/api/v1/getCustomer";
 
-    http.Response response = await http.get(url, headers: {
+    await http.get(url, headers: {
       "Accept": "application/json",
       "content-type": "application/json",
       "req_type": "mob",
@@ -542,90 +574,15 @@ class _MyHomePageState extends State<MyHomePage> {
         await prefs.setString('sportName', resBody["sportName"]);
         await prefs.setString(
             'placeOfRegistration', resBody["placeOfRegistration"]);
-        Navigator.of(context).pushNamed('/main');
-      } else {
-
-        /***************************************************************************/
-        /***************************************************************************/
-        /***************************************************************************/
-        /***************************************************************************/
-        await http.get(globals.base_url_novi + "/api/v1/getCustomer", headers: {
-          "Accept": "application/json",
-          "content-type": "application/json",
-          "req_type": "mob",
-          "token": "$token"
-        }).then((http.Response response) async {
-          print("Response status: ${response.statusCode}");
-          print("Response body: ${response.contentLength}");
-          print(response.headers);
-          print(response.request);
-          print(response.statusCode);
-          print(response.body);
-
-          if (response.statusCode == 200) {
-            //mijenja da se ide na https
-            var resBody = json.decode(response.body);
-
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-
-            prefs.setString('email', resBody["email"]);
-            prefs.setString('token', token);
-            await prefs.setString('ime', resBody["firstName"]);
-            await prefs.setString('prezime', resBody["lastName"]);
-            await prefs.setString(
-                'referenceNumber', resBody["referenceNumber"]);
-            await prefs.setBool('termsOfUse', resBody["termsOfUse"]);
-            await prefs.setBool(
-                'gdpr_privola_mob', resBody["gdpr_privola_mob"]);
-            await prefs.setBool(
-                'gdpr_privola_email', resBody["gdpr_privola_email"]);
-            await prefs.setBool(
-                'gdpr_privola_posta', resBody["gdpr_privola_posta"]);
-
-            await prefs.setDouble('currentPoints', resBody["currentPoints"]);
-            await prefs.setString('dateOfBirth', resBody["dateOfBirth"]);
-            await prefs.setString('gender', resBody["gender"]);
-
-            if (resBody["address"] == " ")
-              await prefs.setString('address', "");
-            else
-              await prefs.setString('address', resBody["address"]);
-
-            if (resBody["city"] == " ")
-              await prefs.setString('city', "");
-            else
-              await prefs.setString('city', resBody["city"]);
-
-            if (resBody["zipCode"] == " ")
-              await prefs.setString('zipCode', "");
-            else
-              await prefs.setString('zipCode', resBody["zipCode"]);
-
-            if (resBody["phoneNumber"] == globals.phone_number_dummmy)
-              await prefs.setString('phoneNumber', "");
-            else
-              await prefs.setString('phoneNumber', resBody["phoneNumber"]);
-
-            await prefs.setString('categoryName', resBody["categoryName"]);
-            await prefs.setString('fitnessName', resBody["fitnessName"]);
-            await prefs.setString('sportName', resBody["sportName"]);
-            await prefs.setString(
-                'placeOfRegistration', resBody["placeOfRegistration"]);
-            _firebaseMessaging.subscribeToTopic("news");
-            Navigator.of(context).pushNamed('/main');
-          } else {
-            _firebaseMessaging.unsubscribeFromTopic("news");
-            // If that call was not successful, throw an error.
-            throw Exception('Failed to load post');
-          }
+        pr.hide().whenComplete(() {
+          _firebaseMessaging.subscribeToTopic("news");
+          Navigator.of(context).pushNamed('/main');
         });
 
-        /***************************************************************************/
-        /***************************************************************************/
-        /***************************************************************************/
-        /***************************************************************************/
-        // If that call was not successful, throw an error.
-        throw Exception('Failed to load post');
+      } else{
+        pr.hide().then((isHidden) {
+          print(isHidden);
+        });
       }
     });
   }

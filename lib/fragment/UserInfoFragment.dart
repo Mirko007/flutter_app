@@ -160,7 +160,7 @@ Widget buildContent(BuildContext context) {
             //hr
              "assets/images/registriraj_logo.png",
             //slo
-            //"assets/images/header_slo.png",
+            //"assets/images/registriraj_logo_slo.png",
             fit: BoxFit.fill,
           ),
           width: MediaQuery.of(context).size.width,
@@ -291,10 +291,11 @@ Widget buildContent(BuildContext context) {
                     Expanded(
                         child: Image.asset(
                       //todo
-                      //slo
-                      //"assets/images/logo_en.png",
                       //hr
                       "assets/images/polleo.jpeg",
+                      //slo
+                      //"assets/images/polleo_slo.jpeg",
+
                       height: 50,
                       width: 100,
                     ))

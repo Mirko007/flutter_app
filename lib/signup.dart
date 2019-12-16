@@ -2,7 +2,7 @@ library Loyalty_client.signup;
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -13,6 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'AppTranslations.dart';
 import 'fragment/main_fragment.dart';
 import 'global_variable.dart' as globals;
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -21,11 +22,12 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   bool spol = true; //1-muško,0 žensko
-  var formats = {
-    InputType.date: DateFormat('dd/MM/yyyy'),
-  };
+ // var formats = {
+ //   InputType.date: DateFormat('dd/MM/yyyy'),
+ // };
+  final format = DateFormat("dd/MM/yyyy");
 
-  InputType inputType = InputType.date;
+ // InputType inputType = InputType.date;
   bool editable = true;
   DateTime date;
 
@@ -112,7 +114,11 @@ class _SignupPageState extends State<SignupPage> {
               SizedBox(
                 height: 100.0,
                 child: Image.asset(
+                  //todo
+                  //hr
                   "assets/images/registriraj_logo.png",
+                  //slo
+                  //"assets/images/registriraj_logo_slo.png",
                   fit: BoxFit.fill,
                 ),
                 width: MediaQuery.of(context).size.width,
@@ -255,26 +261,28 @@ class _SignupPageState extends State<SignupPage> {
                       SizedBox(
                         height: 10,
                       ),
-                      DateTimePickerFormField(
-                        inputType: inputType,
-                        format: formats[inputType],
-                        editable: editable,
-                        firstDate: DateTime(1940),
-                        lastDate: DateTime.now().subtract(
+
+                      DateTimeField(
+                        format: format,
+                        onShowPicker: (context, currentValue) {
+                          return showDatePicker(
+                              context: context,
+                              firstDate: DateTime(1940),
+                          lastDate: DateTime.now().subtract(
                           Duration(days: 5840),
-                        ),
-                        initialDate: DateTime.now().subtract(
+                          ),
+                          initialDate: DateTime.now().subtract(
                           Duration(days: 5841),
-                        ),
-                        decoration: InputDecoration(
-                            labelText:  AppTranslations.of(context).text("datum_rodjenja"),
-                            hasFloatingPlaceholder: false,
-                            labelStyle: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey)),
-                        onChanged: (dt) => setState(() => date = dt),
-                        controller: datumRodenja,
+                          ));
+                        },decoration:  InputDecoration(
+                          labelText:  AppTranslations.of(context).text("datum_rodjenja"),
+                          hasFloatingPlaceholder: false,
+                          labelStyle: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey)),
+                          onChanged: (dt) => setState(() => date = dt),
+                          controller: datumRodenja,
                       ),
                       SizedBox(height: 20.0),
                       Align(
@@ -527,11 +535,7 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void fvoidServisEmail(String text) async {
-    String url;
-//    if (globals.which_url == 0)
-//      url = globals.base_url + "/api/v1/requestOTP";
-//    else
-      url = globals.base_url_novi + "/api/v1/requestOTP";
+    String url = globals.base_url_novi + "/api/v1/requestOTP";
 
     String json_body = '{"active" : false, "email" : "$text"}';
 
@@ -600,11 +604,7 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void fvoidServisEmailOTP(String dialogOTP, String EmailTextConfirm) async {
-    String url;
-//    if (globals.which_url == 0)
-//      url = globals.base_url + "/api/v1/confirmOTP";
-//    else
-      url = globals.base_url_novi + "/api/v1/confirmOTP";
+    String url = globals.base_url_novi + "/api/v1/confirmOTP";
 
     String json_body = '{"otp" : "$dialogOTP", "email" : "$EmailTextConfirm"}';
 

@@ -524,7 +524,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
                 //hr
                 _launchURL("https://leoclub.polleosport.hr/pravila-privatnosti");
                 //slo
-                _launchURL("https://leoclub.polleosport.si/pravila-zasebnosti");
+                //_launchURL("https://leoclub.polleosport.si/pravila-zasebnosti");
               },
             ),
           ],
