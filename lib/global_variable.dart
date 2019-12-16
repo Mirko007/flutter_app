@@ -4,11 +4,11 @@
 //String base_url_novi = "https://leoclub.hr";
 
 //test SSL
-
+//tidi
 //hr
-String base_url_novi = "https://test.leoclub.hr";
+//String base_url_novi = "https://test.leoclub.hr";
 
-//String base_url_novi = "https://test-slo.leoclub.hr";
+String base_url_novi = "https://test-slo.leoclub.hr";
 
 //phone number ako je prazan stavi 00385000000000
 String phone_number_dummmy= "00385000000000";

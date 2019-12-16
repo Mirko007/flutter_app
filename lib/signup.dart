@@ -116,9 +116,9 @@ class _SignupPageState extends State<SignupPage> {
                 child: Image.asset(
                   //todo
                   //hr
-                  "assets/images/registriraj_logo.png",
+                  //"assets/images/registriraj_logo.png",
                   //slo
-                  //"assets/images/registriraj_logo_slo.png",
+                  "assets/images/registriraj_logo_slo.png",
                   fit: BoxFit.fill,
                 ),
                 width: MediaQuery.of(context).size.width,
@@ -760,9 +760,9 @@ class _SignupPageState extends State<SignupPage> {
   _launchURL() async {
     //todo
     //hr
-    const url = "https://leoclub.polleosport.hr/pravila-programa";
+    //const url = "https://leoclub.polleosport.hr/pravila-programa";
     //slo
-    //const url = "https://leoclub.polleosport.si/pravila-programa";
+    const url = "https://leoclub.polleosport.si/pravila-programa";
     print(url);
     if (await canLaunch(url)) {
       launch(url);
