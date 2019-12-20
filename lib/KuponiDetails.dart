@@ -198,7 +198,7 @@ _buyVoucher(Coupon coupon,BuildContext context) async {
   print("token");
   print(token);
 
-  http.Response response = await http.get(url, headers: {
+ await http.get(url, headers: {
     "Accept": "application/json",
     "content-type": "application/json",
     "token": "$token",
@@ -212,20 +212,20 @@ _buyVoucher(Coupon coupon,BuildContext context) async {
     print(response.body);
 
     if (response.statusCode == 200) {
-//      Fluttertoast.showToast(
-//          msg: "Uspješno kupljen kupon",
-//          toastLength: Toast.LENGTH_SHORT,
-//          backgroundColor: Colors.blue,
-//          gravity: ToastGravity.CENTER,
-//          // also possible "TOP" and "CENTER"
-//          textColor: Colors.white);
-//      Navigator.push(
-//        context,
-//        MaterialPageRoute(
-//            builder: (context) => Main_Fragment(tab: 3)),
-//      );
-      Navigator.of(context).pop();
-      Navigator.of(context).pop();
+      Fluttertoast.showToast(
+          msg: "Uspješno kupljen kupon",
+          toastLength: Toast.LENGTH_SHORT,
+          backgroundColor: Colors.blue,
+          gravity: ToastGravity.CENTER,
+          // also possible "TOP" and "CENTER"
+          textColor: Colors.white);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Main_Fragment(tab: 3)),
+      );
+//      Navigator.of(context).pop();
+//      Navigator.of(context).pop();
     } else {
       Fluttertoast.showToast(
           msg: AppTranslations.of(context).text("fail_buying_voucher"),
