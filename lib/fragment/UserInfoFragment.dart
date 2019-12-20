@@ -166,9 +166,9 @@ Widget buildContent(BuildContext context) {
           child: Image.asset(
             //todo
             //hr
-             "assets/images/registriraj_logo.png",
+             //"assets/images/registriraj_logo.png",
             //slo
-            //"assets/images/registriraj_logo_slo.png",
+            "assets/images/registriraj_logo_slo.png",
             fit: BoxFit.fill,
           ),
           width: MediaQuery.of(context).size.width,
@@ -300,9 +300,9 @@ Widget buildContent(BuildContext context) {
                         child: Image.asset(
                       //todo
                       //hr
-                      "assets/images/polleo.jpeg",
+                      //"assets/images/polleo.jpeg",
                       //slo
-                      //"assets/images/polleo_slo.jpeg",
+                      "assets/images/polleo_slo.jpeg",
 
                       height: 50,
                       width: 100,

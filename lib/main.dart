@@ -68,7 +68,7 @@ void main(){
       //_navigateToItemDetail(message);
     },
   );
-  //_firebaseMessaging.subscribeToTopic("news");
+  _firebaseMessaging.subscribeToTopic("polleonewsslo");
   debugPaintSizeEnabled = false;
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -166,9 +166,9 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Image.asset(
                 //todo
                 //hr
-                "assets/images/prijava_logo.png",
+                //"assets/images/prijava_logo.png",
                 //slo
-               // "assets/images/prijava_logo_slo.png",
+                "assets/images/prijava_logo_slo.png",
                 fit: BoxFit.fill,
               ),
               width: MediaQuery.of(context).size.width,
@@ -251,9 +251,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Image.asset(
                   //todo
                   //hr
-                  "assets/images/prijava_logo_polleo.png",
+                  //"assets/images/prijava_logo_polleo.png",
                   //slo
-                  //"assets/images/prijava_logo_polleo_slo.png",
+                  "assets/images/prijava_logo_polleo_slo.png",
                 ),
               ),
             )
@@ -580,7 +580,7 @@ class _MyHomePageState extends State<MyHomePage> {
         await prefs.setString(
             'placeOfRegistration', resBody["placeOfRegistration"]);
         pr.hide().whenComplete(() {
-          _firebaseMessaging.subscribeToTopic("news");
+          _firebaseMessaging.subscribeToTopic("polleonewsslo");
           Navigator.of(context).pushNamed('/main');
         });
 

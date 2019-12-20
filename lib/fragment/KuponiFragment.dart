@@ -330,7 +330,7 @@ getGridView(BuildContext context) {
                           child: Text(
                             getCustomerRequiredpoints(index) +
                                 // allCoupons[index]["voucherType"]["customerPointsRequired"].toString() +
-                                AppTranslations.of(context).text("bodova"),
+                                AppTranslations.of(context).text("bodovi"),
                             style: TextStyle(fontSize: 25, color: Colors.white),
                           )),
                     ),

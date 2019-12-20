@@ -87,7 +87,7 @@ Widget _buildContent(BuildContext context, Coupon _coupon) {
               color: Colors.blue,
               child: Center(
                   child: Text(
-                _coupon.customerPointsRequired + AppTranslations.of(context).text("bodova"),
+                _coupon.customerPointsRequired + AppTranslations.of(context).text("bodovi"),
                 style: TextStyle(fontSize: 30, color: Colors.white),
               )),
             ),

@@ -32,11 +32,46 @@
               "client_type": 3
             },
             {
-              "client_id": "842852683866-5m1e5l7gchi6d5rcpvae0bspfm7c2gbi.apps.googleusercontent.com",
+              "client_id": "842852683866-5b1rrpnlhgvl2rg27m0kcnrf3h13silq.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "hr.etranet.loyalty",
-                "app_store_id": "1467169430"
+                "bundle_id": "hr.etranet.loyaltyslo"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:842852683866:android:73917d3e9f8c0874238863",
+        "android_client_info": {
+          "package_name": "hr.etranet.loyaltyslo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "842852683866-oljabhqut4vrmjtbbp5kqqufd03cmb7t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBt0E23-Mul65Zz6Mxal2pbTGucRa4sJ98"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "842852683866-oljabhqut4vrmjtbbp5kqqufd03cmb7t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "842852683866-5b1rrpnlhgvl2rg27m0kcnrf3h13silq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "hr.etranet.loyaltyslo"
               }
             }
           ]

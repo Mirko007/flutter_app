@@ -49,7 +49,7 @@ class _Main_FragmentState extends State<Main_Fragment> {
 
   @override
   Widget build(BuildContext context) {
-    _firebaseMessaging.subscribeToTopic("news");
+    _firebaseMessaging.subscribeToTopic("polleonewsslo");
 
      return  Scaffold(
         body: callPage(selectedTab),

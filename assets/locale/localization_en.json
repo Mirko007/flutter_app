@@ -60,7 +60,7 @@
   "imate_nove_poruke": "You have new messages",
   "novih_poruka": " new messages",
   "delete_message": "Do you want to delete your message?",
-  "buy_coupon": "Do you want to buy a coupon?",
+  "buy_coupon": "Do you want to buy a coupon? ",
   "exit_app": "Exit Application?",
   "click_yes": "Click yes to exit!",
   "male": "Male",
@@ -73,7 +73,7 @@
   "ime_prezime": "Name and surname",
   "stanje_bodova": "Balance points",
   "loyalty_kartica": "My loyalty card",
-  "bodovi": "POINTS",
+  "bodovi": " POINTS",
   "poruke": "Messages",
   "cesta_pitanja": "Frequently asked questions",
   "poslovnice_kontakti": "Stores and contacts",
@@ -94,6 +94,6 @@
   "storno": "STORNO",
   "osnovni_podaci": "Basic information",
   "potvrda": "Confirm",
-  "provjera_korisnika": "User verification..."
-
+  "provjera_korisnika": "User verification...",
+  "bodova": " points"
 }
