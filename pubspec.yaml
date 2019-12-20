@@ -7,7 +7,7 @@ description: A new Flutter application.
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 1.0.6+16
+version: 1.0.6+17
 
 
 environment:
@@ -83,7 +83,7 @@ flutter:
     - assets/icon/leoclub_icon_launcher.png
     - assets/locale/localization_en.json
     - assets/locale/localization_hr.json
-    - assets/locale/localization_hr2.json
+    - assets/locale/localization_slo.json
     - assets/images/logo_en.png
     - assets/images/registriraj_logo_slo.png
     - assets/images/polleo_slo.jpeg
@@ -111,6 +111,9 @@ flutter:
     - family: MyFlutterApp
       fonts:
         - asset: fonts/MyFlutterApp.ttf
+    - family:  MyBarcode
+      fonts:
+        - asset: fonts/MyBarcode.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

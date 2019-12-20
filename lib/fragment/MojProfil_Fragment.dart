@@ -73,6 +73,10 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
 
     getPrefTypeData();
     _getPref();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
   }
 
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
@@ -120,7 +124,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
   Future<String> getPrefTypeData() async {
     String url;
 
-    url = globals.base_url_novi + "/api/v1/getPrefTypes";
+    url = globals.base_url_novi + globals.getPrefTypes;
 
     var res = await http.get(Uri.parse(url));
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -492,9 +496,9 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
               onPressed: () {
                 //todo
                 //hr
-                //_launchURL("https://leoclub.polleosport.hr/cesta-pitanja");
+                _launchURL("https://leoclub.polleosport.hr/cesta-pitanja");
                 //slo
-                _launchURL("https://leoclub.polleosport.si/pogosta-vprasanja/");
+                //_launchURL("https://leoclub.polleosport.si/pogosta-vprasanja/");
               },
             ),
             RaisedButton(
@@ -502,9 +506,9 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
               onPressed: () {
                 //todo
                 //hr
-               // _launchURL("https://polleosport.hr/poslovnice-i-kontakti");
+                _launchURL("https://polleosport.hr/poslovnice-i-kontakti");
                 //slo
-                _launchURL("https://polleosport.si/poslovalnice-in-kontakti");
+                //_launchURL("https://polleosport.si/poslovalnice-in-kontakti");
               },
             ),
             RaisedButton(
@@ -512,9 +516,9 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
               onPressed: () {
                 //todo
                 //hr
-                //_launchURL("https://leoclub.polleosport.hr/pravila-programa");
+                _launchURL("https://leoclub.polleosport.hr/pravila-programa");
                 //slo
-                _launchURL("https://leoclub.polleosport.si/pravila-programa");
+                //_launchURL("https://leoclub.polleosport.si/pravila-programa");
               },
             ),
             RaisedButton(
@@ -522,9 +526,9 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
               onPressed: () {
                 //todo
                 //hr
-                //_launchURL("https://leoclub.polleosport.hr/pravila-privatnosti");
+                _launchURL("https://leoclub.polleosport.hr/pravila-privatnosti");
                 //slo
-                _launchURL("https://leoclub.polleosport.si/pravila-zasebnosti");
+                //_launchURL("https://leoclub.polleosport.si/pravila-zasebnosti");
               },
             ),
           ],
@@ -584,8 +588,8 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
   void fvoidUpdateCustomer() async {
     String url;
 
-    url = globals.base_url_novi + "/api/v1/updateCustomer";
-    //String url = globals.base_url+"/api/v1/updateCustomer";
+    url = globals.base_url_novi + globals.updateCustomer;
+
 
     //String datum_rodenja = datumRodenja.text;
     String kucna_adresa = _controller_adresa.text;

@@ -32,6 +32,10 @@ class TransactionDetailsState extends State<TransactionDetails> {
   void initState() {
     super.initState();
     _getPref();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
   }
 
   _getPref() async {
@@ -43,7 +47,7 @@ class TransactionDetailsState extends State<TransactionDetails> {
   }
 
   Future<String> getTransactionData() async {
-    String url = globals.base_url_novi + "/api/v1/transaction/" + uid;
+    String url = globals.base_url_novi + globals.transaction+ "/" + uid;
 
     http.Response response = await http.get(url, headers: {
       "Accept": "application/json",
@@ -143,7 +147,7 @@ Widget _buildContent(BuildContext context) {
             ),
           ),
           Container(
-              // margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 4.0),
+
               padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
               height: 25,
               color: Colors.white,
@@ -243,7 +247,7 @@ getPointsDifference() {
   else if (Bodovi > 0)
     return Text(
       "+" + Bodovi.toString(),
-      style: TextStyle(fontSize: 100, color: Colors.green),
+      style: TextStyle(fontSize: 100, color: Colors.lightGreenAccent),
     );
   else
     return Text(
@@ -264,18 +268,18 @@ Widget listview_artikli() {
             child: Row(children: <Widget>[
               Expanded(
                 child: Text(data["itemList"][index]["itemName"],
-                    style: TextStyle(fontSize: 18)),
+                    style: TextStyle(fontSize: 14)),
               ),
               Padding(
                   padding: EdgeInsets.fromLTRB(20, 0, 40, 0),
                   child: Text(
                     data["itemList"][index]["quantity"].toString(),
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 14),
                   )),
               Padding(
                   padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                   child: Text(data["itemList"][index]["itemPrice"].toString(),
-                      style: TextStyle(fontSize: 18))),
+                      style: TextStyle(fontSize: 14))),
             ]));
       });
 }

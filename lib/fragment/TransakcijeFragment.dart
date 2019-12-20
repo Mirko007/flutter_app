@@ -21,6 +21,10 @@ class _TransakcijeState extends State<TransakcijeFragment> {
   void initState() {
     super.initState();
     _getPref();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
   }
 
   _getPref() async {
@@ -67,7 +71,7 @@ class _TransakcijeState extends State<TransakcijeFragment> {
 
 
     Future<String> getTransactionData() async {
-      String url = globals.base_url_novi + "/api/v1/transaction";
+      String url = globals.base_url_novi + globals.transaction;
 
       http.Response response = await http.get(url, headers: {"Accept": "application/json","content-type": "application/json","token": "$token"}).then((http.Response response) async {
         print("Response status: ${response.statusCode}");
@@ -191,7 +195,6 @@ getBodovi(int index) {
 }
 
 void getTransactionDetails(String uuid, BuildContext context) {
-  print("UUID UBIME:"+uuid);
   Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => TransactionDetails(uuid: uuid)),

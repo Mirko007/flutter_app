@@ -166,9 +166,9 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Image.asset(
                 //todo
                 //hr
-                //"assets/images/prijava_logo.png",
+                "assets/images/prijava_logo.png",
                 //slo
-                "assets/images/prijava_logo_slo.png",
+               // "assets/images/prijava_logo_slo.png",
                 fit: BoxFit.fill,
               ),
               width: MediaQuery.of(context).size.width,
@@ -251,9 +251,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Image.asset(
                   //todo
                   //hr
-                  //"assets/images/prijava_logo_polleo.png",
+                  "assets/images/prijava_logo_polleo.png",
                   //slo
-                  "assets/images/prijava_logo_polleo_slo.png",
+                  //"assets/images/prijava_logo_polleo_slo.png",
                 ),
               ),
             )
@@ -274,10 +274,15 @@ class _MyHomePageState extends State<MyHomePage> {
     application.onLocaleChanged = onLocaleChange;
 
     _getPref();
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
   }
 
   _callServisEmail(String EmailText) async {
-    String url = globals.base_url_novi + "/api/v1/requestOTP";
+    String url = globals.base_url_novi + globals.requestOTP;
     String json_body = '{"active" : true, "email" : "$EmailText"}';
 
     await http.post(url, body: json_body, headers: {
@@ -301,7 +306,7 @@ class _MyHomePageState extends State<MyHomePage> {
         /************************************************/
         /************************************************/
         /************************************************/
-        await http.post(globals.base_url_novi + "/api/v1/requestOTP",
+        await http.post(globals.base_url_novi + globals.requestOTP,
             body: json_body,
             headers: {
               "Accept": "application/json",
@@ -381,7 +386,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void fvoidServisEmailOTP(String dialogOTP, String EmailTextConfirm) async {
     String url;
 
-    url = globals.base_url_novi + "/api/v1/confirmOTP";
+    url = globals.base_url_novi + globals.confirmOTP;
     String json_body = '{"otp" : "$dialogOTP", "email" : "$EmailTextConfirm"}';
 
     http.Response response = await http.post(url, body: json_body, headers: {
@@ -408,7 +413,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void fvoidGetCustomer(String token, String EmailText) async {
     String url;
 
-    url = globals.base_url_novi + "/api/v1/getCustomer";
+    url = globals.base_url_novi + globals.getCustomer;
 
     await http.get(url, headers: {
       "Accept": "application/json",
@@ -513,7 +518,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     pr.show();
     
-    String url = globals.base_url_novi + "/api/v1/getCustomer";
+    String url = globals.base_url_novi + globals.getCustomer;
 
     await http.get(url, headers: {
       "Accept": "application/json",

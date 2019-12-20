@@ -16,6 +16,9 @@ List allCoupons = [];
 bool pressed = true;
 int allCouponsItemCount = 0;
 
+var bodovi="";
+var height = AppBar().preferredSize.height;
+
 class KuponiFragment extends StatefulWidget {
   @override
   _KuponiState createState() => _KuponiState();
@@ -26,6 +29,11 @@ class _KuponiState extends State<KuponiFragment> {
   void initState() {
     super.initState();
     _getData();
+    _getBodovi();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
   }
 
   _getData() async {
@@ -39,11 +47,41 @@ class _KuponiState extends State<KuponiFragment> {
     });
   }
 
+  _getBodovi() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String url;
+    token = (prefs.getString('token') ?? "");
+    url = globals.base_url_novi + globals.getCustomer;
+    await http.get(url, headers: {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "req_type": "mob",
+      "token": "$token"
+    }).then((http.Response response) async {
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.contentLength}");
+      print(response.headers);
+      print(response.request);
+      print(response.statusCode);
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        setState(() {
+          var resBody = json.decode(response.body);
+          bodovi = resBody["currentPoints"].toString();
+
+        });
+      } else {
+        // If that call was not successful, throw an error.
+        throw Exception('Failed to load post');
+      }
+    });
+  }
+
   Future<String> getCouponsPonuda(String token) async {
     String url;
 
-    url = globals.base_url_novi + "/api/v1/getVoucher";
-//    String url = globals.base_url + "/api/v1/getVoucher";
+    url = globals.base_url_novi + globals.getVoucher;
 
     http.Response response = await http.get(url, headers: {
       "Accept": "application/json",
@@ -76,8 +114,7 @@ class _KuponiState extends State<KuponiFragment> {
   Future<String> getCouponsOsobni(String token) async {
     String url;
 
-    url = globals.base_url_novi + "/api/v1/getCustomer";
-    // String url = globals.base_url + "/api/v1/getCustomer";
+    url = globals.base_url_novi + globals.getCustomer;
 
     http.Response response = await http.get(url, headers: {
       "Accept": "application/json",
@@ -95,6 +132,7 @@ class _KuponiState extends State<KuponiFragment> {
       if (response.statusCode == 200) {
         setState(() {
           var resBody = json.decode(response.body);
+          bodovi = resBody["currentPoints"].toString();
           allCoupons.clear();
           allCoupons = resBody["voucherList"];
           allCoupons == null
@@ -115,11 +153,23 @@ class _KuponiState extends State<KuponiFragment> {
     return new WillPopScope(
         onWillPop: _onWillPop,
         child: new Scaffold(
-            appBar: new AppBar(
+            appBar:
+            new AppBar(
               automaticallyImplyLeading: false,
-              title: new Text(AppTranslations.of(context).text("kuponi")),
+              title: new Text(AppTranslations.of(context).text("kuponi")),  
+              actions: <Widget>[
+              Container(
+                height: height,
+                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                alignment: Alignment.center,
+                color: Color(0xff0174A9), //FF009AE2
+                child: new Text("BODOVI: "+bodovi),
+              ),
+            ],
             ),
-            //body: _buildContent(context)
+//            CustomAppBar(
+//              height: height,
+//            ),
             body:
 //          Container(
 //              color: Colors.white,
@@ -169,7 +219,7 @@ class _KuponiState extends State<KuponiFragment> {
                               child: Text(
                                 AppTranslations.of(context).text("ponuda"),
                                 style: TextStyle(
-                                    fontSize: 25, color: Colors.white),
+                                    fontSize: 15, color: Colors.white),
                               )),
                         ),
                       ),
@@ -208,7 +258,7 @@ class _KuponiState extends State<KuponiFragment> {
                               child: Text(
                                 AppTranslations.of(context).text("osobni"),
                                 style: TextStyle(
-                                    fontSize: 25, color: Colors.white),
+                                    fontSize: 15, color: Colors.white),
                               )),
                         ),
                       ),
@@ -243,6 +293,7 @@ class _KuponiState extends State<KuponiFragment> {
     ) ?? false;
   }
 }
+
 
 getGridView(BuildContext context) {
   if (allCoupons == null || allCoupons == "")
@@ -468,3 +519,39 @@ getImage(int index) {
     );
   }
 }
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final double height;
+
+  const CustomAppBar({
+    Key key,
+    @required this.height,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return
+        Container(
+          color: Colors.blue,
+            child: AppBar(
+              title: Container(
+                color: Colors.white,
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: "Search",
+                    contentPadding: EdgeInsets.all(10),
+                  ),
+                ),
+              ),
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.verified_user),
+                  onPressed: () => null,
+                ),
+              ],
+            )
+        );
+  }
+
+  @override
+  Size get preferredSize => Size.fromHeight(height);
+}
+

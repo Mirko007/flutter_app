@@ -1,8 +1,11 @@
+import 'package:Loyalty_client/AppTranslations.dart';
 import 'package:Loyalty_client/fragment/AkcijeFragment.dart';
 import 'package:Loyalty_client/fragment/KuponiFragment.dart';
 import 'package:Loyalty_client/fragment/MojProfil_Fragment.dart';
 import 'package:Loyalty_client/fragment/TransakcijeFragment.dart';
 import 'package:Loyalty_client/fragment/UserInfoFragment.dart';
+
+import 'package:Loyalty_client/presentation/my_barcode_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -47,73 +50,55 @@ class _Main_FragmentState extends State<Main_Fragment> {
   @override
   Widget build(BuildContext context) {
     _firebaseMessaging.subscribeToTopic("news");
-    return Scaffold(
-            bottomNavigationBar: CurvedNavigationBar(
-              index: 2,
-              height: 75.0,
-              items: <Widget>[
-                Icon(Icons.compare_arrows, size: 30,color: Colors.white,),
-                Icon(Icons.local_offer, size: 30,color: Colors.white),
-                Icon(Icons.person_outline, size: 30,color: Colors.white),
-                Icon(Icons.local_atm, size: 30,color: Colors.white),
-                Icon(Icons.info,color: Colors.white,size:30),
-              ],
-              color: Colors.blue,
-              buttonBackgroundColor: Colors.blue,
-              backgroundColor: Colors.white,
-              animationCurve: Curves.easeInOut,
-              animationDuration: Duration(milliseconds: 600),
-              onTap: (index) {
-                setState(() {
-                  selectedTab = index;
-                });
-              },
-            ),
-            body: callPage(selectedTab))
 
-//      home: Scaffold(
-//        appBar: AppBar(
-//          title: Text('Loopt In'),
-//        ),
-//        body: callPage(_selectedTab),
-//        bottomNavigationBar: BottomNavigationBar(
-//          currentIndex: _selectedTab,
-//          onTap: (int index) {
-//            setState(() {
-//              _selectedTab = index;
-//            });
-//          },
-//          items: [
-//            BottomNavigationBarItem(
-//              icon: Icon(Icons.home),
-//              title: Text('Transakcije'),
-//              backgroundColor: Colors.lightBlueAccent
-//            ),
-//            BottomNavigationBarItem(
-//              icon: Icon(Icons.category),
-//              title: Text('Akcije'),
-//                backgroundColor: Colors.lightBlueAccent
-//            ),
-//            BottomNavigationBarItem(
-//              icon: Icon(Icons.search),
-//              title: Text(''),
-//                backgroundColor: Colors.lightBlueAccent
-//            ),
-//            BottomNavigationBarItem(
-//              icon: Icon(Icons.search),
-//              title: Text('Kuponi'),
-//                backgroundColor: Colors.lightBlueAccent
-//            ),
-//            BottomNavigationBarItem(
-//              icon: Icon(Icons.search),
-//              title: Text('Moj profil'),
-//                backgroundColor: Colors.lightBlueAccent
-//            ),
-//          ],fixedColor:Colors.lightBlueAccent
-//          ,
-//        ),
-//      ),
-        ;
+     return  Scaffold(
+        body: callPage(selectedTab),
+        bottomNavigationBar: Container(height: 58.0,
+          width: MediaQuery.of(context).size.width,
+          child: (MediaQuery.of(context).orientation == Orientation.portrait)?
+        BottomNavigationBar(showUnselectedLabels: true,
+          currentIndex: selectedTab,
+          onTap: (int index) {
+            setState(() {
+              selectedTab = index;
+            });
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(MyBarcode.transaction),
+              title: Text(AppTranslations.of(context).text("transakcije"),style: TextStyle(fontSize: 10),),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(MyBarcode.offers),
+              title: Text(AppTranslations.of(context).text("akcije"),style: TextStyle(fontSize: 10),),
+
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(MyBarcode.barcode,size: 40,),
+              title: Container(height: 0.0),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(MyBarcode.voucher),
+              title: Text(AppTranslations.of(context).text("kuponi"),style: TextStyle(fontSize: 10),),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(MyBarcode.user),
+              title: Text(AppTranslations.of(context).text("moj_profil"),style: TextStyle(fontSize: 10),),
+            ),
+          ],
+          selectedItemColor: Colors.black87,
+          unselectedItemColor: Colors.black45,
+          backgroundColor: Colors.white,
+
+        ):
+          Container(
+            color: Colors.blue,
+            height: 1,
+            width: MediaQuery.of(context).size.width,
+          )
+        )
+      );
+
   }
 
 

@@ -1,3 +1,4 @@
+import 'package:Loyalty_client/presentation/my_barcode_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_flutter/barcode_flutter.dart';
@@ -21,6 +22,12 @@ class _UserInfoState extends State<UserInfoFragment> {
   void initState() {
     super.initState();
     _loadCounter();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
   }
 
   _loadCounter() async {
@@ -39,6 +46,7 @@ class _UserInfoState extends State<UserInfoFragment> {
   @override
   Widget build(BuildContext context) {
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
+
       return Scaffold(
           resizeToAvoidBottomPadding: false,
           backgroundColor: Colors.blue,
@@ -54,7 +62,7 @@ class _UserInfoState extends State<UserInfoFragment> {
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: Icon(
-                      Icons.screen_rotation,
+                      MyBarcode.rotate,
                       color: Colors.black,
                       size: 35.0,
                     ),
@@ -158,9 +166,9 @@ Widget buildContent(BuildContext context) {
           child: Image.asset(
             //todo
             //hr
-             //"assets/images/registriraj_logo.png",
+             "assets/images/registriraj_logo.png",
             //slo
-            "assets/images/registriraj_logo_slo.png",
+            //"assets/images/registriraj_logo_slo.png",
             fit: BoxFit.fill,
           ),
           width: MediaQuery.of(context).size.width,
@@ -170,7 +178,7 @@ Widget buildContent(BuildContext context) {
           child: Row(
             children: <Widget>[
               Icon(
-                Icons.supervised_user_circle,
+                MyBarcode.user,
                 color: Colors.grey,
               ),
               Padding(
@@ -202,7 +210,7 @@ Widget buildContent(BuildContext context) {
           child: Row(
             children: <Widget>[
               Icon(
-                Icons.account_balance_wallet,
+                MyBarcode.wallet,
                 color: Colors.grey,
               ),
               Padding(
@@ -257,17 +265,17 @@ Widget buildContent(BuildContext context) {
           ),
         ),
         //todo Test
-        Align(
-          alignment: Alignment.center,
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
-            child: Text(
-              "TEST TEST TEST TEST",
-              style: TextStyle(
-                  fontSize: 25, color: Colors.red, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
+//        Align(
+//          alignment: Alignment.center,
+//          child: Padding(
+//            padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+//            child: Text(
+//              "TEST TEST TEST TEST",
+//              style: TextStyle(
+//                  fontSize: 25, color: Colors.red, fontWeight: FontWeight.bold),
+//            ),
+//          ),
+//        ),
         Padding(
           padding: EdgeInsets.only(left: 10, right: 10, top: 10),
           child: Container(
@@ -292,9 +300,9 @@ Widget buildContent(BuildContext context) {
                         child: Image.asset(
                       //todo
                       //hr
-                      //"assets/images/polleo.jpeg",
+                      "assets/images/polleo.jpeg",
                       //slo
-                      "assets/images/polleo_slo.jpeg",
+                      //"assets/images/polleo_slo.jpeg",
 
                       height: 50,
                       width: 100,
@@ -309,15 +317,16 @@ Widget buildContent(BuildContext context) {
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(10, 5, 15, 5),
                         child: new BarCodeImage(
-                          data: referenceNumber,
-                          // Code string. (required)
-                          codeType: BarCodeType.Code128,
-                          // Code type (required)
-                          lineWidth: 2.0,
-                          // width for a single black/white bar (default: 2.0)
-                          barHeight: 90.0,
-                          // height for the entire widget (default: 100.0)
-                          hasText: true,
+//                          data: referenceNumber,
+                          params: Code128BarCodeParams(referenceNumber,lineWidth: 2.0,barHeight: 86.0,withText: false),
+//                          // Code string. (required)
+//                          codeType: BarCodeType.Code128,
+//                          // Code type (required)
+//                          lineWidth: 2.0,
+//                          // width for a single black/white bar (default: 2.0)
+//                          barHeight: 90.0,
+//                          // height for the entire widget (default: 100.0)
+//                          hasText: false,
                           // Render with text label or not (default: false)
                           onError: (error) {
                             // Error handler
@@ -338,7 +347,7 @@ Widget buildContent(BuildContext context) {
         Align(
           alignment: Alignment.center,
           child: Icon(
-            Icons.screen_rotation,
+            MyBarcode.rotate,
             color: Colors.black,
             size: 50.0,
           ),

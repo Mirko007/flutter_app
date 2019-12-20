@@ -37,6 +37,10 @@ class MessageActivityState extends State<MessageActivity> {
   void initState() {
     super.initState();
     _query();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
   }
 
   _query() async {

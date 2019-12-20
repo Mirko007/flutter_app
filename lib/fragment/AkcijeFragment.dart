@@ -170,11 +170,15 @@ class _AkcijeState extends State<AkcijeFragment> {
   void initState() {
     super.initState();
     _getAkcije();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
   }
 
   _getAkcije() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String url = globals.base_url_novi + "/api/v1/getCatalog";
+    String url = globals.base_url_novi + globals.getCatalog;
     String token = (prefs.getString('token') ?? "");
 
     await http.get(url, headers: {

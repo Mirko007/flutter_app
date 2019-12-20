@@ -19,6 +19,8 @@ class KuponiDetails extends StatelessWidget {
   // In the constructor, require a coupon
   KuponiDetails({Key key, @required this.coupon}) : super(key: key);
 
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -33,6 +35,7 @@ class KuponiDetails extends StatelessWidget {
     );
   }
 }
+
 
 Widget _buildContent(BuildContext context, Coupon _coupon) {
   print("_coupon.barcode");
@@ -189,7 +192,7 @@ _buyVoucher(Coupon coupon,BuildContext context) async {
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  String url = globals.base_url_novi + "/api/v1/getVoucher/"+ coupon.id.toString();
+  String url = globals.base_url_novi + globals.getVoucher+ "/" + coupon.id.toString();
 
   String token = (prefs.getString('token') ?? "");
   print("token");
