@@ -17,12 +17,15 @@ class Application {
   final List<String> supportedLanguages = [
     "hr",
     "en",
+    "en",
+    "en"
   ];
 
   final List<String> supportedLanguagesCodes = [
     "hr",
+    "en",
     "US",
-    "UK",
+    "UK"
   ];
 
   //returns the list of supported Locales

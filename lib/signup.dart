@@ -22,12 +22,12 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   bool spol = true; //1-muško,0 žensko
- // var formats = {
- //   InputType.date: DateFormat('dd/MM/yyyy'),
- // };
+  // var formats = {
+  //   InputType.date: DateFormat('dd/MM/yyyy'),
+  // };
   final format = DateFormat("dd/MM/yyyy");
 
- // InputType inputType = InputType.date;
+  // InputType inputType = InputType.date;
   bool editable = true;
   DateTime date;
 
@@ -42,8 +42,6 @@ class _SignupPageState extends State<SignupPage> {
 
   bool gdpr_privola = false;
   bool terms_of_use = false;
-
-
 
   List<DropdownMenuItem<String>> _dropDownMenuItemsGender;
   String _currentGender;
@@ -60,14 +58,11 @@ class _SignupPageState extends State<SignupPage> {
   String _currentcategoryType;
   int _currentcategoryTypeIndex;
 
-
-
   List data_fitnessType;
   List data_sportType;
   List data_categoryType;
 
   Future<String> getPrefTypeData() async {
-
     String url = globals.base_url_novi + globals.getPrefTypes;
     var res = await http.get(Uri.parse(url));
 
@@ -107,7 +102,7 @@ class _SignupPageState extends State<SignupPage> {
                 height: 24.0,
               ),
               SizedBox(
-                height: 100.0,
+                height: 84.0,
                 child: Image.asset(
                   //todo
                   //hr
@@ -130,10 +125,7 @@ class _SignupPageState extends State<SignupPage> {
                       SizedBox(
                         height: 10,
                       ),
-                      Text(
-                        AppTranslations.of(context).text("upisi_podatke")
-
-                      ),
+                      Text(AppTranslations.of(context).text("upisi_podatke")),
                       SizedBox(
                         height: 10,
                       ),
@@ -143,29 +135,31 @@ class _SignupPageState extends State<SignupPage> {
                             AppTranslations.of(context).text("racun"),
                             style: TextStyle(fontSize: 16),
                           ),
-                        Expanded(
-                          child: InkWell(
-                                child: new Text(
-                                  AppTranslations.of(context).text("prijavi_se"),overflow: TextOverflow.fade,maxLines: 2,
-                                  style: TextStyle(
-                                      color: Colors.blue,
-                                      decoration: TextDecoration.underline,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ),
-                                onTap: () {
-                                  Navigator.of(context).pop(true);
-                                },
+                          Expanded(
+                            child: InkWell(
+                              child: new Text(
+                                AppTranslations.of(context).text("prijavi_se"),
+                                overflow: TextOverflow.fade,
+                                maxLines: 2,
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    decoration: TextDecoration.underline,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16),
                               ),
-                        ),
-
+                              onTap: () {
+                                Navigator.of(context).pop(true);
+                              },
+                            ),
+                          ),
                         ],
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 5, bottom: 5),
                         child: TextField(
                           decoration: InputDecoration(
-                              labelText: AppTranslations.of(context).text("ime"),
+                              labelText:
+                                  AppTranslations.of(context).text("ime"),
                               labelStyle: TextStyle(
                                   fontFamily: 'Montserrat',
                                   fontWeight: FontWeight.bold,
@@ -179,7 +173,8 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                            labelText:  AppTranslations.of(context).text("prezime"),
+                            labelText:
+                                AppTranslations.of(context).text("prezime"),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
@@ -192,7 +187,8 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                            labelText:  AppTranslations.of(context).text("mobitel"),
+                            labelText:
+                                AppTranslations.of(context).text("mobitel"),
                             hintText: "+385911234567",
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
@@ -206,7 +202,8 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                            labelText: AppTranslations.of(context).text("email"),
+                            labelText:
+                                AppTranslations.of(context).text("email"),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
@@ -219,7 +216,8 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                            labelText: AppTranslations.of(context).text("kucna_adresa"),
+                            labelText: AppTranslations.of(context)
+                                .text("kucna_adresa"),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
@@ -232,7 +230,8 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                            labelText: AppTranslations.of(context).text("postanski_broj"),
+                            labelText: AppTranslations.of(context)
+                                .text("postanski_broj"),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
@@ -259,34 +258,35 @@ class _SignupPageState extends State<SignupPage> {
                       SizedBox(
                         height: 10,
                       ),
-
                       DateTimeField(
                         format: format,
                         onShowPicker: (context, currentValue) {
                           return showDatePicker(
                               context: context,
                               firstDate: DateTime(1940),
-                          lastDate: DateTime.now().subtract(
-                          Duration(days: 5840),
-                          ),
-                          initialDate: DateTime.now().subtract(
-                          Duration(days: 5841),
-                          ));
-                        },decoration:  InputDecoration(
-                          labelText:  AppTranslations.of(context).text("datum_rodjenja"),
-                          hasFloatingPlaceholder: false,
-                          labelStyle: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey)),
-                          onChanged: (dt) => setState(() => date = dt),
-                          controller: datumRodenja,
+                              lastDate: DateTime.now().subtract(
+                                Duration(days: 5840),
+                              ),
+                              initialDate: DateTime.now().subtract(
+                                Duration(days: 5841),
+                              ));
+                        },
+                        decoration: InputDecoration(
+                            labelText: AppTranslations.of(context)
+                                .text("datum_rodjenja"),
+                            hasFloatingPlaceholder: false,
+                            labelStyle: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey)),
+                        onChanged: (dt) => setState(() => date = dt),
+                        controller: datumRodenja,
                       ),
                       SizedBox(height: 20.0),
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          "Spol",
+                          AppTranslations.of(context).text("spol"),
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
@@ -363,17 +363,29 @@ class _SignupPageState extends State<SignupPage> {
                       RaisedButton(
                         onPressed: _launchURL,
                         padding: EdgeInsets.all(5),
-                        child: new Text(AppTranslations.of(context).text("uvjeti_koristenja")),
+                        child: new Text(AppTranslations.of(context)
+                            .text("uvjeti_koristenja")),
                       ),
                       CheckboxListTile(
                           value: gdpr_privola,
-                          title: new Text(
-                          AppTranslations.of(context).text("privola_mail_posta_mob")),
+                          title: new Text(AppTranslations.of(context)
+                              .text("privola_mail_posta_mob")),
                           onChanged: (bool value) {
                             setState(() {
                               gdpr_privola = value;
                             });
                           }),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                          child: Text(
+                            AppTranslations.of(context).text("optional"),
+                            style: TextStyle(fontSize: 12),
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+                      ),
                       SizedBox(
                         height: 10.0,
                       ),
@@ -386,11 +398,10 @@ class _SignupPageState extends State<SignupPage> {
                               !(PrezimeText.text == "")) {
                             fvoidServisEmail(EmailText.text);
                           } else {
-                            print(
-                                "gdpr_privola" + gdpr_privola.toString());
+                            print("gdpr_privola" + gdpr_privola.toString());
                             Fluttertoast.showToast(
-                                msg:
-                                AppTranslations.of(context).text("unesite_sve_podatke"),
+                                msg: AppTranslations.of(context)
+                                    .text("unesite_sve_podatke"),
                                 toastLength: Toast.LENGTH_SHORT,
                                 gravity: ToastGravity.BOTTOM,
                                 // also possible "TOP" and "CENTER"
@@ -405,13 +416,14 @@ class _SignupPageState extends State<SignupPage> {
                               color: Colors.blue,
                               elevation: 7.0,
                               child: Center(
-                                  child: Text(
-                                      AppTranslations.of(context).text("registriraj"),
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'Montserrat'),
-                                  ),
+                                child: Text(
+                                  AppTranslations.of(context)
+                                      .text("registriraj"),
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Montserrat'),
+                                ),
                               ),
                             )),
                       ),
@@ -421,15 +433,14 @@ class _SignupPageState extends State<SignupPage> {
             ],
           ),
         ),
-
       ])),
     );
   }
 
   @override
   void initState() {
-//    _dropDownMenuItemsGender = getDropDownMenuItems();
-//    _currentGender = _dropDownMenuItemsGender[2].value;
+    //_dropDownMenuItemsGender = getDropDownMenuItems();
+    //_currentGender = _dropDownMenuItemsGender[0].value;
     this.getPrefTypeData();
     super.initState();
     SystemChrome.setPreferredOrientations([
@@ -439,7 +450,11 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
-    List _gender = [AppTranslations.of(context).text("male"), AppTranslations.of(context).text("female"), AppTranslations.of(context).text("other")];
+    List _gender = [
+      AppTranslations.of(context).text("male"),
+      AppTranslations.of(context).text("female"),
+      AppTranslations.of(context).text("other")
+    ];
     List<DropdownMenuItem<String>> items = new List();
     for (String gender in _gender) {
       items.add(new DropdownMenuItem(value: gender, child: new Text(gender)));
@@ -450,7 +465,7 @@ class _SignupPageState extends State<SignupPage> {
   @override
   void didChangeDependencies() {
     _dropDownMenuItemsGender = getDropDownMenuItems();
-    _currentGender = _dropDownMenuItemsGender[0].value;
+    //_currentGender = _dropDownMenuItemsGender[0].value;
     super.didChangeDependencies();
   }
 
@@ -576,8 +591,8 @@ class _SignupPageState extends State<SignupPage> {
       // dialog is dismissible with a tap on the barrier
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(
-              AppTranslations.of(context).text("activation_code_token")),
+          title:
+              Text(AppTranslations.of(context).text("activation_code_token")),
           content: new Row(
             children: <Widget>[
               new Expanded(
@@ -642,7 +657,7 @@ class _SignupPageState extends State<SignupPage> {
   void fvoidCreateCustomer(String token, String emailTextConfirm) async {
     String url;
 
-      url = globals.base_url_novi + globals.updateCustomer;
+    url = globals.base_url_novi + globals.updateCustomer;
 
     String datum_rodenja = datumRodenja.text;
     final now = DateTime.now();
@@ -671,8 +686,10 @@ class _SignupPageState extends State<SignupPage> {
       spol = "1";
     } else if (_currentGender == AppTranslations.of(context).text("female")) {
       spol = "2";
-    } else {
+    } else if (_currentGender == AppTranslations.of(context).text("other")) {
       spol = "3";
+    } else {
+      spol = "1";
     }
 
     String json_body =

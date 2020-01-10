@@ -14,7 +14,7 @@ import 'global_variable.dart' as globals;
 String token='';
 List data;
 const EMPTY_TEXT = Center(child: Text('Waiting for messages.'));
-
+//
 final dbHelper = DatabaseHelper.instance;
 
 
@@ -58,7 +58,7 @@ class MessageActivityState extends State<MessageActivity> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(title: Text(AppTranslations.of(context).text("poruke"))),
+      appBar: AppBar( iconTheme: IconThemeData(color: Colors.white),title: Text(AppTranslations.of(context).text("poruke"),style: TextStyle(color: Colors.white),),brightness: Brightness.dark,),
       body: Container(
         color: Colors.grey,
         child: _buildContent(context),

@@ -92,7 +92,7 @@ class _Main_FragmentState extends State<Main_Fragment> {
 
         ):
           Container(
-            color: Colors.blue,
+            color: Colors.white,
             height: 1,
             width: MediaQuery.of(context).size.width,
           )

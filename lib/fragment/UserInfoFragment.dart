@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:Loyalty_client/presentation/my_barcode_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../AppTranslations.dart';
 import '../TransactionDetails.dart';
+
+import '../global_variable.dart' as globals;
+import 'package:http/http.dart' as http;
 
 String ime_prezime = '';
 String current_points = '';
@@ -22,6 +27,7 @@ class _UserInfoState extends State<UserInfoFragment> {
   void initState() {
     super.initState();
     _loadCounter();
+    _getBodovi();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
@@ -37,22 +43,53 @@ class _UserInfoState extends State<UserInfoFragment> {
           " " +
           (prefs.getString('prezime') ?? '');
       double cur = (prefs.getDouble('currentPoints') ?? 0.0);
-      current_points = cur.toString();
+      int current = cur.toInt();
+      current_points = current.toString();
 
       referenceNumber = (prefs.getString('referenceNumber') ?? "");
+    });
+  }
+
+  _getBodovi() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String url;
+    token = (prefs.getString('token') ?? "");
+    url = globals.base_url_novi + globals.getCustomer;
+    await http.get(url, headers: {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "req_type": "mob",
+      "token": "$token"
+    }).then((http.Response response) async {
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.contentLength}");
+      print(response.headers);
+      print(response.request);
+      print(response.statusCode);
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        setState(() {
+          var resBody = json.decode(response.body);
+          double cur = resBody["currentPoints"];
+          int current = cur.toInt();
+          current_points = current.toString();
+        });
+      } else {
+        // If that call was not successful, throw an error.
+        throw Exception('Failed to load post');
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
-
       return Scaffold(
           resizeToAvoidBottomPadding: false,
-          backgroundColor: Colors.blue,
-          body: Container(
-            color: Colors.blue,
-            child: Column(
+
+          backgroundColor: Colors.white, //00ACF0
+          body: Column(
               children: <Widget>[
                 SizedBox(
                   height: 24.0,
@@ -109,23 +146,21 @@ class _UserInfoState extends State<UserInfoFragment> {
                 ),
               ],
             ),
-          ));
+          );
     } else {
-// is landscape
+// is potrait
       return new WillPopScope(
           onWillPop: _onWillPop,
           child: new Scaffold(
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(0.0),
+              child: AppBar(
+                  automaticallyImplyLeading: false, brightness: Brightness.dark,),
+            ),
             body: Container(
-              color: Colors.blue,
+              color: Color(0xff00ACF0),
               child: buildContent(context),
             ),
-          ));
-      return Scaffold(
-          resizeToAvoidBottomPadding: false,
-          backgroundColor: Colors.blue,
-          body: Container(
-            color: Colors.blue,
-            child: buildContent(context),
           ));
     }
   }
@@ -158,15 +193,13 @@ Widget buildContent(BuildContext context) {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+
         SizedBox(
-          height: 24.0,
-        ),
-        SizedBox(
-          height: 100.0,
+          height: 84.0,
           child: Image.asset(
             //todo
             //hr
-             //"assets/images/registriraj_logo.png",
+            //"assets/images/registriraj_logo.png",
             //slo
             "assets/images/registriraj_logo_slo.png",
             fit: BoxFit.fill,
@@ -272,7 +305,7 @@ Widget buildContent(BuildContext context) {
             child: Text(
               "TEST TEST TEST TEST",
               style: TextStyle(
-                  fontSize: 25, color: Colors.red, fontWeight: FontWeight.bold),
+                  fontSize: 25, color: Colors.blue, fontWeight: FontWeight.bold),
             ),
           ),
         ),
@@ -280,7 +313,7 @@ Widget buildContent(BuildContext context) {
           padding: EdgeInsets.only(left: 10, right: 10, top: 10),
           child: Container(
             decoration: BoxDecoration(
-                color: Colors.black,
+                color: Colors.black87,
                 borderRadius: BorderRadius.all(Radius.circular(15.0))),
             child: Column(
               children: <Widget>[
@@ -318,7 +351,8 @@ Widget buildContent(BuildContext context) {
                         padding: EdgeInsets.fromLTRB(10, 5, 15, 5),
                         child: new BarCodeImage(
 //                          data: referenceNumber,
-                          params: Code128BarCodeParams(referenceNumber,lineWidth: 2.0,barHeight: 86.0,withText: false),
+                          params: Code128BarCodeParams(referenceNumber,
+                              lineWidth: 2.0, barHeight: 86.0, withText: false),
 //                          // Code string. (required)
 //                          codeType: BarCodeType.Code128,
 //                          // Code type (required)

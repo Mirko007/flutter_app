@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
 import '../global_variable.dart' as globals;
 
 String token = '';
@@ -16,8 +17,10 @@ List allCoupons = [];
 bool pressed = true;
 int allCouponsItemCount = 0;
 
-var bodovi="";
+var bodovi = "";
 var height = AppBar().preferredSize.height;
+
+List<bool> isSelected;
 
 class KuponiFragment extends StatefulWidget {
   @override
@@ -28,6 +31,7 @@ class _KuponiState extends State<KuponiFragment> {
   @override
   void initState() {
     super.initState();
+    isSelected = [true, false];
     _getData();
     _getBodovi();
     SystemChrome.setPreferredOrientations([
@@ -68,8 +72,10 @@ class _KuponiState extends State<KuponiFragment> {
       if (response.statusCode == 200) {
         setState(() {
           var resBody = json.decode(response.body);
-          bodovi = resBody["currentPoints"].toString();
-
+          //bodovi = resBody["currentPoints"].toString();
+          double cur = resBody["currentPoints"];
+          int current = cur.toInt();
+          bodovi = current.toString();
         });
       } else {
         // If that call was not successful, throw an error.
@@ -132,7 +138,10 @@ class _KuponiState extends State<KuponiFragment> {
       if (response.statusCode == 200) {
         setState(() {
           var resBody = json.decode(response.body);
-          bodovi = resBody["currentPoints"].toString();
+         // bodovi = resBody["currentPoints"].toString();
+          double cur = resBody["currentPoints"];
+          int current = cur.toInt();
+          bodovi = current.toString();
           allCoupons.clear();
           allCoupons = resBody["voucherList"];
           allCoupons == null
@@ -153,147 +162,228 @@ class _KuponiState extends State<KuponiFragment> {
     return new WillPopScope(
         onWillPop: _onWillPop,
         child: new Scaffold(
-            appBar:
-            new AppBar(
+            appBar: new AppBar(
               automaticallyImplyLeading: false,
-              title: new Text(AppTranslations.of(context).text("kuponi")),  
+              brightness: Brightness.dark,
+             // backgroundColor: Colors.transparent,
+              title: new Text(AppTranslations.of(context).text("kuponi"),style: TextStyle(color: Colors.white),),
               actions: <Widget>[
-              Container(
-                height: height,
-                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                alignment: Alignment.center,
-                color: Color(0xff0174A9), //FF009AE2
-                child: new Text("BODOVI: "+bodovi),
-              ),
-            ],
+                Container(
+                  height: height,
+                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  alignment: Alignment.center,
+                  //color: Color(0xff2274A9),
+                  color: Colors.blueAccent[50],
+                  //FF009AE2
+                  child: new Text(AppTranslations.of(context).text("bodovi")+": " + bodovi,style: TextStyle(color: Colors.white),),
+                ),
+              ],
             ),
-//            CustomAppBar(
-//              height: height,
-//            ),
-            body:
-//          Container(
-//              color: Colors.white,
-//              child:
-//              new SizedBox(
-//    height: MediaQuery.of(context).size.height,
-//    child: Image.asset(
-//    "assets/images/nema_sadrzaja.PNG",
-//    fit: BoxFit.fill,
-//    ),
-//    width: MediaQuery.of(context).size.width,
-//    )
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-                Widget>[
-              Row(
+            body: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Container(
-                    height: 60.0,
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width / 2,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(
-                        10.0,
-                        10.0,
-                        0.0,
-                        10.0,
-                      ),
-                      child: RaisedButton(
-                        color: pressed ? Colors.black12 : Colors.blue,
-                        shape: OutlineInputBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(15.0),
-                                bottomLeft: Radius.circular(15.0))),
-                        onPressed: () =>
-                            setState(() {
+//              Padding(
+//                padding: const EdgeInsets.all(8.0),
+//                child: Center(
+//                  child: ToggleButtons(
+//                    borderColor: Colors.blue[800],
+//                    fillColor: Colors.blue[700],
+//                    borderWidth: 1,
+//                    selectedBorderColor: Colors.black,
+//                    selectedColor: Colors.white,
+//                    borderRadius: BorderRadius.circular(20),
+//                    children: <Widget>[
+//                      Padding(
+//                        padding: const EdgeInsets.all(8.0),
+//                        child: Text(
+//                          AppTranslations.of(context).text("ponuda"),
+//                          style: TextStyle(fontSize: 16),
+//                        ),
+//                      ),
+//                      Padding(
+//                        padding: const EdgeInsets.all(8.0),
+//                        child: Text(
+//                          AppTranslations.of(context).text("osobni"),
+//                          style: TextStyle(fontSize: 16),
+//                        ),
+//                      ),
+//                    ],
+//                    onPressed: (int index) {
+//                      setState(() {
+//                        for (int i = 0; i < isSelected.length; i++) {
+//                          if (i == index) {
+//                            isSelected[i] = true;
+//                          } else {
+//                            isSelected[i] = false;
+//                          }
+//                        }
+//                      });
+//                    },
+//                    isSelected: isSelected,
+//                  ),
+//                ),
+//              ),
+                  //todo 23.12. 17.05 zamijenjeni
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        height: 60.0,
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            10.0,
+                            10.0,
+                            0.0,
+                            5.0,
+                          ),
+                          child: RaisedButton(
+                            color: Colors.white,
+                            shape: OutlineInputBorder(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(15.0),
+                                    bottomLeft: Radius.circular(15.0))),
+                            //color: pressed ? Colors.black12 : Colors.blue,
+                            textColor: Colors.white,
+                            padding: EdgeInsets.all(0.0),
+                            onPressed: () => setState(() {
                               pressed = true;
                               if (pressed)
                                 this.getCouponsPonuda(token);
                               else
                                 this.getCouponsOsobni(token);
                             }),
-                        child: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Center(
-                              child: Text(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width / 2,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: pressed
+                                      ? <Color>[
+                                          Color(0xFF0D47A1),
+                                          Color(0xFF1976D2),
+                                          Color(0xFF42A5F5),
+                                        ]
+                                      : <Color>[
+                                          Color(0xFF3C3C3D),
+                                          Color(0xFF747272),
+                                          Color(0xFFB4B3B3),
+                                        ],
+                                ),
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(15.0),
+                                    bottomLeft: Radius.circular(15.0)),
+                              ),
+                              padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                              child: Center(
+                                  child: Text(
                                 AppTranslations.of(context).text("ponuda"),
                                 style: TextStyle(
                                     fontSize: 15, color: Colors.white),
                               )),
+                            ),
+//                        Padding(
+//                          padding: const EdgeInsets.all(5.0),
+//                          child: Center(
+//                              child: Text(
+//                                AppTranslations.of(context).text("ponuda"),
+//                                style: TextStyle(
+//                                    fontSize: 15, color: Colors.white),
+//                              )),
+//                        ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  Container(
-                    height: 60.0,
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width / 2,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(
-                        0.0,
-                        10.0,
-                        10.0,
-                        10.0,
-                      ),
-                      child: RaisedButton(
-                        color: pressed ? Colors.blue : Colors.black12,
-                        shape: OutlineInputBorder(
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(15.0),
-                                bottomRight: Radius.circular(15.0))),
-                        onPressed: () =>
-                            setState(() {
+                      Container(
+                        height: 60.0,
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            0.0,
+                            10.0,
+                            10.0,
+                            5.0,
+                          ),
+                          child: RaisedButton(
+                            //color: pressed ? Colors.blue : Colors.black12,
+                            color: Colors.white,
+                            shape: OutlineInputBorder(
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(15.0),
+                                    bottomRight: Radius.circular(15.0))),
+                            padding: EdgeInsets.all(0.0),
+                            onPressed: () => setState(() {
                               pressed = false;
                               if (pressed)
                                 this.getCouponsPonuda(token);
                               else
                                 this.getCouponsOsobni(token);
                             }),
-                        child: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Center(
-                              child: Text(
-                                AppTranslations.of(context).text("osobni"),
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.white),
-                              )),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width / 2,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: pressed
+                                      ? <Color>[
+                                          Color(0xFF3C3C3D),
+                                          Color(0xFF747272),
+                                          Color(0xFFB4B3B3),
+                                        ]
+                                      : <Color>[
+                                          Color(0xFF0D47A1),
+                                          Color(0xFF1976D2),
+                                          Color(0xFF42A5F5),
+                                        ],
+                                ),
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(15.0),
+                                    bottomRight: Radius.circular(15.0)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Center(
+                                    child: Text(
+                                  AppTranslations.of(context).text("osobni"),
+                                  style: TextStyle(
+                                      fontSize: 15, color: Colors.white),
+                                )),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
-              Expanded(child: getGridView(context))
-            ]))
-      //        ))
+                  Expanded(child: getGridView(context))
+                ]))
+        //        ))
 
-    );
+        );
   }
 
   Future<bool> _onWillPop() {
     return showDialog(
-      context: context,
-      builder: (context) => new AlertDialog(
-        title: new Text(AppTranslations.of(context).text("exit_app")),
-        content: new Text(AppTranslations.of(context).text("click_yes")),
-        actions: <Widget>[
-          new FlatButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: new Text(AppTranslations.of(context).text("ne")),
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text(AppTranslations.of(context).text("exit_app")),
+            content: new Text(AppTranslations.of(context).text("click_yes")),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text(AppTranslations.of(context).text("ne")),
+              ),
+              new FlatButton(
+                onPressed: () => SystemNavigator.pop(),
+                child: new Text(AppTranslations.of(context).text("da")),
+              ),
+            ],
           ),
-          new FlatButton(
-            onPressed: () => SystemNavigator.pop(),
-            child: new Text(AppTranslations.of(context).text("da")),
-          ),
-        ],
-      ),
-    ) ?? false;
+        ) ??
+        false;
   }
 }
-
 
 getGridView(BuildContext context) {
   if (allCoupons == null || allCoupons == "")
@@ -309,7 +399,7 @@ getGridView(BuildContext context) {
         itemCount: allCouponsItemCount,
         itemBuilder: (BuildContext content, int index) {
           return Padding(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(5),
             child: InkWell(
               onTap: () {
                 getKuponDetails(index, context);
@@ -322,47 +412,58 @@ getGridView(BuildContext context) {
                   children: <Widget>[
                     Container(
                       decoration: BoxDecoration(
-                          color: Colors.blue,
+                          gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: <Color>[
+                                Color(0xFF0D47A1),
+                                Color(0xFF1976D2),
+                                Color(0xFF42A5F5),
+                              ]),
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(15.0),
                               topRight: Radius.circular(15.0))),
-                      child: Center(
-                          child: Text(
-                            getCustomerRequiredpoints(index) +
-                                // allCoupons[index]["voucherType"]["customerPointsRequired"].toString() +
-                                AppTranslations.of(context).text("bodovi"),
-                            style: TextStyle(fontSize: 25, color: Colors.white),
-                          )),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0.0,3,0,3),
+                        child: Center(
+                            child: Text(
+                          getCustomerRequiredpoints(index) +
+                              // allCoupons[index]["voucherType"]["customerPointsRequired"].toString() +
+                              AppTranslations.of(context).text("bodovi"),
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        )),
+                      ),
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.blue,
+                        color: Colors.white,
                       ),
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                        padding: EdgeInsets.fromLTRB(5, 3, 5, 3),
                         child: Center(
                             child: Text(
-                              getVoucherName(index),
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontSize: 15, color: Colors.white),
-                            )),
+                          getVoucherName(index),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.black87,
+                              fontWeight: FontWeight.bold),
+                        )),
                       ),
                     ),
                     Expanded(
                       child: Container(
                         color: Colors.white,
                         child: getImage(index),
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width,
+                        width: MediaQuery.of(context).size.width,
                       ),
                     ),
                     Padding(
                         padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                        child: Text(AppTranslations.of(context).text("vrijedi_do") + getValidto(index)))
+                        child: Text(
+                            AppTranslations.of(context).text("vrijedi_do") +
+                                getValidto(index)))
                   ],
                 ),
               ),
@@ -409,39 +510,53 @@ String getVoucherName(int index) {
       VoucherName = allCoupons[index]["voucherType"]["voucherName"].toString();
     } catch (error) {}
 
-
     return VoucherName;
   }
 }
 
 String getValidto(int index) {
+  DateFormat dateFormat = DateFormat('dd/MM/yyyy');
   if (pressed) {
     if (allCoupons[index]["validTo"] == null)
       return "";
-    else
-      return allCoupons[index]["validTo"];
+    else{
+      String date_validTo ="";
+      date_validTo =allCoupons[index]["validTo"];
+      if(date_validTo!="") {
+        DateTime date_ = dateFormat.parse(allCoupons[index]["validTo"]);
+        date_validTo= dateFormat.format(date_);
+      }
+      return date_validTo;
+    }
   } else {
     String ValidTo = "";
     try {
       ValidTo = allCoupons[index]["voucherType"]["validTo"].toString();
+      if(ValidTo!=""){
+
+      DateTime date_2 = dateFormat.parse(allCoupons[index]["voucherType"]["validTo"].toString());
+      ValidTo = dateFormat.format(date_2);}
+
     } catch (error) {}
     if (ValidTo == "")
       return "";
     else
       return ValidTo;
   }
-  // return pressed == true ? allCoupons[index]["validTo"] : "2";
+
 }
 
 class Coupon {
-  Coupon({this.id,
-    this.barcode,
-    this.validTo,
-    this.customerPointsRequired,
-    this.image,
-    this.locationName,
-    this.voucherName,
-    this.voucherOwner});
+  Coupon(
+      {this.id,
+      this.barcode,
+      this.validTo,
+      this.customerPointsRequired,
+      this.image,
+      this.locationName,
+      this.voucherName,
+      this.voucherDescription,
+      this.voucherOwner});
 
   final int id;
   final String barcode;
@@ -450,6 +565,7 @@ class Coupon {
   final String image;
   final String locationName;
   final String voucherName;
+  final String voucherDescription;
   final bool voucherOwner; //0-Ponuda,1-Osobni
 }
 
@@ -458,41 +574,40 @@ void getKuponDetails(int index, BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) =>
-              KuponiDetails(
+          builder: (context) => KuponiDetails(
                 coupon: Coupon(
                     id: allCoupons[index]["id"],
                     barcode: "",
                     validTo: allCoupons[index]["validTo"],
                     customerPointsRequired:
-                    allCoupons[index]["customerPointsRequired"].toString(),
+                        allCoupons[index]["customerPointsRequired"].toString(),
                     image: allCoupons[index]["image"],
                     locationName: allCoupons[index]["locationName"],
                     voucherName: allCoupons[index]["voucherName"],
+                    voucherDescription: allCoupons[index]["description"],
                     voucherOwner: false),
-
               )),
     );
   } else {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) =>
-              KuponiDetails(
+          builder: (context) => KuponiDetails(
                 coupon: Coupon(
                     id: allCoupons[index]["voucherType"]["id"],
                     barcode: allCoupons[index]["voucher"],
                     validTo: allCoupons[index]["voucherType"]["validTo"],
                     customerPointsRequired: allCoupons[index]["voucherType"]
-                    ["customerPointsRequired"]
+                            ["customerPointsRequired"]
                         .toString(),
                     image: allCoupons[index]["voucherType"]["image"],
                     locationName: allCoupons[index]["voucherType"]
-                    ["locationName"],
+                        ["locationName"],
                     voucherName: allCoupons[index]["voucherType"]
-                    ["voucherName"],
+                        ["voucherName"],
+                    voucherDescription: allCoupons[index]["voucherType"]
+                ["description"],
                     voucherOwner: true),
-
               )),
     );
   }
@@ -503,9 +618,9 @@ getImage(int index) {
     return allCoupons[index]["image"] == null
         ? null
         : Image.memory(
-      Base64Decoder().convert(allCoupons[index]["image"]),
-      fit: BoxFit.scaleDown,
-    );
+            Base64Decoder().convert(allCoupons[index]["image"]),
+            fit: BoxFit.scaleDown,
+          );
   else {
     String VoucherImage = "";
     try {
@@ -514,44 +629,8 @@ getImage(int index) {
     return VoucherImage == ""
         ? null
         : Image.memory(
-      Base64Decoder().convert(VoucherImage),
-      fit: BoxFit.scaleDown,
-    );
+            Base64Decoder().convert(VoucherImage),
+            fit: BoxFit.scaleDown,
+          );
   }
 }
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final double height;
-
-  const CustomAppBar({
-    Key key,
-    @required this.height,
-  }) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return
-        Container(
-          color: Colors.blue,
-            child: AppBar(
-              title: Container(
-                color: Colors.white,
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: "Search",
-                    contentPadding: EdgeInsets.all(10),
-                  ),
-                ),
-              ),
-              actions: [
-                IconButton(
-                  icon: Icon(Icons.verified_user),
-                  onPressed: () => null,
-                ),
-              ],
-            )
-        );
-  }
-
-  @override
-  Size get preferredSize => Size.fromHeight(height);
-}
-

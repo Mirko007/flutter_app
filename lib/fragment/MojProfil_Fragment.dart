@@ -242,11 +242,13 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
   Widget buildContent(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(
-        title: Text(AppTranslations.of(context).text("moj_profil")),
+        title: Text(AppTranslations.of(context).text("moj_profil"),style: TextStyle(color: Colors.white),),
         automaticallyImplyLeading: false,
+          brightness: Brightness.dark,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.exit_to_app),
+            color: Colors.white,
             onPressed: () {
               _firebaseMessaging.unsubscribeFromTopic("polleonewsslo");
               Navigator.of(context).pop();

@@ -113,10 +113,12 @@ class ListPage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(title: Text(AppTranslations.of(context).text("transakcije")),
-        automaticallyImplyLeading: false,),
+      appBar: AppBar(title: Text(AppTranslations.of(context).text("transakcije"),style: TextStyle(color: Colors.white),),
+        automaticallyImplyLeading: false,
+      brightness: Brightness.dark,),
+
       body: Container(
-        color: Colors.blueAccent,
+        color: Colors.grey,
         child: _buildContent(context),
       ),
     );

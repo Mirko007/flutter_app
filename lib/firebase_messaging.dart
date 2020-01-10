@@ -84,6 +84,7 @@ class FirebaseMessaging {
     if (!_platform.isIOS) {
       return null;
     }
+
     return _channel.invokeMethod<bool>(
       'requestNotificationPermissions',
       iosSettings.toMap(),

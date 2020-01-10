@@ -1,13 +1,14 @@
 import 'dart:ui';
 
 import 'package:Loyalty_client/AppTranslations.dart';
+import 'package:Loyalty_client/MessageActivity.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'AppTranslationsDelegate.dart';
 import 'Application.dart';
 
-import 'package:Loyalty_client/MessageActivity.dart';
+
 
 import 'package:flutter/material.dart';
 
@@ -38,42 +39,52 @@ final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-void main(){
+void main() {
+
   WidgetsFlutterBinding.ensureInitialized();
+
   _firebaseMessaging.requestNotificationPermissions();
+
   _firebaseMessaging.configure(
     onMessage: (Map<String, dynamic> message) async {
       print("onMessage: $message");
       String title = message['notification']['title'];
       String tekst = message['notification']['body'];
 
+      //_showNotification("VANJA", "SE ZOVEM on message");
       _showNotification(title, tekst);
-      //_showItemDialog(message);
+
     },
     onBackgroundMessage: myBackgroundMessageHandler,
     onLaunch: (Map<String, dynamic> message) async {
       print("onLaunch: $message");
-      String title = message['notification']['title'];
-      String tekst = message['notification']['body'];
+      String title = message['data']['messageTitle'];
+      String tekst = message['data']['messageText'];
 
-      _showNotification(title, tekst);
-      // _navigateToItemDetail(message);
+
+      _showNotificationNotInForeground(title,tekst);
+      //_showNotification(title, tekst);
+
     },
     onResume: (Map<String, dynamic> message) async {
       print("onResume: $message");
-      String title = message['notification']['title'];
-      String tekst = message['notification']['body'];
+      String title = message['data']['messageTitle'];
+      String tekst = message['data']['messageText'];
 
-      _showNotification(title, tekst);
-      //_navigateToItemDetail(message);
+      _showNotificationNotInForeground(title,tekst);
+     // _showNotification(title, tekst);
+
     },
   );
-  _firebaseMessaging.subscribeToTopic("polleonewsslo");
+
+  //_firebaseMessaging.subscribeToTopic("polleonewsslo");
   debugPaintSizeEnabled = false;
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    systemNavigationBarColor: Colors.blue, // navigation bar color
-    statusBarColor: Colors.blue, // status bar color
+    systemNavigationBarColor: Color(0xff00ACF0), // navigation bar color
+ //   statusBarColor: Colors.transparent, // status bar color
+    statusBarBrightness: Brightness.dark,
+    statusBarIconBrightness: Brightness.dark
   ));
   WidgetsFlutterBinding.ensureInitialized();
   runApp(new MyApp());
@@ -88,7 +99,8 @@ class MyApp extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        // primarySwatch: colorCustom,
+        primarySwatch: Colors.lightBlue,
       ),
       navigatorKey: navigatorKey,
       routes: <String, WidgetBuilder>{
@@ -300,7 +312,6 @@ class _MyHomePageState extends State<MyHomePage> {
       if (response.statusCode == 200) {
         _asyncInputDialog(context, EmailText);
       } else {
-
         /************************************************/
         /************************************************/
         /************************************************/
@@ -331,8 +342,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 textColor: Colors.white);
             // If that call was not successful, throw an error.
             throw Exception('Failed to load post');
-
-
           }
         });
 
@@ -500,8 +509,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _checkUser(String token) async {
-    ProgressDialog pr  = new ProgressDialog(context);
-    pr = new ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: false);
+    ProgressDialog pr = new ProgressDialog(context);
+    pr = new ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false, showLogs: false);
     pr.style(
         message: AppTranslations.of(context).text("provjera_korisnika"),
         borderRadius: 10.0,
@@ -514,10 +524,9 @@ class _MyHomePageState extends State<MyHomePage> {
         progressTextStyle: TextStyle(
             color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
         messageTextStyle: TextStyle(
-            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600)
-    );
+            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
     pr.show();
-    
+
     String url = globals.base_url_novi + globals.getCustomer;
 
     await http.get(url, headers: {
@@ -583,8 +592,7 @@ class _MyHomePageState extends State<MyHomePage> {
           _firebaseMessaging.subscribeToTopic("polleonewsslo");
           Navigator.of(context).pushNamed('/main');
         });
-
-      } else{
+      } else {
         pr.hide().then((isHidden) {
           print(isHidden);
         });
@@ -594,8 +602,10 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 Future<void> _showNotification(String title, String message) async {
-  int broj_novih_poruka = await dbHelper.queryRowCountRead();
-  Map<String, dynamic> row = {
+
+  int broj_novih_poruka = await DatabaseHelper.instance.queryRowCountRead();
+
+    Map<String, dynamic> row = {
     DatabaseHelper.columnIdMessage: "22",
     DatabaseHelper.columnCreated: "",
     DatabaseHelper.columnTitle: title,
@@ -603,7 +613,7 @@ Future<void> _showNotification(String title, String message) async {
     DatabaseHelper.columnReadStatus: 0,
     DatabaseHelper.columnDeleted: "",
   };
-  dbHelper.insert(row);
+  DatabaseHelper.instance.insert(row);
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
@@ -613,11 +623,11 @@ Future<void> _showNotification(String title, String message) async {
   flutterLocalNotificationsPlugin.initialize(initSetttings,
       onSelectNotification: onSelectNotification);
 
-  var android1 = new AndroidNotificationDetails(
-      'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
-      priority: Priority.High, importance: Importance.Max);
+  var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      "Polleo", 'Polleo', 'channel description',
+      importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
   var iOS1 = new IOSNotificationDetails();
-  var platform = new NotificationDetails(android1, iOS1);
+  var platform = new NotificationDetails(androidPlatformChannelSpecifics, iOS1);
   if (broj_novih_poruka > 0) {
     ++broj_novih_poruka;
     await flutterLocalNotificationsPlugin.show(
@@ -628,16 +638,47 @@ Future<void> _showNotification(String title, String message) async {
             AppTranslations.of(navigatorKey.currentContext)
                 .text("novih_poruka"),
         platform,
-        payload: 'Poruka');
+       );
   } else {
     await flutterLocalNotificationsPlugin.show(0, title, message, platform,
-        payload: 'Poruka');
-  }
+        );
+   }
 }
 
+Future<void> _showNotificationNotInForeground(String title, String message) async {
+
+  int broj_novih_poruka = await DatabaseHelper.instance.queryRowCountRead();
+
+  Map<String, dynamic> row = {
+    DatabaseHelper.columnIdMessage: "22",
+    DatabaseHelper.columnCreated: "",
+    DatabaseHelper.columnTitle: title,
+    DatabaseHelper.columnMessage: message,
+    DatabaseHelper.columnReadStatus: 0,
+    DatabaseHelper.columnDeleted: "",
+  };
+  DatabaseHelper.instance.insert(row);
+
+  navigatorKey.currentState.pushNamed('/messages');
+
+}
 Future<void> onSelectNotification(String payload) async {
   //Postaviti na poruke
   print("Test ulaz");
+//  print(payload);
+//  String title =  payload.substring(0, payload.indexOf("|"));
+//  String message =  payload.substring( payload.indexOf("|")+1,payload.length);
+
+//  Map<String, dynamic> row = {
+//    DatabaseHelper.columnIdMessage: "22",
+//    DatabaseHelper.columnCreated: "",
+//    DatabaseHelper.columnTitle: title,
+//    DatabaseHelper.columnMessage: message,
+//    DatabaseHelper.columnReadStatus: 0,
+//    DatabaseHelper.columnDeleted: "",
+//  };
+//  DatabaseHelper.instance.insert(row);
+
   navigatorKey.currentState.pushNamed('/messages');
 }
 
@@ -646,11 +687,25 @@ Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
     print(message.containsKey('data'));
     final dynamic data = message['data'];
     print("data:" + data);
+    _showNotificationNotInForeground(message['data']['messageTitle'], message['data']['messageText']);
+//    _showNotification(
+//        message['data']['messageTitle'], message['data']['messageText']);
   }
 
   if (message.containsKey('notification')) {
-    _showNotification(
-        message['notification']['title'], message['notification']['body']);
+
+//    Map<String, dynamic> row = {
+//      DatabaseHelper.columnIdMessage: "22",
+//      DatabaseHelper.columnCreated: "",
+//      DatabaseHelper.columnTitle: message['data']['messageTitle'],
+//      DatabaseHelper.columnMessage: message['data']['messageText'],
+//      DatabaseHelper.columnReadStatus: 0,
+//      DatabaseHelper.columnDeleted: "",
+//    };
+//    DatabaseHelper.instance.insert(row);
+//    _showNotification(
+//        message['data']['messageTitle'], message['data']['messageText']);
+    //_showNotification("VANJA", "SE ZOVEM");
     // Handle notification message
     final dynamic notification = message['notification'];
     print("notification:" + notification);

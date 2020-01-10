@@ -79,7 +79,7 @@ class TransactionDetailsState extends State<TransactionDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(AppTranslations.of(context).text("transakcije_detalji"))),
+      appBar: AppBar(iconTheme: IconThemeData(color: Colors.white),title: Text(AppTranslations.of(context).text("transakcije_detalji"),style: TextStyle(color: Colors.white),),brightness: Brightness.dark,),
       body: Container(
         color: Colors.grey,
         child: _buildContent(context),

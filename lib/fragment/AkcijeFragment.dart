@@ -30,30 +30,11 @@ class _AkcijeState extends State<AkcijeFragment> {
   Widget build(BuildContext context) {
     return new WillPopScope(
       onWillPop: _onWillPop,
-      child: new
-//        Scaffold(
-//            appBar: new AppBar(
-//              automaticallyImplyLeading: false,
-//              title: new Text("Akcije"),
-//            ),
-//            body: new SizedBox(
-//              height: MediaQuery
-//                  .of(context)
-//                  .size
-//                  .height,
-//              child: Image.asset(
-//                "assets/images/nema_sadrzaja.PNG",
-//                fit: BoxFit.fill,
-//              ),
-//              width: MediaQuery
-//                  .of(context)
-//                  .size
-//                  .width,
-//            ))
-          Scaffold(
+      child: new Scaffold(
         appBar: AppBar(
-          title: Text(AppTranslations.of(context).text("akcije")),
+          title: Text(AppTranslations.of(context).text("akcije"),style: TextStyle(color: Colors.white),),
           automaticallyImplyLeading: false,
+            brightness: Brightness.dark
         ),
         backgroundColor: Colors.white,
         body: new ListView.builder(

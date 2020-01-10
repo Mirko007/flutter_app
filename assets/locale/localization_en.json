@@ -24,9 +24,9 @@
   "prezime": "Last name",
   "mobitel": "Phone number",
   "email": "E-mail address",
-  "kucna_adresa": "Home address (Optional)",
+  "kucna_adresa": "Home address (*)",
   "spol": "Gender",
-  "datum_rodjenja": "Date of birth (Optional)",
+  "datum_rodjenja": "Date of birth (*)",
   "lozinka": "Password",
   "uvjeti": "I accept and agree with the Terms of Service",
   "uvjeti_koristenja": "Terms of Service",
@@ -37,8 +37,8 @@
   "da": "Yes",
   "ne": "No",
   "postojeci": "Existing member",
-  "postanski_broj": "Zip code (Optional)",
-  "grad": "City (Optional)",
+  "postanski_broj": "Zip code (*)",
+  "grad": "City (*)",
   "unesite_sve_podatke": "Please enter your data",
   "privola_mail_posta_mob": "Dajem suglasnost da mi Polleo Adria d.o.o šalje obavijesti o Programu te ponude i pogodnosti putem mobitela, elektroničke pošte i pošte",
   "privola_posta": "I want to get notices through mail",
@@ -95,5 +95,6 @@
   "osnovni_podaci": "Basic information",
   "potvrda": "Confirm",
   "provjera_korisnika": "User verification...",
-  "bodova": " points"
+  "bodova": " points",
+  "optional": "* Optional"
 }

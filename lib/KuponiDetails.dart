@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 
 import 'database_helper.dart';
 import 'global_variable.dart' as globals;
+import 'package:intl/intl.dart';
 
 class KuponiDetails extends StatelessWidget {
   Coupon coupon;
@@ -19,14 +20,16 @@ class KuponiDetails extends StatelessWidget {
   // In the constructor, require a coupon
   KuponiDetails({Key key, @required this.coupon}) : super(key: key);
 
-
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppTranslations.of(context).text("kuponi_detalji")),
+        brightness: Brightness.dark,
+        iconTheme: IconThemeData(color: Colors.white),
+        title: Text(
+          AppTranslations.of(context).text("kuponi_detalji"),
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -36,7 +39,6 @@ class KuponiDetails extends StatelessWidget {
   }
 }
 
-
 Widget _buildContent(BuildContext context, Coupon _coupon) {
   print("_coupon.barcode");
   print(_coupon.barcode);
@@ -45,53 +47,53 @@ Widget _buildContent(BuildContext context, Coupon _coupon) {
     child: Container(
       height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(
-          color: Colors.black12,
+          color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(15.0))),
       child: SingleChildScrollView(
         child: Column(
-
           children: <Widget>[
             Padding(
               padding: EdgeInsets.all(10),
               child: Center(
-                child: _coupon.voucherOwner
-                    ? Container(
-                  height: 100,
-                  color: Colors.white,
-                  child: Padding(
-                      padding: EdgeInsets.fromLTRB(10, 5, 15, 5),
-                      child:
-                              new BarCodeImage(
-
-                              data: _coupon.barcode== null ? "1111":_coupon.barcode,
-                              // Code string. (required)
-                              codeType: BarCodeType.Code128,
-                              // Code type (required)
-                              lineWidth: 2.0,
-                              // width for a single black/white bar (default: 2.0)
-                              barHeight: 90.0,
-                              // height for the entire widget (default: 100.0)
-                              hasText: true,
-                              // Render with text label or not (default: false)
-                              onError: (error) {
-                                // Error handler
-                                print('error = $error');
-                              },
-                            )
-                          ),
-                ):Container()
-              ),
+                  child: _coupon.voucherOwner
+                      ? Container(
+                          height: 100,
+                          color: Colors.white,
+                          child: Padding(
+                              padding: EdgeInsets.fromLTRB(10, 5, 15, 5),
+                              child: new BarCodeImage(
+                                data: _coupon.barcode == null
+                                    ? "1111"
+                                    : _coupon.barcode,
+                                // Code string. (required)
+                                codeType: BarCodeType.Code128,
+                                // Code type (required)
+                                lineWidth: 2.0,
+                                // width for a single black/white bar (default: 2.0)
+                                barHeight: 90.0,
+                                // height for the entire widget (default: 100.0)
+                                hasText: true,
+                                // Render with text label or not (default: false)
+                                onError: (error) {
+                                  // Error handler
+                                  print('error = $error');
+                                },
+                              )),
+                        )
+                      : Container()),
             ),
             Container(
-              height: 40,
+              height: 30,
               color: Colors.blue,
               child: Center(
                   child: Text(
-                _coupon.customerPointsRequired + AppTranslations.of(context).text("bodovi"),
-                style: TextStyle(fontSize: 30, color: Colors.white),
+                _coupon.customerPointsRequired +
+                    AppTranslations.of(context).text("bodovi"),
+                style: TextStyle(fontSize: 20, color: Colors.white),
               )),
             ),
             Container(
+              height: 30,
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
@@ -99,67 +101,49 @@ Widget _buildContent(BuildContext context, Coupon _coupon) {
                   child: Text(
                 _coupon.voucherName,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 15, color: Colors.white),
+                style: TextStyle(fontSize: 20, color: Colors.white),
               )),
             ),
             _coupon.image == null
-                  ? Container()
-                  : Image.memory(
-                      Base64Decoder().convert(_coupon.image),
-                      fit: BoxFit.fitWidth,
-                    ),
-              // width: MediaQuery.of(context).size.width,
+                ? Container()
+                : Image.memory(
+                    Base64Decoder().convert(_coupon.image),
+                    fit: BoxFit.fitWidth,
+                  ),
+            // width: MediaQuery.of(context).size.width,
+            Center(
+                child: Text(
+                  _coupon.voucherDescription,
 
+                  style: TextStyle(fontSize: 15, color: Colors.black),
+                )),
+            //todo pogledat boirder ispšod
             Padding(
                 padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                child: Text(AppTranslations.of(context).text("vrijedi_do") + _coupon.validTo)),
+                child: Text(AppTranslations.of(context).text("vrijedi_do") +
+                    getValidto(_coupon.validTo),style: TextStyle(fontSize: 15, color: Colors.black,fontWeight: FontWeight.bold),)),
             !_coupon.voucherOwner
-                ?RaisedButton(
-              child: Container(
-                  height: 40.0,
-                  child: Material(
-                    borderRadius: BorderRadius.circular(20.0),
-                    shadowColor: Colors.blueAccent,
+                ? RaisedButton(
+                    shape: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0)),
                     color: Colors.blue,
-                    elevation: 7.0,
-                    child: Center(
-                      child: Text(
-                        AppTranslations.of(context).text("kupi"),
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Montserrat'),
+                    child: Container(
+                      height: 40.0,
+                      child: Center(
+                        child: Text(
+                          AppTranslations.of(context).text("kupi"),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Montserrat'),
+                        ),
                       ),
                     ),
-                  )),
-              onPressed: () {
-                //_buyVoucher(_coupon,context);
-                _dialogBuyVoucher(_coupon,context);
-              },
-            )
-//          GestureDetector(
-//            onTap: () {
-//              _dialogBuyVoucher(_coupon,context);
-//            },
-//            child: Container(
-//                height: 40.0,
-//                child: Material(
-//                  borderRadius: BorderRadius.circular(20.0),
-//                  shadowColor: Colors.blueAccent,
-//                  color: Colors.blue,
-//                  elevation: 7.0,
-//                  child: Center(
-//                    child: Text(
-//                      'KUPI2',
-//                      style: TextStyle(
-//                          color: Colors.white,
-//                          fontWeight: FontWeight.bold,
-//                          fontFamily: 'Montserrat'),
-//                    ),
-//                  ),
-//                )),
-//          )
-                :Container()
+                    onPressed: () {
+                      _dialogBuyVoucher(_coupon, context);
+                    },
+                  )
+                : Container()
           ],
         ),
       ),
@@ -167,38 +151,50 @@ Widget _buildContent(BuildContext context, Coupon _coupon) {
   );
 }
 
+String getValidto(String couponValidTo) {
+  DateFormat dateFormat = DateFormat('dd/MM/yyyy');
 
-_dialogBuyVoucher(Coupon coupon,BuildContext context) {
+  if (couponValidTo == "") {
+    return "";
+  } else {
+    DateTime date_ = dateFormat.parse(couponValidTo);
+     String date_validTo = dateFormat.format(date_);
+
+    return date_validTo;
+  }
+}
+
+_dialogBuyVoucher(Coupon coupon, BuildContext context) {
   showDialog(
       context: context,
       builder: (context) => new AlertDialog(
-    title: new Text(''),
-    content: new Text(AppTranslations.of(context).text("buy_coupon")+coupon.voucherName),
-    actions: <Widget>[
-      new FlatButton(
-        onPressed: () => Navigator.of(context).pop(false),
-        child: new Text(AppTranslations.of(context).text("ne")),
-      ),
-      new FlatButton(
-        onPressed: () => _buyVoucher(coupon,context),
-        child: new Text(AppTranslations.of(context).text("da")),
-      ),
-    ],
-  ));
-
+            title: new Text(''),
+            content: new Text(AppTranslations.of(context).text("buy_coupon") +
+                coupon.voucherName),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text(AppTranslations.of(context).text("ne")),
+              ),
+              new FlatButton(
+                onPressed: () => _buyVoucher(coupon, context),
+                child: new Text(AppTranslations.of(context).text("da")),
+              ),
+            ],
+          ));
 }
 
-_buyVoucher(Coupon coupon,BuildContext context) async {
-
+_buyVoucher(Coupon coupon, BuildContext context) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  String url = globals.base_url_novi + globals.getVoucher+ "/" + coupon.id.toString();
+  String url =
+      globals.base_url_novi + globals.getVoucher + "/" + coupon.id.toString();
 
   String token = (prefs.getString('token') ?? "");
   print("token");
   print(token);
 
- await http.get(url, headers: {
+  await http.get(url, headers: {
     "Accept": "application/json",
     "content-type": "application/json",
     "token": "$token",
@@ -221,8 +217,7 @@ _buyVoucher(Coupon coupon,BuildContext context) async {
           textColor: Colors.white);
       Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) => Main_Fragment(tab: 3)),
+        MaterialPageRoute(builder: (context) => Main_Fragment(tab: 3)),
       );
 //      Navigator.of(context).pop();
 //      Navigator.of(context).pop();

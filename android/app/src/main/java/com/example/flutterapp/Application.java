@@ -1,12 +1,21 @@
 package com.example.flutterapp;
 
+
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.os.Build;
+import android.util.Log;
+
 import io.flutter.app.FlutterApplication;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService;
 
+
 public class Application extends FlutterApplication implements PluginRegistrantCallback {
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -17,4 +26,6 @@ public class Application extends FlutterApplication implements PluginRegistrantC
     public void registerWith(PluginRegistry registry) {
         GeneratedPluginRegistrant.registerWith(registry);
     }
+
+
 }
