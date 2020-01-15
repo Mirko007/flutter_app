@@ -53,49 +53,53 @@ class _Main_FragmentState extends State<Main_Fragment> {
 
      return  Scaffold(
         body: callPage(selectedTab),
-        bottomNavigationBar: Container(height: 58.0,
-          width: MediaQuery.of(context).size.width,
-          child: (MediaQuery.of(context).orientation == Orientation.portrait)?
-        BottomNavigationBar(showUnselectedLabels: true,
-          currentIndex: selectedTab,
-          onTap: (int index) {
-            setState(() {
-              selectedTab = index;
-            });
-          },
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(MyBarcode.transaction),
-              title: Text(AppTranslations.of(context).text("transakcije"),style: TextStyle(fontSize: 10),),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(MyBarcode.offers),
-              title: Text(AppTranslations.of(context).text("akcije"),style: TextStyle(fontSize: 10),),
-
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(MyBarcode.barcode,size: 40,),
-              title: Container(height: 0.0),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(MyBarcode.voucher),
-              title: Text(AppTranslations.of(context).text("kuponi"),style: TextStyle(fontSize: 10),),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(MyBarcode.user),
-              title: Text(AppTranslations.of(context).text("moj_profil"),style: TextStyle(fontSize: 10),),
-            ),
-          ],
-          selectedItemColor: Colors.black87,
-          unselectedItemColor: Colors.black45,
-          backgroundColor: Colors.white,
-
-        ):
-          Container(
-            color: Colors.white,
-            height: 1,
+        bottomNavigationBar: SafeArea(
+          bottom: true,
+          child: Container(height: 58.0,
             width: MediaQuery.of(context).size.width,
-          )
+            child: (MediaQuery.of(context).orientation == Orientation.portrait)?
+          BottomNavigationBar(
+            showUnselectedLabels: true,
+            currentIndex: selectedTab,
+            onTap: (int index) {
+              setState(() {
+                selectedTab = index;
+              });
+            },
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(MyBarcode.transaction),
+                title: Text(AppTranslations.of(context).text("transakcije"),style: TextStyle(fontSize: 10),),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(MyBarcode.offers),
+                title: Text(AppTranslations.of(context).text("akcije"),style: TextStyle(fontSize: 10),),
+
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(MyBarcode.barcode,size: 40,),
+                title: Container(height: 0.0),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(MyBarcode.voucher),
+                title: Text(AppTranslations.of(context).text("kuponi"),style: TextStyle(fontSize: 10),),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(MyBarcode.user),
+                title: Text(AppTranslations.of(context).text("moj_profil"),style: TextStyle(fontSize: 10),),
+              ),
+            ],
+            selectedItemColor: Colors.black87,
+            unselectedItemColor: Colors.black45,
+            backgroundColor: Colors.white,
+
+          ):
+            Container(
+              color: Colors.white,
+              height: 1,
+              width: MediaQuery.of(context).size.width,
+            )
+          ),
         )
       );
 

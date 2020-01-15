@@ -29,7 +29,7 @@ import 'signup.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:progress_dialog/progress_dialog.dart';
-
+import 'package:flutter/foundation.dart' show TargetPlatform;
 import 'package:path/path.dart' as Path;
 import 'package:sqflite/sqflite.dart';
 
@@ -511,7 +511,7 @@ class _MyHomePageState extends State<MyHomePage> {
   _checkUser(String token) async {
     ProgressDialog pr = new ProgressDialog(context);
     pr = new ProgressDialog(context,
-        type: ProgressDialogType.Normal, isDismissible: false, showLogs: false);
+        type: ProgressDialogType.Normal, isDismissible: true, showLogs: false);
     pr.style(
         message: AppTranslations.of(context).text("provjera_korisnika"),
         borderRadius: 10.0,
@@ -525,6 +525,7 @@ class _MyHomePageState extends State<MyHomePage> {
             color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
         messageTextStyle: TextStyle(
             color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
+    if(TargetPlatform.android == Theme.of(context).platform )
     pr.show();
 
     String url = globals.base_url_novi + globals.getCustomer;
@@ -593,9 +594,12 @@ class _MyHomePageState extends State<MyHomePage> {
           Navigator.of(context).pushNamed('/main');
         });
       } else {
+        pr.dismiss();
         pr.hide().then((isHidden) {
           print(isHidden);
+          print("Vanja");
         });
+
       }
     });
   }

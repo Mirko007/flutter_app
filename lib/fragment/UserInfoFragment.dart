@@ -298,17 +298,17 @@ Widget buildContent(BuildContext context) {
           ),
         ),
         //todo Test
-        Align(
-          alignment: Alignment.center,
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
-            child: Text(
-              "TEST TEST TEST TEST",
-              style: TextStyle(
-                  fontSize: 25, color: Colors.blue, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
+  //      Align(
+  //        alignment: Alignment.center,
+  //        child: Padding(
+  //          padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+  //          child: Text(
+   //           "TEST TEST TEST TEST",
+  //            style: TextStyle(
+  //                fontSize: 25, color: Colors.blue, fontWeight: FontWeight.bold),
+ //           ),
+ //        ),
+  //      ),
         Padding(
           padding: EdgeInsets.only(left: 10, right: 10, top: 10),
           child: Container(
