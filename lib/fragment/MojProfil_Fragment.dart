@@ -250,7 +250,7 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
             icon: Icon(Icons.exit_to_app),
             color: Colors.white,
             onPressed: () {
-              _firebaseMessaging.unsubscribeFromTopic("polleonewsslo");
+              _firebaseMessaging.unsubscribeFromTopic(globals.notification_topic);
               Navigator.of(context).pop();
             },
           ),
@@ -625,6 +625,8 @@ class _MojProfil_State extends State<MojProfil_Fragment> {
         '"firstName" : "$firstName","lastName" : "$lastName","email" : "$email","termsOfUse" : true,"gdpr_privola_email" : $gdpr_privola_email,"gdpr_privola_mob" : $gdpr_privola_mob,"gdpr_privola_posta" : $gdpr_privola_posta,"categoryType" : $_currentcategoryTypeIndex,'
         '"fitnessType" : $_currentfitnessTypeIndex,"sportType" : $_currentsportTypeIndex}';
 
+
+    //todo promijeniti ako je android ili ios
     await http.post(url, body: json_body, headers: {
       "Accept": "application/json",
       "content-type": "application/json",

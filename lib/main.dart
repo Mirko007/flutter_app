@@ -77,7 +77,7 @@ void main() {
     },
   );
 
-  //_firebaseMessaging.subscribeToTopic("polleonewsslo");
+  //_firebaseMessaging.subscribeToTopic(globals.notification_topic);
   debugPaintSizeEnabled = false;
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -126,11 +126,11 @@ class MyApp extends StatelessWidget {
         }
 
         for (var supportedLocale in supportedLocales) {
-          print("supportedLocale" + supportedLocale.toString());
-          print("supportedLocalelanguageCode" + supportedLocale.languageCode);
-          print("supportedLocalecountryCode" + supportedLocale.countryCode);
-          print("locale_countryCode" + locale.languageCode);
-          print("locale_countryCode" + locale.countryCode);
+          print("supportedLocale:" + supportedLocale.toString());
+          print("supportedLocalelanguageCode:" + supportedLocale.languageCode);
+          print("supportedLocalecountryCode:" + supportedLocale.countryCode);
+          print("locale_languageCode:" + locale.languageCode); //sl
+          print("locale_countryCode:" + locale.countryCode);  //SI
 
           if (supportedLocale.languageCode == locale.languageCode &&
               supportedLocale.countryCode == locale.countryCode) {
@@ -146,6 +146,7 @@ class MyApp extends StatelessWidget {
         Locale('hr', 'HR'),
         Locale('en', 'US'),
         Locale('en', 'UK'),
+        Locale('sl', 'SI'),
       ],
     );
   }
@@ -509,24 +510,24 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _checkUser(String token) async {
-    ProgressDialog pr = new ProgressDialog(context);
-    pr = new ProgressDialog(context,
-        type: ProgressDialogType.Normal, isDismissible: true, showLogs: false);
-    pr.style(
-        message: AppTranslations.of(context).text("provjera_korisnika"),
-        borderRadius: 10.0,
-        backgroundColor: Colors.white,
-        progressWidget: CircularProgressIndicator(),
-        elevation: 10.0,
-        insetAnimCurve: Curves.easeInOut,
-        progress: 0.0,
-        maxProgress: 100.0,
-        progressTextStyle: TextStyle(
-            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
-        messageTextStyle: TextStyle(
-            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
-    if(TargetPlatform.android == Theme.of(context).platform )
-    pr.show();
+//    ProgressDialog pr = new ProgressDialog(context);
+//    pr = new ProgressDialog(context,
+//        type: ProgressDialogType.Normal, isDismissible: true, showLogs: false);
+//    pr.style(
+//        message: AppTranslations.of(context).text("provjera_korisnika"),
+//        borderRadius: 10.0,
+//        backgroundColor: Colors.white,
+//        progressWidget: CircularProgressIndicator(),
+//        elevation: 10.0,
+//        insetAnimCurve: Curves.easeInOut,
+//        progress: 0.0,
+//        maxProgress: 100.0,
+//        progressTextStyle: TextStyle(
+//            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+//        messageTextStyle: TextStyle(
+//            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
+//    if(TargetPlatform.android == Theme.of(context).platform )
+//    pr.show();
 
     String url = globals.base_url_novi + globals.getCustomer;
 
@@ -589,16 +590,16 @@ class _MyHomePageState extends State<MyHomePage> {
         await prefs.setString('sportName', resBody["sportName"]);
         await prefs.setString(
             'placeOfRegistration', resBody["placeOfRegistration"]);
-        pr.hide().whenComplete(() {
-          _firebaseMessaging.subscribeToTopic("polleonewsslo");
+      //pr.hide().whenComplete(() {
+          _firebaseMessaging.subscribeToTopic(globals.notification_topic);
           Navigator.of(context).pushNamed('/main');
-        });
+      //  });
       } else {
-        pr.dismiss();
-        pr.hide().then((isHidden) {
-          print(isHidden);
-          print("Vanja");
-        });
+      //  pr.dismiss();
+//        pr.hide().then((isHidden) {
+//          print(isHidden);
+//          print("Vanja");
+//        });
 
       }
     });

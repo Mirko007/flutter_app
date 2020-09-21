@@ -7,7 +7,11 @@ description: A new Flutter application.
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 1.0.6+23
+# 1.0.6+23 Polleo Slo IOS
+# 1.0.2 Polleo SLO android
+# 1.0.9 Polleo Hrv android
+# 1.0.3 Polleo Hrv IOS
+version: 1.0.6+24
 
 
 environment:
@@ -83,7 +87,7 @@ flutter:
     - assets/icon/leoclub_icon_launcher.png
     - assets/locale/localization_en.json
     - assets/locale/localization_hr.json
-    - assets/locale/localization_hr2.json
+    - assets/locale/localization_sl.json
     - assets/images/logo_en.png
     - assets/images/registriraj_logo_slo.png
     - assets/images/polleo_slo.jpeg

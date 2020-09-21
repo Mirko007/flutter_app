@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 import '../firebase_messaging.dart';
+import '../global_variable.dart' as globals;
 
 
 class Main_Fragment extends StatefulWidget {
@@ -49,7 +50,7 @@ class _Main_FragmentState extends State<Main_Fragment> {
 
   @override
   Widget build(BuildContext context) {
-    _firebaseMessaging.subscribeToTopic("polleonewsslo");
+    _firebaseMessaging.subscribeToTopic(globals.notification_topic);
 
      return  Scaffold(
         body: callPage(selectedTab),

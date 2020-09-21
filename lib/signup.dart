@@ -697,6 +697,8 @@ class _SignupPageState extends State<SignupPage> {
         '"firstName" : "$firstName","lastName" : "$lastName","email" : "$email","termsOfUse" : true,"gdpr_privola_email" : true,"gdpr_privola_mob" : true,"gdpr_privola_posta" : true,"categoryType" : $_currentcategoryTypeIndex,'
         '"fitnessType" : $_currentfitnessTypeIndex,"sportType" : $_currentsportTypeIndex}';
 
+
+    //todo promijeniti ako je android ili ios
     await http.post(url, body: json_body, headers: {
       "Accept": "application/json",
       "content-type": "application/json",
