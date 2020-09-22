@@ -3,22 +3,19 @@
 //String base_url_novi = "https://leoclub.hr";
 //
 // produkcija slo
-//String base_url_novi = "https://slo.leoclub.hr";
-//todo
-//test SSL
-//tidi
-//hr
-//String base_url_novi = "https://test.leoclub.hr";
+String base_url_novi = "https://slo.leoclub.hr";
 
 //Test slo
-String base_url_novi = "https://test-slo.leoclub.hr";
+//String base_url_novi = "https://test-slo.leoclub.hr";
 
 //phone number ako je prazan stavi 00385000000000
-String phone_number_dummmy= "00385000000000";
+String phone_number_dummmy= "00386000000000";
 
-//String notification_topic= "polleonewsslo";
+//******************notifikacije******************//
+String notification_topic= "polleonewsslo";
 //test
-String notification_topic= "polleonewsslotest";
+//String notification_topic= "polleonewsslotest";
+//******************notifikacije******************//
 
 //API
 String requestOTP= "/api/v1/requestOTP";
