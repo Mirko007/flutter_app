@@ -55,6 +55,8 @@ dependencies:
   flutter_linkify: ^2.1.0
   progress_dialog: ^1.2.0
 
+dependency_overrides:
+  intl: 0.15.8
 
 dev_dependencies:
   flutter_test:
