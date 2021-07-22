@@ -19,6 +19,8 @@ class Application {
     "en",
     "en",
     "en",
+    "si",
+    "sl",
     "sl"
   ];
 
@@ -27,6 +29,8 @@ class Application {
     "en",
     "US",
     "UK",
+    "SL",
+    "SL",
     "SI"
   ];
 
