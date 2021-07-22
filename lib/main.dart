@@ -144,9 +144,10 @@ class MyApp extends StatelessWidget {
       },
       supportedLocales: [
         Locale('hr', 'HR'),
+        Locale('sl', 'SL'),
+        Locale('si', 'SL'),
         Locale('en', 'US'),
         Locale('en', 'UK'),
-        Locale('sl', 'SI'),
       ],
     );
   }
@@ -170,7 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -624,15 +625,16 @@ Future<void> _showNotification(String title, String message) async {
   flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
   var android = new AndroidInitializationSettings('@mipmap/launcher_icon');
   var iOS = new IOSInitializationSettings();
-  var initSetttings = new InitializationSettings(android, iOS);
+  var initSetttings = new InitializationSettings(android: android, iOS: iOS);
   flutterLocalNotificationsPlugin.initialize(initSetttings,
       onSelectNotification: onSelectNotification);
 
   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      "Polleo", 'Polleo', 'channel description',
-      importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
+      "Robin", 'Robin', 'channel description',
+      importance: Importance.max, priority: Priority.high, ticker: 'ticker');
   var iOS1 = new IOSNotificationDetails();
-  var platform = new NotificationDetails(androidPlatformChannelSpecifics, iOS1);
+  var platform = new NotificationDetails(
+      android: androidPlatformChannelSpecifics, iOS: iOS1);
   if (broj_novih_poruka > 0) {
     ++broj_novih_poruka;
     await flutterLocalNotificationsPlugin.show(

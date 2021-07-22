@@ -86,7 +86,7 @@ class _UserInfoState extends State<UserInfoFragment> {
   Widget build(BuildContext context) {
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       return Scaffold(
-          resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
 
           backgroundColor: Colors.white, //00ACF0
           body: Column(
